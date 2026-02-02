@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk - Undagi Admin</title>
+    <title>Masuk / Daftar - Undagi Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
 </head>
 <body class="bg-slate-50 flex items-center justify-center min-h-screen p-4">
 
-    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden animate-fade-in-up">
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden">
         <div class="h-32 bg-gradient-to-r from-blue-600 to-blue-800 relative flex items-center justify-center">
             <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-30"></div>
             <h1 class="text-3xl font-bold text-white relative z-10 tracking-widest">UNDAGI</h1>
@@ -21,13 +21,24 @@
         <div class="p-8">
             <div class="text-center mb-8">
                 <h2 class="text-2xl font-bold text-gray-800">Selamat Datang</h2>
-                <p class="text-sm text-gray-500 mt-2">Masuk untuk mengelola undangan pernikahanmu.</p>
+                <p class="text-sm text-gray-500 mt-2">Satu akun untuk semua kebutuhan undanganmu.</p>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-xl mb-6 text-xs text-left flex gap-3 items-start">
+                <i class="fas fa-info-circle text-lg mt-0.5"></i>
+                <div>
+                    <strong>Pengguna Baru?</strong><br>
+                    Langsung klik tombol di bawah. Akunmu akan otomatis terdaftar saat login pertama kali.
+                </div>
             </div>
 
             <button id="btnLogin" class="w-full border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 px-4 rounded-xl shadow-sm transition transform hover:scale-105 flex items-center justify-center gap-3">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-6 h-6">
-                <span id="btnText">Masuk dengan Google</span>
+                <span id="btnText">Masuk / Daftar dengan Google</span>
             </button>
+
+            <div id="errorLog" class="hidden mt-4 p-3 bg-red-100 text-red-700 text-xs rounded break-words font-mono text-left">
+                </div>
 
             <p class="text-xs text-center text-gray-400 mt-8">
                 &copy; 2026 Undagi Platform. Aman & Terpercaya.
@@ -36,45 +47,41 @@
     </div>
 
     <script type="module">
-        // Import dari config yang baru kita perbaiki
+        // Import Auth
         import { auth, provider, signInWithPopup, onAuthStateChanged } from './firebase-config.js';
 
         const btn = document.getElementById('btnLogin');
         const btnText = document.getElementById('btnText');
+        const errorLog = document.getElementById('errorLog');
 
-        // 1. CEK STATUS LOGIN (Otomatis redirect kalau sudah login)
+        // 1. CEK JIKA SUDAH LOGIN
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Kalau user sudah login, langsung lempar ke dashboard
+                // Redirect ke Dashboard
                 window.location.href = "dashboard.html";
             }
         });
 
         // 2. FUNGSI LOGIN
         btn.addEventListener('click', async () => {
-            // A. UBAH TAMPILAN TOMBOL JADI LOADING
-            btn.disabled = true; // Matikan tombol biar gak diklik 2x
-            btn.classList.add('opacity-75', 'cursor-not-allowed');
-            btnText.innerText = "Menghubungkan...";
+            // Reset Error
+            errorLog.classList.add('hidden');
+            errorLog.innerText = "";
+
+            // Loading State
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            btnText.innerText = "Menghubungkan ke Google...";
             
-            // B. TAMPILKAN POPUP LOADING
-            Swal.fire({
-                title: 'Mohon Tunggu',
-                text: 'Sedang menghubungi Google...',
-                allowOutsideClick: false,
-                didOpen: () => { Swal.showLoading() }
-            });
-
             try {
-                // C. PROSES LOGIN FIREBASE
+                // Eksekusi Login Popup
                 const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-
-                // D. JIKA BERHASIL
+                
+                // Jika Berhasil
                 Swal.fire({
                     icon: 'success',
-                    title: 'Berhasil Masuk!',
-                    text: `Halo, ${user.displayName}`,
+                    title: 'Berhasil!',
+                    text: 'Mengalihkan ke Dashboard...',
                     timer: 1500,
                     showConfirmButton: false
                 }).then(() => {
@@ -82,20 +89,38 @@
                 });
 
             } catch (error) {
-                // E. JIKA GAGAL / DIBATALKAN
-                console.error(error);
+                // JIKA GAGAL (KITA TAMPILKAN ERRORNYA)
+                console.error("Login Error:", error);
                 
-                // Reset Tombol
                 btn.disabled = false;
-                btn.classList.remove('opacity-75', 'cursor-not-allowed');
-                btnText.innerText = "Masuk dengan Google";
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnText.innerText = "Masuk / Daftar dengan Google";
+
+                // Tampilkan pesan error spesifik
+                let pesanError = "Gagal login. Coba lagi.";
+                
+                if (error.code === 'auth/popup-closed-by-user') {
+                    pesanError = "Login dibatalkan (Popup ditutup).";
+                } else if (error.code === 'auth/cancelled-popup-request') {
+                    pesanError = "Terlalu banyak permintaan popup.";
+                } else if (error.code === 'auth/network-request-failed') {
+                    pesanError = "Koneksi internet bermasalah.";
+                } else if (error.code === 'auth/unauthorized-domain') {
+                    pesanError = "Domain ini belum diizinkan di Firebase Console! (Lihat Tahap 3 Deployment)";
+                } else {
+                    // Tampilkan error mentah untuk debugging
+                    pesanError = "Error Teknis: " + error.message;
+                }
 
                 Swal.fire({
                     icon: 'error',
-                    title: 'Gagal Masuk',
-                    text: 'Koneksi terputus atau login dibatalkan.',
-                    confirmButtonColor: '#2563eb'
+                    title: 'Oops...',
+                    text: pesanError
                 });
+
+                // Tampilkan log di layar (biar bisa di-screenshot kalau user bingung)
+                errorLog.innerText = "System Error: " + error.code + " - " + error.message;
+                errorLog.classList.remove('hidden');
             }
         });
     </script>
