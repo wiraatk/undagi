@@ -138,7 +138,7 @@
 
     </main>
 
-    <div class="fixed bottom-0 w-full glass-nav p-4 z-40">
+    <div class="fixed bottom-0 w-full glass-nav p-4 z-40 bg-white/90 backdrop-blur border-t border-slate-200">
         <div class="max-w-3xl mx-auto flex gap-3">
             <button onclick="previewInvitation()" class="flex-1 bg-slate-100 text-slate-700 font-bold py-3 rounded-xl hover:bg-slate-200 transition flex items-center justify-center gap-2">
                 <i class="fas fa-eye"></i> <span class="hidden sm:inline">Preview</span>
@@ -148,9 +148,9 @@
                 <i class="fas fa-save"></i> Simpan
             </button>
 
-            <button onclick="shareInvitation()" class="flex-1 bg-green-500 text-white font-bold py-3 rounded-xl hover:bg-green-600 transition flex items-center justify-center gap-2 shadow-lg shadow-green-500/30">
-                <i class="fab fa-whatsapp"></i> Bagikan
-            </button>
+            <a href="manage.html" class="flex-1 bg-green-500 text-white font-bold py-3 rounded-xl hover:bg-green-600 transition flex items-center justify-center gap-2 shadow-lg shadow-green-500/30">
+                <i class="fas fa-share-alt"></i> Bagikan
+            </a>
         </div>
     </div>
 
@@ -158,7 +158,7 @@
         import { auth, db, doc, getDoc, setDoc, onAuthStateChanged, signOut } from './firebase-config.js';
 
         // GANTI API KEY IMBBB KAMU DISINI
-        const IMGBB_API_KEY = "a0fad9109722b5123512328153099951"; // <-- PASTE KEY KAMU
+        const IMGBB_API_KEY = "a0fad9109722b5123512328153099951"; 
 
         let currentUser = null;
         let currentData = {};
@@ -266,43 +266,10 @@
         // 4. PREVIEW
         window.previewInvitation = () => {
             if (!currentUser) return;
-            // Buka di tab baru
             window.open(`view.html?uid=${currentUser.uid}`, '_blank');
         };
 
-        // 5. FITUR SHARE (BAGIKAN)
-        window.shareInvitation = () => {
-            if (!currentUser) return;
-            
-            // Generate Link: Ambil URL saat ini, ganti dashboard.html jadi view.html
-            // Ini otomatis menyesuaikan mau di localhost atau github.io
-            let baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf("/"));
-            let finalLink = `${baseUrl}/view.html?uid=${currentUser.uid}`;
-
-            const groom = document.getElementById('groomNick').value || 'Pria';
-            const bride = document.getElementById('brideNick').value || 'Wanita';
-            
-            // Kata-kata untuk WhatsApp
-            const waText = `Assalamu'alaikum Warahmatullahi Wabarakatuh\n\nTanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i, teman sekaligus sahabat, untuk menghadiri acara pernikahan kami:\n\n*${groom} & ${bride}*\n\nBerikut link undangan kami:\n${finalLink}\n\nMerupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.\n\nTerima kasih.`;
-
-            Swal.fire({
-                title: 'Bagikan Undangan',
-                html: `
-                    <div class="mb-4">
-                        <label class="text-xs text-gray-500 block mb-1">Link Undangan Kamu:</label>
-                        <input type="text" value="${finalLink}" id="shareInput" class="w-full bg-gray-100 p-2 text-sm rounded border border-gray-300" readonly>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="navigator.clipboard.writeText('${finalLink}'); Swal.showValidationMessage('Link Disalin!')" class="bg-gray-200 py-2 rounded text-sm hover:bg-gray-300 font-bold"><i class="fas fa-copy"></i> Salin Link</button>
-                        <a href="https://wa.me/?text=${encodeURIComponent(waText)}" target="_blank" class="bg-green-500 text-white py-2 rounded text-sm hover:bg-green-600 font-bold flex items-center justify-center gap-1"><i class="fab fa-whatsapp"></i> Kirim WA</a>
-                    </div>
-                `,
-                showConfirmButton: false,
-                showCloseButton: true
-            });
-        };
-
-        // 6. UPLOAD GAMBAR KE IMGBB
+        // 5. UPLOAD GAMBAR KE IMGBB
         window.uploadImage = async (inputId) => {
             const { value: file } = await Swal.fire({
                 title: 'Pilih Foto',
@@ -323,8 +290,7 @@
                     if (data.success) {
                         document.getElementById(inputId).value = data.data.url;
                         Swal.close();
-                        // Auto save biar gak hilang
-                        saveData();
+                        saveData(); // Auto save biar gak hilang
                     } else {
                         throw new Error('Gagal upload ke ImgBB');
                     }
