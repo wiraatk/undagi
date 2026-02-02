@@ -3,126 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk / Daftar - Undagi Admin</title>
+    <title>Debug Login - Undagi</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>body{font-family:'Montserrat',sans-serif}</style>
 </head>
-<body class="bg-slate-50 flex items-center justify-center min-h-screen p-4">
+<body class="bg-gray-100 p-4">
 
-    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden">
-        <div class="h-32 bg-gradient-to-r from-blue-600 to-blue-800 relative flex items-center justify-center">
-            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-30"></div>
-            <h1 class="text-3xl font-bold text-white relative z-10 tracking-widest">UNDAGI</h1>
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-6 mt-10">
+        <h1 class="text-2xl font-bold mb-4">Login System</h1>
+        
+        <div id="debugBox" class="bg-black text-green-400 font-mono text-xs p-4 rounded mb-4 h-48 overflow-y-scroll border-2 border-red-500">
+            > System Init...<br>
         </div>
 
-        <div class="p-8">
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-800">Selamat Datang</h2>
-                <p class="text-sm text-gray-500 mt-2">Satu akun untuk semua kebutuhan undanganmu.</p>
-            </div>
-
-            <div class="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-xl mb-6 text-xs text-left flex gap-3 items-start">
-                <i class="fas fa-info-circle text-lg mt-0.5"></i>
-                <div>
-                    <strong>Pengguna Baru?</strong><br>
-                    Langsung klik tombol di bawah. Akunmu akan otomatis terdaftar saat login pertama kali.
-                </div>
-            </div>
-
-            <button id="btnLogin" class="w-full border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 px-4 rounded-xl shadow-sm transition transform hover:scale-105 flex items-center justify-center gap-3">
-                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-6 h-6">
-                <span id="btnText">Masuk / Daftar dengan Google</span>
-            </button>
-
-            <div id="errorLog" class="hidden mt-4 p-3 bg-red-100 text-red-700 text-xs rounded break-words font-mono text-left">
-                </div>
-
-            <p class="text-xs text-center text-gray-400 mt-8">
-                &copy; 2026 Undagi Platform. Aman & Terpercaya.
-            </p>
-        </div>
+        <button id="btnLogin" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-blue-700 transition">
+            Masuk dengan Google
+        </button>
+        
+        <a href="index.html" class="block text-center mt-4 text-sm text-gray-500">Kembali ke Beranda</a>
     </div>
 
     <script type="module">
-        // Import Auth
-        import { auth, provider, signInWithPopup, onAuthStateChanged } from './firebase-config.js';
+        // FUNGSI PENCATAT ERROR KE LAYAR
+        const debugBox = document.getElementById('debugBox');
+        function log(msg, type='info') {
+            const color = type === 'error' ? 'red' : 'green';
+            debugBox.innerHTML += `<span style="color:${color}">> ${msg}</span><br>`;
+            console.log(msg);
+        }
 
-        const btn = document.getElementById('btnLogin');
-        const btnText = document.getElementById('btnText');
-        const errorLog = document.getElementById('errorLog');
+        // 1. TANGKAP ERROR GLOBAL
+        window.onerror = function(message, source, lineno, colno, error) {
+            log(`CRITICAL ERROR: ${message}`, 'error');
+            return true;
+        };
 
-        // 1. CEK JIKA SUDAH LOGIN
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // Redirect ke Dashboard
-                window.location.href = "dashboard.html";
-            }
-        });
+        log("Mencoba memuat firebase-config.js...");
 
-        // 2. FUNGSI LOGIN
-        btn.addEventListener('click', async () => {
-            // Reset Error
-            errorLog.classList.add('hidden');
-            errorLog.innerText = "";
-
-            // Loading State
-            btn.disabled = true;
-            btn.classList.add('opacity-50', 'cursor-not-allowed');
-            btnText.innerText = "Menghubungkan ke Google...";
+        try {
+            // KITA PAKAI CACHE BUSTING (?v=random) BIAR GITHUB GAK PAKAI FILE LAMA
+            const module = await import('./firebase-config.js?v=' + Math.random());
             
-            try {
-                // Eksekusi Login Popup
-                const result = await signInWithPopup(auth, provider);
+            log("Config ditemukan!");
+            
+            const { auth, provider, signInWithPopup, onAuthStateChanged } = module;
+
+            if(!auth) log("ERROR: 'auth' tidak ditemukan di export!", 'error');
+            if(!provider) log("ERROR: 'provider' tidak ditemukan di export! Cek config lagi.", 'error');
+            
+            if(auth && provider) {
+                log("Sistem SIAP! Silakan klik tombol.");
                 
-                // Jika Berhasil
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: 'Mengalihkan ke Dashboard...',
-                    timer: 1500,
-                    showConfirmButton: false
-                }).then(() => {
-                    window.location.href = "dashboard.html";
+                // Cek status login
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        log(`User terdeteksi: ${user.email}`);
+                        log("Redirecting...");
+                        window.location.href = "dashboard.html";
+                    }
                 });
 
-            } catch (error) {
-                // JIKA GAGAL (KITA TAMPILKAN ERRORNYA)
-                console.error("Login Error:", error);
-                
-                btn.disabled = false;
-                btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                btnText.innerText = "Masuk / Daftar dengan Google";
-
-                // Tampilkan pesan error spesifik
-                let pesanError = "Gagal login. Coba lagi.";
-                
-                if (error.code === 'auth/popup-closed-by-user') {
-                    pesanError = "Login dibatalkan (Popup ditutup).";
-                } else if (error.code === 'auth/cancelled-popup-request') {
-                    pesanError = "Terlalu banyak permintaan popup.";
-                } else if (error.code === 'auth/network-request-failed') {
-                    pesanError = "Koneksi internet bermasalah.";
-                } else if (error.code === 'auth/unauthorized-domain') {
-                    pesanError = "Domain ini belum diizinkan di Firebase Console! (Lihat Tahap 3 Deployment)";
-                } else {
-                    // Tampilkan error mentah untuk debugging
-                    pesanError = "Error Teknis: " + error.message;
-                }
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: pesanError
+                // Tombol Login
+                document.getElementById('btnLogin').addEventListener('click', async () => {
+                    log("Tombol diklik. Membuka popup...");
+                    try {
+                        const result = await signInWithPopup(auth, provider);
+                        log("Login SUKSES! Halo " + result.user.displayName);
+                        window.location.href = "dashboard.html";
+                    } catch (err) {
+                        log("LOGIN GAGAL: " + err.message, 'error');
+                        log("Code: " + err.code, 'error');
+                        Swal.fire('Error', err.message, 'error');
+                    }
                 });
-
-                // Tampilkan log di layar (biar bisa di-screenshot kalau user bingung)
-                errorLog.innerText = "System Error: " + error.code + " - " + error.message;
-                errorLog.classList.remove('hidden');
             }
-        });
+
+        } catch (e) {
+            log("GAGAL IMPORT CONFIG!", 'error');
+            log(e.message, 'error');
+            log("Saran: Cek file firebase-config.js di GitHub, pastikan tidak ada typo.", 'error');
+        }
     </script>
 </body>
 </html>
