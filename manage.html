@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard User</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>body{font-family:'Montserrat',sans-serif}</style>
+</head>
+<body class="bg-slate-50 min-h-screen pb-20">
+
+    <nav class="bg-white shadow-sm px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+        <h1 class="font-bold text-xl text-slate-800">⚙️ KELOLA</h1>
+        <div class="flex gap-4">
+            <a href="dashboard.html" class="text-xs font-bold text-slate-500 hover:text-blue-600 self-center">EDIT DATA</a>
+            <button id="btnLogout" class="text-xs font-bold text-red-500 border border-red-200 px-3 py-2 rounded">LOGOUT</button>
+        </div>
+    </nav>
+
+    <div class="max-w-lg mx-auto p-6 space-y-6">
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center relative overflow-hidden">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Status Akun</p>
+            
+            <div id="loading-state" class="animate-pulse h-8 w-32 bg-slate-200 rounded-full mx-auto"></div>
+
+            <div id="badge-free" class="hidden">
+                <span class="bg-red-100 text-red-600 px-4 py-1 rounded-full text-xs font-bold">🔴 FREE PLAN</span>
+                <p class="text-xs text-slate-500 mt-3">Musik & Galeri terkunci. Upgrade untuk membuka.</p>
+            </div>
+
+            <div id="badge-premium" class="hidden">
+                <span class="bg-green-100 text-green-700 px-4 py-1 rounded-full text-xs font-bold">👑 PREMIUM AKTIF</span>
+                <p class="text-xs text-green-600 mt-3 font-bold">Musik, Galeri & Fitur VIP Siap!</p>
+            </div>
+        </div>
+
+        <div id="upgrade-box" class="hidden bg-slate-900 text-white p-6 rounded-2xl shadow-xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500 rounded-full blur-[60px] opacity-30"></div>
+            <h3 class="font-bold text-lg mb-1 relative z-10">Buka Fitur Premium?</h3>
+            <p class="text-xs text-slate-400 mb-4 relative z-10">Aktifkan Musik, Galeri Foto & Hilangkan Watermark.</p>
+            
+            <div class="bg-white/10 p-3 rounded mb-4 text-xs relative z-10 border border-white/10">
+                <p>Transfer Rp 50rb ke: <b>BCA 1234567890</b></p>
+            </div>
+
+            <button onclick="konfirmasiWA()" class="relative z-10 w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 rounded-lg text-xs uppercase tracking-wider flex justify-center items-center gap-2 transition">
+                <i class="fab fa-whatsapp text-lg"></i> Konfirmasi ke Admin
+            </button>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 border-l-4 border-l-blue-500">
+            <h3 class="font-bold text-slate-800 mb-1 text-lg">💌 Kirim Undangan</h3>
+            <p class="text-xs text-slate-500 mb-4">Buat link khusus untuk setiap tamu agar nama mereka muncul di cover.</p>
+            
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs font-bold text-slate-700 ml-1">Nama Tamu</label>
+                    <input type="text" id="inputNamaTamu" placeholder="Contoh: Bpk. Budi & Keluarga" 
+                           class="w-full bg-slate-50 border border-slate-300 p-3 rounded-xl text-sm outline-none focus:border-blue-500 transition">
+                </div>
+
+                <div id="resultArea" class="hidden bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <p class="text-[10px] text-slate-400 mb-1">Link Khusus:</p>
+                    <input type="text" id="generatedLink" class="w-full bg-white border p-2 rounded text-xs text-blue-600 font-mono mb-2" readonly>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="copyGeneratedLink()" class="bg-white border border-slate-300 text-slate-600 py-2 rounded-lg text-xs font-bold hover:bg-slate-50">
+                            <i class="fas fa-copy"></i> Salin Link
+                        </button>
+                        <button onclick="shareToWA()" class="bg-green-500 text-white py-2 rounded-lg text-xs font-bold hover:bg-green-600 shadow-lg shadow-green-500/20">
+                            <i class="fab fa-whatsapp"></i> Kirim WA
+                        </button>
+                    </div>
+                </div>
+
+                <button id="btnBuat" onclick="buatLink()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-blue-700 transition">
+                    BUAT LINK
+                </button>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a id="btn-view-general" href="#" target="_blank" class="text-xs text-slate-400 underline hover:text-blue-500">
+                Lihat Undangan (Tanpa Nama Tamu)
+            </a>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { auth, db, doc, getDoc, onAuthStateChanged, signOut } from './firebase-config.js';
+
+        let currentUser = null;
+        let baseLink = ""; // Link dasar tanpa parameter 'to'
+
+        // CEK LOGIN
+        onAuthStateChanged(auth, (user) => {
+            if(user) { currentUser = user; loadData(user.uid); }
+            else { window.location.href = "login.html"; }
+        });
+
+        async function loadData(uid) {
+            const snap = await getDoc(doc(db, "invitations", uid));
+            if(!snap.exists()) return;
+            const data = snap.data();
+
+            // Setup Link Dasar
+            const currentUrl = window.location.href;
+            const baseUrl = currentUrl.replace('manage.html', 'view.html');
+            baseLink = `${baseUrl}?uid=${uid}`; // Belum ada &to=
+
+            // Set Link Umum
+            document.getElementById('btn-view-general').href = baseLink + "&to=Tamu Undangan";
+
+            // Status Check
+            document.getElementById('loading-state').classList.add('hidden');
+            if(data.status_bayar === 'premium') {
+                document.getElementById('badge-premium').classList.remove('hidden');
+            } else {
+                document.getElementById('badge-free').classList.remove('hidden');
+                document.getElementById('upgrade-box').classList.remove('hidden');
+            }
+        }
+
+        // --- GENERATOR LOGIC ---
+        window.buatLink = () => {
+            const nama = document.getElementById('inputNamaTamu').value.trim();
+            if(!nama) { alert("Isi nama tamu dulu bro!"); return; }
+
+            // Encode nama (ubah spasi jadi %20 biar link gak error)
+            const namaEncoded = encodeURIComponent(nama);
+            const finalLink = `${baseLink}&to=${namaEncoded}`;
+
+            document.getElementById('generatedLink').value = finalLink;
+            document.getElementById('resultArea').classList.remove('hidden');
+            document.getElementById('btnBuat').classList.add('hidden'); // Sembunyikan tombol buat biar rapi
+        };
+
+        // Reset tombol kalau ngetik lagi
+        document.getElementById('inputNamaTamu').addEventListener('input', () => {
+            document.getElementById('resultArea').classList.add('hidden');
+            document.getElementById('btnBuat').classList.remove('hidden');
+        });
+
+        window.copyGeneratedLink = () => {
+            const el = document.getElementById('generatedLink');
+            el.select(); navigator.clipboard.writeText(el.value);
+            alert("Link berhasil disalin!");
+        };
+
+        window.shareToWA = () => {
+            const nama = document.getElementById('inputNamaTamu').value;
+            const link = document.getElementById('generatedLink').value;
+            
+            // Pesan WA Otomatis yang sopan
+            const text = `Om Swastyastu,\n\nKepada Yth. ${nama},\n\nTanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk hadir dalam acara pernikahan kami.\n\nBerikut link undangan digital kami:\n${link}\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.\n\nTerima Kasih.\nOm Santih Santih Santih Om`;
+            
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        };
+
+        // --- FITUR ADMIN (MAGIC LINK) ---
+        window.konfirmasiWA = () => {
+            if(!currentUser) return;
+            const noAdmin = "6281234567890"; // GANTI NOMOR WA MU
+            const currentUrl = window.location.href; 
+            const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/'));
+            const magicLink = `${baseUrl}/approve.html?uid=${currentUser.uid}`;
+            const text = `Halo Admin, saya mau upgrade Premium.\nEmail: ${currentUser.email}\n\nKlik link ini untuk approve: ${magicLink}`;
+            window.open(`https://wa.me/${noAdmin}?text=${encodeURIComponent(text)}`, '_blank');
+        };
+        
+        document.getElementById('btnLogout').addEventListener('click', () => signOut(auth).then(()=>window.location.href="login.html"));
+    </script>
+</body>
+</html>

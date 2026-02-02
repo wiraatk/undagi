@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>God Mode - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>body{font-family:'Montserrat',sans-serif}</style>
+</head>
+<body class="bg-slate-900 text-white">
+
+    <nav class="border-b border-slate-700 bg-slate-800 p-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-red-600 text-white font-bold px-3 py-1 rounded text-xs uppercase tracking-widest">Admin Area</div>
+                <h1 class="font-bold text-xl">Undagi Manager</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <p id="adminEmail" class="text-sm text-slate-400 hidden md:block">Loading...</p>
+                <button id="btnLogout" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition">Keluar</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto p-6">
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                <p class="text-xs text-slate-400 uppercase">Total User</p>
+                <h3 class="text-3xl font-bold" id="totalUsers">0</h3>
+            </div>
+            <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+                <p class="text-xs text-slate-400 uppercase">Premium</p>
+                <h3 class="text-3xl font-bold text-yellow-500" id="totalPremium">0</h3>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <input type="text" id="searchInput" placeholder="Cari nama user..." class="w-full bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-xl focus:outline-none focus:border-blue-500 transition">
+        </div>
+
+        <div class="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-900 text-slate-400 uppercase text-xs font-bold">
+                        <tr>
+                            <th class="p-4">User / Mempelai</th>
+                            <th class="p-4">Tanggal Daftar</th>
+                            <th class="p-4">Paket (Plan)</th>
+                            <th class="p-4 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody" class="divide-y divide-slate-700">
+                        <tr><td colspan="4" class="p-8 text-center text-slate-500">Memuat data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, db, collection, getDocs, updateDoc, doc, onAuthStateChanged, signOut } from './firebase-config.js';
+
+        // ==========================================
+        // 🛡️ SECURITY CHECK: GANTI EMAIL INI!
+        // ==========================================
+        const ALLOWED_ADMIN = "komangne@gmail.com"; 
+        // ==========================================
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Cek apakah yang login adalah Admin?
+                // Note: Ini proteksi sederhana client-side.
+                if(user.email.toLowerCase() !== ALLOWED_ADMIN.toLowerCase()) {
+                    document.body.innerHTML = "<div class='h-screen flex items-center justify-center text-xl font-bold text-red-500 bg-black'>⛔ AKSES DITOLAK: Bukan Admin!</div>";
+                    setTimeout(() => signOut(auth).then(()=>window.location.href='index.html'), 2000);
+                    return;
+                }
+
+                document.getElementById('adminEmail').innerText = user.email;
+                loadAllUsers();
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        async function loadAllUsers() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "invitations"));
+                const tbody = document.getElementById('userTableBody');
+                tbody.innerHTML = "";
+
+                let count = 0;
+                let premiumCount = 0;
+                let rows = "";
+
+                querySnapshot.forEach((docSnap) => {
+                    count++;
+                    const data = docSnap.data();
+                    const uid = docSnap.id;
+                    const plan = data.plan || 'free';
+                    if(plan === 'premium') premiumCount++;
+
+                    // Warna Badge Paket
+                    let badgeColor = "bg-gray-600";
+                    if(plan === 'pro') badgeColor = "bg-blue-600";
+                    if(plan === 'premium') badgeColor = "bg-yellow-600 text-black font-bold";
+
+                    // Format Tanggal
+                    const date = data.updatedAt ? new Date(data.updatedAt.seconds * 1000).toLocaleDateString() : "-";
+                    const names = (data.groomNick || "Belum Isi") + " & " + (data.brideNick || "Data");
+
+                    rows += `
+                        <tr class="hover:bg-slate-700/50 transition">
+                            <td class="p-4">
+                                <div class="font-bold text-white">${names}</div>
+                                <div class="text-xs text-slate-400">ID: ${uid.substring(0,8)}...</div>
+                            </td>
+                            <td class="p-4 text-slate-300">${date}</td>
+                            <td class="p-4">
+                                <select onchange="changePlan('${uid}', this.value)" class="${badgeColor} text-xs uppercase px-2 py-1 rounded border-none outline-none cursor-pointer hover:opacity-80 transition shadow-sm text-white text-center w-24">
+                                    <option value="free" ${plan==='free'?'selected':''}>Free</option>
+                                    <option value="pro" ${plan==='pro'?'selected':''}>Pro</option>
+                                    <option value="premium" ${plan==='premium'?'selected':''}>Premium</option>
+                                </select>
+                            </td>
+                            <td class="p-4 text-center flex justify-center gap-2">
+                                <a href="view.html?uid=${uid}" target="_blank" class="w-8 h-8 rounded bg-slate-600 hover:bg-blue-600 flex items-center justify-center transition text-white" title="Lihat Undangan">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <button onclick="deleteUser('${uid}')" class="w-8 h-8 rounded bg-slate-600 hover:bg-red-600 flex items-center justify-center transition text-white" title="Hapus User">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tbody.innerHTML = rows;
+                document.getElementById('totalUsers').innerText = count;
+                document.getElementById('totalPremium').innerText = premiumCount;
+
+            } catch (error) {
+                console.error(error);
+                Swal.fire('Error', 'Gagal memuat data.', 'error');
+            }
+        }
+
+        // FUNGSI GANTI PAKET (Global Scope)
+        window.changePlan = async (uid, newPlan) => {
+            try {
+                // Update Firestore
+                await updateDoc(doc(db, "invitations", uid), {
+                    plan: newPlan
+                });
+                
+                const Toast = Swal.mixin({
+                    toast: true, position: 'top-end', showConfirmButton: false, timer: 1500,
+                    didOpen: (toast) => { toast.addEventListener('mouseenter', Swal.stopTimer); toast.addEventListener('mouseleave', Swal.resumeTimer); }
+                });
+                Toast.fire({ icon: 'success', title: `User diupdate ke ${newPlan.toUpperCase()}` });
+                
+                // Refresh warna badge (kasar tapi efektif)
+                setTimeout(() => loadAllUsers(), 500); 
+            } catch (e) {
+                Swal.fire('Gagal', e.message, 'error');
+            }
+        };
+
+        // FUNGSI LOGOUT
+        document.getElementById('btnLogout').addEventListener('click', () => {
+            signOut(auth).then(() => window.location.href = "login.html");
+        });
+        
+        // SEARCH FILTER
+        document.getElementById('searchInput').addEventListener('keyup', (e) => {
+            const term = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#userTableBody tr');
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(term) ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

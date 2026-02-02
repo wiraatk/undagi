@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Editor - Undagi</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body { font-family: 'Montserrat', sans-serif; background-color: #f3f4f6; }
+        /* Sembunyikan scrollbar navigasi tab */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Style Tab Aktif */
+        .tab-btn.active { 
+            background-color: #2563eb; 
+            color: white; 
+            border-color: #2563eb;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Loading Overlay Fullscreen */
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 9999; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="globalLoader" class="loading-overlay hidden">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600 mb-6"></div>
+        <h2 class="text-xl font-bold text-gray-800" id="loadingText">Memproses Data...</h2>
+        <p class="text-sm text-gray-500 mt-2">Mohon tunggu, sedang mengupload gambar ke server.</p>
+    </div>
+
+    <nav class="bg-white border-b border-gray-200 fixed w-full z-30 top-0 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg">U</div>
+                    <span class="font-bold text-xl text-gray-800 tracking-tight">Undagi<span class="text-blue-600">.id</span></span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="view.html" target="_blank" class="hidden md:flex items-center gap-2 text-sm font-bold text-blue-600 border border-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition">
+                        <i class="fas fa-eye"></i> Preview
+                    </a>
+                    <button id="btnLogout" class="text-sm font-bold text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-2 rounded-lg transition">
+                        <i class="fas fa-sign-out-alt"></i> Keluar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="pt-24 pb-32 max-w-4xl mx-auto px-4">
+        
+        <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Edit Undangan</h1>
+                <p class="text-sm text-gray-500 mt-1">Isi data di bawah ini untuk melengkapi undanganmu.</p>
+            </div>
+            <div class="bg-white px-4 py-2 rounded-full border border-gray-200 shadow-sm flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                <span class="text-xs font-bold text-gray-600">Paket: <span id="userPlanBadge" class="text-blue-600">Loading...</span></span>
+            </div>
+        </div>
+
+        <div class="flex overflow-x-auto no-scrollbar gap-3 mb-8 pb-4 sticky top-16 z-20 bg-[#f3f4f6]/95 backdrop-blur py-2">
+            <button onclick="switchTab('mempelai')" id="tab-mempelai" class="tab-btn active px-6 py-2.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-bold whitespace-nowrap transition transform hover:scale-105">
+                <i class="fas fa-user-friends mr-2"></i> Mempelai
+            </button>
+            <button onclick="switchTab('acara')" id="tab-acara" class="tab-btn px-6 py-2.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-bold whitespace-nowrap transition transform hover:scale-105">
+                <i class="fas fa-calendar-alt mr-2"></i> Acara
+            </button>
+            <button onclick="switchTab('galeri')" id="tab-galeri" class="tab-btn px-6 py-2.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-bold whitespace-nowrap transition transform hover:scale-105">
+                <i class="fas fa-camera mr-2"></i> Galeri
+            </button>
+            <button onclick="switchTab('fitur')" id="tab-fitur" class="tab-btn px-6 py-2.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-bold whitespace-nowrap transition transform hover:scale-105">
+                <i class="fas fa-gift mr-2"></i> Fitur
+            </button>
+            <button onclick="switchTab('tema')" id="tab-tema" class="tab-btn px-6 py-2.5 rounded-full bg-white border border-gray-200 text-gray-600 text-sm font-bold whitespace-nowrap transition transform hover:scale-105">
+                <i class="fas fa-palette mr-2"></i> Tema
+            </button>
+        </div>
+
+        <form id="invitationForm" class="bg-white rounded-3xl shadow-lg border border-gray-100 p-6 md:p-10 relative overflow-hidden">
+            
+            <div id="section-mempelai" class="tab-content animate-fade-in">
+                <h3 class="text-xl font-bold text-gray-800 mb-6 border-b pb-4 flex items-center gap-2">
+                    <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span> Data Pasangan
+                </h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-blue-50/50 p-6 rounded-2xl border border-blue-100 hover:border-blue-300 transition">
+                        <h4 class="font-bold text-blue-800 mb-4 flex items-center gap-2 text-lg"><i class="fas fa-mars"></i> Mempelai Pria</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Nama Lengkap</label>
+                                <input type="text" id="groomName" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" placeholder="Contoh: Dimas Anggara, S.Kom">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Nama Panggilan</label>
+                                <input type="text" id="groomNick" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" placeholder="Contoh: Dimas">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Nama Ayah</label>
+                                <input type="text" id="groomFather" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" placeholder="Bpk. Susanto">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Nama Ibu</label>
+                                <input type="text" id="groomMother" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition" placeholder="Ibu Sri Wahyuni">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-pink-50/50 p-6 rounded-2xl border border-pink-100 hover:border-pink-300 transition">
+                        <h4 class="font-bold text-pink-800 mb-4 flex items-center gap-2 text-lg"><i class="fas fa-venus"></i> Mempelai Wanita</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Nama Lengkap</label>
+                                <input type="text" id="brideName" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition" placeholder="Contoh: Rara Sekar, S.E">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Nama Panggilan</label>
+                                <input type="text" id="brideNick" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition" placeholder="Contoh: Rara">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Nama Ayah</label>
+                                <input type="text" id="brideFather" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition" placeholder="Bpk. Wijaya">
+                            </div>
+                            <div>
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Nama Ibu</label>
+                                <input type="text" id="brideMother" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition" placeholder="Ibu Lestari">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-acara" class="tab-content hidden animate-fade-in">
+                <h3 class="text-xl font-bold text-gray-800 mb-6 border-b pb-4 flex items-center gap-2">
+                    <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-sm">2</span> Waktu & Lokasi
+                </h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Tanggal Acara</label>
+                        <input type="date" id="eventDate" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Jam Mulai</label>
+                        <input type="time" id="eventTime" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Nama Gedung / Lokasi</label>
+                        <div class="relative">
+                            <i class="fas fa-building absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input type="text" id="eventLocation" class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Contoh: Gedung Graha Sabha">
+                        </div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Link Google Maps</label>
+                        <div class="relative">
+                            <i class="fas fa-map-marker-alt absolute left-4 top-1/2 -translate-y-1/2 text-red-500"></i>
+                            <input type="url" id="mapsUrl" class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Paste link maps disini (https://maps.app.goo.gl/...)">
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-2 ml-1"><i class="fas fa-info-circle"></i> Buka Google Maps > Cari Lokasi > Share > Copy Link</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-galeri" class="tab-content hidden animate-fade-in">
+                <h3 class="text-xl font-bold text-gray-800 mb-6 border-b pb-4 flex items-center gap-2">
+                    <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-sm">3</span> Upload Foto
+                </h3>
+                <p class="text-sm text-gray-500 mb-6 bg-yellow-50 p-4 rounded-xl border border-yellow-100">
+                    <i class="fas fa-lightbulb text-yellow-500 mr-2"></i> Klik kotak di bawah untuk memilih foto. Gambar akan otomatis diupload saat tombol <strong>Simpan</strong> ditekan.
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="group relative">
+                        <label class="block text-xs font-bold uppercase text-gray-500 mb-2 text-center">Foto Cover (Landscape)</label>
+                        <div class="relative w-full aspect-[3/4] bg-gray-100 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-blue-500 transition group-hover:shadow-lg">
+                            <img id="preview-cover" src="https://placehold.co/600x800/e2e8f0/94a3b8?text=Upload+Cover" class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                                <i class="fas fa-cloud-upload-alt text-3xl text-white mb-2"></i>
+                                <span class="text-white text-xs font-bold">Ganti Foto</span>
+                            </div>
+                            <input type="file" id="file-cover" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer z-10" onchange="previewImage(this, 'preview-cover')">
+                        </div>
+                    </div>
+
+                    <div class="group relative">
+                        <label class="block text-xs font-bold uppercase text-gray-500 mb-2 text-center">Foto Pria (Portrait)</label>
+                        <div class="relative w-full aspect-[3/4] bg-gray-100 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-blue-500 transition group-hover:shadow-lg">
+                            <img id="preview-groom" src="https://placehold.co/600x800/e2e8f0/94a3b8?text=Foto+Pria" class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                                <i class="fas fa-cloud-upload-alt text-3xl text-white mb-2"></i>
+                                <span class="text-white text-xs font-bold">Ganti Foto</span>
+                            </div>
+                            <input type="file" id="file-groom" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer z-10" onchange="previewImage(this, 'preview-groom')">
+                        </div>
+                    </div>
+
+                    <div class="group relative">
+                        <label class="block text-xs font-bold uppercase text-gray-500 mb-2 text-center">Foto Wanita (Portrait)</label>
+                        <div class="relative w-full aspect-[3/4] bg-gray-100 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden cursor-pointer hover:border-blue-500 transition group-hover:shadow-lg">
+                            <img id="preview-bride" src="https://placehold.co/600x800/e2e8f0/94a3b8?text=Foto+Wanita" class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+                                <i class="fas fa-cloud-upload-alt text-3xl text-white mb-2"></i>
+                                <span class="text-white text-xs font-bold">Ganti Foto</span>
+                            </div>
+                            <input type="file" id="file-bride" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer z-10" onchange="previewImage(this, 'preview-bride')">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-fitur" class="tab-content hidden animate-fade-in">
+                <h3 class="text-xl font-bold text-gray-800 mb-6 border-b pb-4 flex items-center gap-2">
+                    <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-sm">4</span> Fitur Digital
+                </h3>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200">
+                        <h4 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="fas fa-music text-purple-500"></i> Musik Latar</h4>
+                        <div class="relative">
+                            <select id="musicSelect" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-purple-500 outline-none appearance-none bg-white">
+                                <option value="">-- Pilih Lagu --</option>
+                                <option value="romance1.mp3">🎹 Piano Romantic</option>
+                                <option value="acoustic.mp3">🎸 Acoustic Love</option>
+                                <option value="wedding.mp3">🎻 Wedding Classic</option>
+                            </select>
+                            <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 p-6 rounded-2xl border border-green-100">
+                        <h4 class="font-bold text-green-800 mb-4 flex items-center gap-2"><i class="fas fa-wallet"></i> Amplop Digital</h4>
+                        <div class="space-y-3">
+                            <input type="text" id="bankName" class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-green-500 outline-none" placeholder="Nama Bank / E-Wallet (BCA/Dana)">
+                            <input type="number" id="accountNumber" class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-green-500 outline-none" placeholder="Nomor Rekening">
+                            <input type="text" id="accountHolder" class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-green-500 outline-none" placeholder="Atas Nama Pemilik">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-tema" class="tab-content hidden animate-fade-in">
+                <h3 class="text-xl font-bold text-gray-800 mb-6 border-b pb-4 flex items-center gap-2">
+                    <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center text-sm">5</span> Pilih Tema
+                </h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="theme" value="gold" class="peer sr-only">
+                        <div class="p-4 rounded-2xl border-2 border-gray-100 peer-checked:border-blue-500 peer-checked:bg-blue-50/50 text-center hover:shadow-md transition relative overflow-hidden">
+                            <div class="w-12 h-12 bg-[#A07656] mx-auto rounded-full mb-3 shadow-sm border-2 border-white ring-2 ring-[#A07656]/20"></div>
+                            <span class="block font-bold text-sm text-gray-700">Gold Luxury</span>
+                            <div class="absolute top-2 right-2 text-blue-500 opacity-0 peer-checked:opacity-100 transition"><i class="fas fa-check-circle"></i></div>
+                        </div>
+                    </label>
+
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="theme" value="silver" class="peer sr-only">
+                        <div class="p-4 rounded-2xl border-2 border-gray-100 peer-checked:border-blue-500 peer-checked:bg-blue-50/50 text-center hover:shadow-md transition relative overflow-hidden">
+                            <div class="w-12 h-12 bg-[#64748b] mx-auto rounded-full mb-3 shadow-sm border-2 border-white ring-2 ring-[#64748b]/20"></div>
+                            <span class="block font-bold text-sm text-gray-700">Silver Minimal</span>
+                            <div class="absolute top-2 right-2 text-blue-500 opacity-0 peer-checked:opacity-100 transition"><i class="fas fa-check-circle"></i></div>
+                        </div>
+                    </label>
+
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="theme" value="sage" class="peer sr-only">
+                        <div class="p-4 rounded-2xl border-2 border-gray-100 peer-checked:border-blue-500 peer-checked:bg-blue-50/50 text-center hover:shadow-md transition relative overflow-hidden">
+                            <div class="w-12 h-12 bg-[#65a30d] mx-auto rounded-full mb-3 shadow-sm border-2 border-white ring-2 ring-[#65a30d]/20"></div>
+                            <span class="block font-bold text-sm text-gray-700">Sage Nature</span>
+                            <div class="absolute top-2 right-2 text-blue-500 opacity-0 peer-checked:opacity-100 transition"><i class="fas fa-check-circle"></i></div>
+                        </div>
+                    </label>
+
+                    <label class="cursor-pointer group">
+                        <input type="radio" name="theme" value="maroon" class="peer sr-only">
+                        <div class="p-4 rounded-2xl border-2 border-gray-100 peer-checked:border-blue-500 peer-checked:bg-blue-50/50 text-center hover:shadow-md transition relative overflow-hidden">
+                            <div class="w-12 h-12 bg-[#9f1239] mx-auto rounded-full mb-3 shadow-sm border-2 border-white ring-2 ring-[#9f1239]/20"></div>
+                            <span class="block font-bold text-sm text-gray-700">Red Maroon</span>
+                            <div class="absolute top-2 right-2 text-blue-500 opacity-0 peer-checked:opacity-100 transition"><i class="fas fa-check-circle"></i></div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-gray-100 flex flex-col md:flex-row justify-end gap-4 items-center">
+                <p class="text-xs text-gray-400 italic hidden md:block">Pastikan data sudah benar sebelum disimpan.</p>
+                <button type="button" id="btnSave" class="w-full md:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-xl shadow-lg hover:shadow-blue-500/30 hover:scale-105 transition transform flex items-center justify-center gap-3">
+                    <i class="fas fa-save"></i> SIMPAN SEMUA DATA
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <a href="view.html" target="_blank" class="fixed bottom-6 right-6 z-40 animate-bounce bg-green-500 text-white px-6 py-3 rounded-full shadow-xl font-bold flex items-center gap-2 hover:bg-green-600 transition border-2 border-white ring-2 ring-green-200">
+        <i class="fas fa-eye"></i> Lihat Hasil
+    </a>
+
+    <script type="module">
+        import { auth, db, doc, getDoc, setDoc, onAuthStateChanged, signOut } from './firebase-config.js';
+
+        // ============================================
+        // API KEY IMGBB KAMU (Sudah Terpasang)
+        // ============================================
+        const IMGBB_API_KEY = "a0fad86fc59b7718181eccd06bf12d6d"; 
+        // ============================================
+
+        let currentUser = null;
+        let currentData = {};
+
+        // 1. CEK STATUS LOGIN
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                await loadUserData(user.uid);
+            } else {
+                window.location.href = "login.html"; // Tendang ke login kalau belum masuk
+            }
+        });
+
+        // 2. PREVIEW IMAGE LOKAL
+        window.previewImage = (input, imgId) => {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => document.getElementById(imgId).src = e.target.result;
+                reader.readAsDataURL(input.files[0]);
+            }
+        };
+
+        // 3. FUNGSI UPLOAD KE IMGBB (SOLUSI GRATISAN)
+        async function uploadToImgBB(file) {
+            if (!file) return null;
+            
+            const formData = new FormData();
+            formData.append("image", file);
+            
+            try {
+                // Kirim ke Server ImgBB
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                    method: "POST",
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    console.log("Upload Sukses:", result.data.url);
+                    return result.data.url; // Kita ambil Link Gambar-nya
+                } else {
+                    console.error("ImgBB Error:", result);
+                    throw new Error("Gagal upload gambar. Cek koneksi.");
+                }
+            } catch (error) {
+                console.error("Network Error:", error);
+                return null;
+            }
+        }
+
+        // 4. LOAD DATA DARI FIREBASE
+        async function loadUserData(uid) {
+            try {
+                const docSnap = await getDoc(doc(db, "invitations", uid));
+                
+                if (docSnap.exists()) {
+                    currentData = docSnap.data();
+                    
+                    // Isi Text Inputs (Looping biar rapi)
+                    const fields = [
+                        'groomName','groomNick','groomFather','groomMother',
+                        'brideName','brideNick','brideFather','brideMother',
+                        'eventDate','eventTime','eventLocation','mapsUrl',
+                        'bankName','accountNumber','accountHolder'
+                    ];
+                    fields.forEach(id => {
+                        if(currentData[id]) document.getElementById(id).value = currentData[id];
+                    });
+
+                    // Isi Select Musik
+                    if(currentData.music) document.getElementById('musicSelect').value = currentData.music;
+
+                    // Isi Gambar Preview (Kalau sudah ada di database)
+                    if(currentData.coverPhoto) document.getElementById('preview-cover').src = currentData.coverPhoto;
+                    if(currentData.groomPhoto) document.getElementById('preview-groom').src = currentData.groomPhoto;
+                    if(currentData.bridePhoto) document.getElementById('preview-bride').src = currentData.bridePhoto;
+
+                    // Isi Pilihan Tema
+                    const theme = currentData.theme || 'gold';
+                    const radio = document.querySelector(`input[name="theme"][value="${theme}"]`);
+                    if(radio) radio.checked = true;
+                    
+                    // Update Badge Paket
+                    const plan = currentData.plan || 'free'; 
+                    const badgeText = plan === 'premium' ? "Premium (VIP)" : (plan === 'pro' ? "Pro (Hemat)" : "Basic (Gratis)");
+                    document.getElementById('userPlanBadge').innerText = badgeText;
+                }
+            } catch (e) { 
+                console.error("Error Loading Data:", e); 
+            }
+        }
+
+        // 5. TOMBOL SIMPAN (PROSES UTAMA)
+        document.getElementById('btnSave').addEventListener('click', async () => {
+            if(!currentUser) return;
+
+            // Tampilkan Loading
+            const loader = document.getElementById('globalLoader');
+            const loadingText = document.getElementById('loadingText');
+            loader.classList.remove('hidden'); 
+            
+            try {
+                // A. Upload Gambar Dulu (Jika User Pilih File Baru)
+                loadingText.innerText = "Mengupload Foto...";
+                
+                const fileCover = document.getElementById('file-cover').files[0];
+                const fileGroom = document.getElementById('file-groom').files[0];
+                const fileBride = document.getElementById('file-bride').files[0];
+
+                // Logic: Kalau ada file baru -> Upload ke ImgBB. Kalau gak -> Pakai link lama.
+                const coverUrl = fileCover ? await uploadToImgBB(fileCover) : currentData.coverPhoto;
+                const groomUrl = fileGroom ? await uploadToImgBB(fileGroom) : currentData.groomPhoto;
+                const brideUrl = fileBride ? await uploadToImgBB(fileBride) : currentData.bridePhoto;
+
+                // B. Simpan Data Teks ke Firebase
+                loadingText.innerText = "Menyimpan Data...";
+                
+                const formData = {
+                    // Data Teks
+                    groomName: document.getElementById('groomName').value,
+                    groomNick: document.getElementById('groomNick').value,
+                    groomFather: document.getElementById('groomFather').value,
+                    groomMother: document.getElementById('groomMother').value,
+                    
+                    brideName: document.getElementById('brideName').value,
+                    brideNick: document.getElementById('brideNick').value,
+                    brideFather: document.getElementById('brideFather').value,
+                    brideMother: document.getElementById('brideMother').value,
+
+                    eventDate: document.getElementById('eventDate').value,
+                    eventTime: document.getElementById('eventTime').value,
+                    eventLocation: document.getElementById('eventLocation').value,
+                    mapsUrl: document.getElementById('mapsUrl').value,
+
+                    music: document.getElementById('musicSelect').value,
+                    bankName: document.getElementById('bankName').value,
+                    accountNumber: document.getElementById('accountNumber').value,
+                    accountHolder: document.getElementById('accountHolder').value,
+
+                    // Data Gambar (Link dari ImgBB)
+                    coverPhoto: coverUrl || '',
+                    groomPhoto: groomUrl || '',
+                    bridePhoto: brideUrl || '',
+
+                    // Meta Data
+                    theme: document.querySelector('input[name="theme"]:checked')?.value || 'gold',
+                    updatedAt: new Date()
+                };
+
+                // Kirim ke Firestore
+                await setDoc(doc(db, "invitations", currentUser.uid), formData, { merge: true });
+                
+                // Update data lokal biar gak perlu reload
+                currentData = formData;
+
+                // Sukses!
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Undangan kamu sudah siap disebar.',
+                    icon: 'success',
+                    confirmButtonText: 'Lihat Hasil',
+                    confirmButtonColor: '#2563eb'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.open('view.html', '_blank');
+                    }
+                });
+
+            } catch (error) {
+                console.error(error);
+                Swal.fire('Gagal!', 'Terjadi kesalahan. Coba cek koneksi internet.', 'error');
+            } finally {
+                loader.classList.add('hidden'); // Sembunyikan Loading
+            }
+        });
+
+        // 6. LOGIC TAB SWITCHING
+        window.switchTab = (tabName) => {
+            // Sembunyikan semua konten tab
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Reset style tombol tab
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active', 'bg-blue-600', 'text-white', 'border-blue-600');
+                el.classList.add('bg-white', 'text-gray-600');
+            });
+
+            // Tampilkan tab yang dipilih
+            const content = document.getElementById(`section-${tabName}`);
+            const btn = document.getElementById(`tab-${tabName}`);
+            
+            if(content && btn) {
+                content.classList.remove('hidden');
+                btn.classList.add('active', 'bg-blue-600', 'text-white', 'border-blue-600');
+                btn.classList.remove('bg-white', 'text-gray-600');
+            }
+        };
+        // Set Default Tab
+        switchTab('mempelai');
+
+        // 7. LOGOUT
+        document.getElementById('btnLogout').addEventListener('click', () => {
+            Swal.fire({
+                title: 'Keluar?',
+                text: "Kamu harus login lagi nanti untuk mengedit.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Ya, Keluar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    signOut(auth).then(() => window.location.href = "login.html");
+                }
+            })
+        });
+    </script>
+</body>
+</html>
