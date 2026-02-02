@@ -7,8 +7,8 @@ import {
     getDoc, 
     setDoc, 
     updateDoc,
-    collection, // <--- INI BARU (PENTING BUAT ADMIN)
-    getDocs     // <--- INI BARU (PENTING BUAT ADMIN)
+    collection, 
+    getDocs     
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { 
     getAuth, 
@@ -20,9 +20,7 @@ import {
     signInWithPopup 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// --- CONFIG FIREBASE KAMU (Dari Project undanginaja-9ab71) ---
-// Catatan: Ini project lama yang region Indonesia ya. 
-// Karena kita sudah pakai ImgBB untuk gambar, harusnya aman untuk Database saja.
+// --- CONFIG FIREBASE KAMU ---
 const firebaseConfig = {
     apiKey: "AIzaSyAJWbqP-uX1O1uHGUhotGI6r8hgvrALj84",
     authDomain: "undanginaja-9ab71.firebaseapp.com",
@@ -32,15 +30,17 @@ const firebaseConfig = {
     appId: "1:1069509999582:web:2c4e34626e2b35c0573b4f"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const provider = new GoogleAuthProvider(); // <--- INI YANG HILANG TADI!
 
 // EXPORT LENGKAP
 export { 
-    app, db, auth, 
+    app, db, auth, provider, // <--- JANGAN LUPA EXPORT PROVIDER
     doc, getDoc, setDoc, updateDoc, 
-    collection, getDocs, // <--- JANGAN LUPA INI DI-EXPORT
+    collection, getDocs, 
     onAuthStateChanged, signOut, 
     createUserWithEmailAndPassword, signInWithEmailAndPassword,
     GoogleAuthProvider, signInWithPopup 
