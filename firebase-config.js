@@ -1,5 +1,3 @@
-// file: firebase-config.js
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
     getFirestore, 
@@ -34,11 +32,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-const provider = new GoogleAuthProvider(); // <--- INI YANG HILANG TADI!
+const provider = new GoogleAuthProvider(); // <--- INI SUDAH DITAMBAHKAN
 
-// EXPORT LENGKAP
+// EXPORT LENGKAP (Provider sudah masuk)
 export { 
-    app, db, auth, provider, // <--- JANGAN LUPA EXPORT PROVIDER
+    app, db, auth, 
+    provider, // <--- INI YANG BIKIN ERROR KEMARIN (SUDAH DIPERBAIKI)
     doc, getDoc, setDoc, updateDoc, 
     collection, getDocs, 
     onAuthStateChanged, signOut, 
