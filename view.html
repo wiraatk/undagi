@@ -1,242 +1,183 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Pawiwahan</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Great+Vibes&family=Noto+Serif+Balinese&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#b8860b', /* Dark Golden Rod */
-                        dark: '#1c1c1c',
-                        accent: '#ffcc00'
-                    },
-                    fontFamily: {
-                        serif: ['"Cinzel"', 'serif'],
-                        script: ['"Great Vibes"', 'cursive'],
-                        bali: ['"Noto Serif Balinese"', 'serif']
-                    },
-                    animation: {
-                        'spin-slow': 'spin 15s linear infinite',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { background-color: #1c1c1c; color: #e5e5e5; overflow-x: hidden; }
-        /* Ornamen Bingkai */
-        .border-ornamen {
-            border: 1px solid #b8860b;
-            outline: 1px solid #b8860b;
-            outline-offset: 5px;
-        }
-        #cover-screen {
-            transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
-        }
-        #cover-screen.open { transform: translateY(-100%); }
-    </style>
-</head>
-<body>
-
-    <audio id="bgm" loop><source src="" type="audio/mp3"></audio>
-    <button id="musicBtn" onclick="toggleMusic()" class="fixed bottom-6 left-6 z-50 w-10 h-10 bg-primary/80 rounded-full flex items-center justify-center text-white hidden animate-spin-slow shadow-lg border border-white">
-        <i class="fas fa-compact-disc"></i>
-    </button>
-
-    <section id="cover-screen" class="fixed inset-0 z-50 bg-dark flex flex-col items-center justify-center text-center px-6 bg-cover bg-center">
-        <div class="absolute inset-0 bg-black/60"></div>
-        <img id="coverBg" src="" class="absolute inset-0 w-full h-full object-cover -z-10 filter blur-sm">
-
-        <div class="relative z-10 border-ornamen p-8 py-12 max-w-sm w-full bg-black/40 backdrop-blur-md rounded-t-full" data-aos="zoom-in">
-            <p class="text-accent text-xs tracking-[0.3em] uppercase mb-4 font-serif">Pawiwahan</p>
-            
-            <h1 class="font-script text-5xl text-white mb-6 drop-shadow-lg leading-tight" id="coverNames">...</h1>
-            
-            <div class="my-6">
-                <i class="fas fa-certificate text-primary text-xl"></i>
-            </div>
-
-            <div class="bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/10 mb-8 transform transition hover:scale-105">
-                <p class="text-[10px] text-gray-300 uppercase tracking-widest mb-1">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
-                <h3 class="font-serif text-lg font-bold text-accent" id="guestNameDisplay">Tamu Undangan</h3>
-            </div>
-
-            <button onclick="openInvitation()" class="bg-primary hover:bg-white hover:text-dark text-white px-8 py-3 rounded-full font-serif text-xs font-bold tracking-widest transition-all shadow-lg flex items-center justify-center gap-2 mx-auto">
-                <i class="fas fa-envelope-open"></i> BUKA UNDANGAN
-            </button>
-        </div>
-    </section>
-
-    <main class="relative max-w-lg mx-auto bg-dark shadow-2xl min-h-screen">
-        
-        <section class="py-16 px-6 text-center">
-            <div class="mb-6" data-aos="fade-down">
-                <span class="text-4xl text-primary font-bali">ᬏᬁ</span> </div>
-            <h2 class="font-serif text-3xl text-primary mb-2">Om Swastyastu</h2>
-            <p class="text-xs text-gray-400 italic px-4 leading-relaxed" data-aos="fade-up">
-                "Atas Asung Kertha Wara Nugraha Ida Sang Hyang Widhi Wasa/Tuhan Yang Maha Esa, kami bermaksud menyelenggarakan upacara Pawiwahan putra-putri kami."
-            </p>
-        </section>
-
-        <section class="py-10 px-6">
-            <div class="text-center mb-12" data-aos="fade-right">
-                <div class="w-40 h-40 mx-auto rounded-full border-2 border-primary p-1 mb-4">
-                    <img id="groomImg" src="" class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition">
-                </div>
-                <h3 class="font-serif text-xl text-accent font-bold" id="groomNameDisplay">...</h3>
-                <p class="text-xs text-gray-400 mt-1">Putra dari pasangan:</p>
-                <p class="text-xs text-white" id="groomParents">...</p>
-            </div>
-
-            <div class="text-center font-script text-4xl text-primary mb-12">&</div>
-
-            <div class="text-center" data-aos="fade-left">
-                <div class="w-40 h-40 mx-auto rounded-full border-2 border-primary p-1 mb-4">
-                    <img id="brideImg" src="" class="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition">
-                </div>
-                <h3 class="font-serif text-xl text-accent font-bold" id="brideNameDisplay">...</h3>
-                <p class="text-xs text-gray-400 mt-1">Putri dari pasangan:</p>
-                <p class="text-xs text-white" id="brideParents">...</p>
-            </div>
-        </section>
-
-        <section class="py-16 px-6 bg-white/5 relative">
-            <div class="text-center" data-aos="zoom-in">
-                <h2 class="font-serif text-2xl text-primary mb-8 border-b border-primary/30 inline-block pb-2">Rangkaian Acara</h2>
-                
-                <div class="bg-black/40 p-6 rounded-xl border border-primary/30">
-                    <h3 class="font-bold text-lg text-white mb-4">Resepsi / Pawiwahan</h3>
-                    <div class="flex justify-center gap-4 text-sm text-gray-300 mb-4">
-                        <span><i class="far fa-calendar"></i> <span id="dateDisplay">...</span></span>
-                        <span>|</span>
-                        <span><i class="far fa-clock"></i> <span id="timeDisplay">...</span></span>
-                    </div>
-                    <p class="text-sm font-bold text-accent mb-6" id="locationDisplay">...</p>
-                    <a id="btnMap" href="#" target="_blank" class="inline-block px-6 py-2 border border-white text-white text-xs hover:bg-white hover:text-black transition uppercase tracking-wider">
-                        Google Maps
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <section class="py-16 px-6 text-center">
-            <h2 class="font-serif text-xl text-primary mb-4">Punian / Kado</h2>
-            <p class="text-xs text-gray-500 mb-8">Doa restu Anda merupakan karunia yang sangat berarti.</p>
-            
-            <div class="max-w-xs mx-auto bg-gradient-to-r from-gray-800 to-gray-900 p-6 rounded-xl shadow-lg border border-gray-700" data-aos="flip-up">
-                <p class="text-sm font-bold text-gray-400 mb-2" id="bankNameDisplay">BANK</p>
-                <p class="text-2xl font-mono text-white tracking-widest mb-4" id="rekDisplay">0000</p>
-                <p class="text-xs text-gray-400 mb-6">a.n <span id="rekHolderDisplay" class="text-white font-bold">...</span></p>
-                <button onclick="copyRek()" class="text-xs bg-primary/20 text-primary px-4 py-2 rounded hover:bg-primary hover:text-white transition">
-                    <i class="far fa-copy"></i> Salin Nomor
-                </button>
-            </div>
-        </section>
-
-        <footer class="py-12 text-center border-t border-gray-800 bg-black">
-            <h2 class="font-serif text-xl text-primary mb-2">Om Shanti Shanti Shanti Om</h2>
-            <p class="text-[10px] text-gray-600 uppercase mt-4">Powered by Undagi</p>
-        </footer>
-
-    </main>
-
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script type="module">
         import { auth, db, doc, getDoc, onAuthStateChanged } from './firebase-config.js';
 
         AOS.init({ duration: 1000, once: true });
 
-        // --- 1. LOGIC NAMA TAMU & DATA ---
-        onAuthStateChanged(auth, async (user) => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const targetUID = urlParams.get('uid') || (user ? user.uid : null);
-            const guestName = urlParams.get('to');
+        // === LOGIC ===
+        const bgm = document.getElementById('bgm');
+        let isPlaying = false;
 
-            // Set Nama Tamu Otomatis
-            if(guestName) {
-                document.getElementById('guestNameDisplay').innerText = decodeURIComponent(guestName);
-            }
+        // Default Musik kalau user tidak upload
+        const musicLibrary = {
+            'romance1.mp3': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+            'acoustic.mp3': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3', 
+            'wedding.mp3': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
+        };
 
-            if(!targetUID) return;
-
-            try {
-                const docSnap = await getDoc(doc(db, "invitations", targetUID));
-                if(docSnap.exists()) renderData(docSnap.data());
-            } catch(e) { console.error(e); }
-        });
-
-        function renderData(data) {
-            // Teks
-            document.getElementById('coverNames').innerText = `${data.groomNick || 'Pria'} & ${data.brideNick || 'Wanita'}`;
-            document.getElementById('groomNameDisplay').innerText = data.groomName;
-            document.getElementById('groomParents').innerText = `Bpk. ${data.groomFather} & Ibu ${data.groomMother}`;
-            document.getElementById('brideNameDisplay').innerText = data.brideName;
-            document.getElementById('brideParents').innerText = `Bpk. ${data.brideFather} & Ibu ${data.brideMother}`;
-            
-            // Foto
-            if(data.coverPhoto) {
-                document.getElementById('coverBg').src = data.coverPhoto;
-            }
-            if(data.groomPhoto) document.getElementById('groomImg').src = data.groomPhoto;
-            if(data.bridePhoto) document.getElementById('brideImg').src = data.bridePhoto;
-
-            // Acara
-            if(data.eventDate) {
-                const dateObj = new Date(data.eventDate);
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                document.getElementById('dateDisplay').innerText = dateObj.toLocaleDateString('id-ID', options);
-            }
-            document.getElementById('timeDisplay').innerText = (data.eventTime || '00:00') + ' WITA';
-            document.getElementById('locationDisplay').innerText = data.eventLocation;
-            if(data.mapsUrl) document.getElementById('btnMap').href = data.mapsUrl;
-
-            // Bank
-            document.getElementById('bankNameDisplay').innerText = data.bankName;
-            document.getElementById('rekDisplay').innerText = data.accountNumber;
-            document.getElementById('rekHolderDisplay').innerText = data.accountHolder;
-
-            // Musik (Simpel)
-            const bgm = document.getElementById('bgm');
-            // Jika ada data musik di DB pakai itu, jika tidak pakai default
-            const defaultMusic = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'; 
-            bgm.src = defaultMusic; 
-        }
-
-        // --- 2. INTERAKSI ---
         window.openInvitation = () => {
             document.getElementById('cover-screen').classList.add('open');
-            const bgm = document.getElementById('bgm');
-            bgm.play().then(() => {
-                document.getElementById('musicBtn').classList.remove('hidden');
-            }).catch(e => console.log("Audio autoplay blocked"));
+            setTimeout(() => { document.querySelector('.bottom-nav').classList.add('show'); }, 500);
+            
+            // Cek apakah ada source musik sebelum play
+            if(bgm.src) {
+                bgm.play().then(() => {
+                    isPlaying = true;
+                    document.getElementById('navMusicIcon').classList.add('animate-spin');
+                }).catch(e => console.log("Audio autoplay blocked"));
+            }
         };
 
         window.toggleMusic = () => {
-            const bgm = document.getElementById('bgm');
-            const btn = document.getElementById('musicBtn');
-            if(bgm.paused) {
-                bgm.play();
-                btn.classList.add('animate-spin-slow');
-            } else {
-                bgm.pause();
-                btn.classList.remove('animate-spin-slow');
-            }
+            const icon = document.getElementById('navMusicIcon');
+            if(isPlaying) { bgm.pause(); icon.classList.remove('animate-spin'); icon.style.opacity = "0.5"; }
+            else { bgm.play(); icon.classList.add('animate-spin'); icon.style.opacity = "1"; }
+            isPlaying = !isPlaying;
         };
 
         window.copyRek = () => {
             navigator.clipboard.writeText(document.getElementById('rekDisplay').innerText);
-            Swal.fire({icon: 'success', title: 'Tersalin', timer: 1000, showConfirmButton: false});
+            Swal.fire({icon: 'success', title: 'Tersalin', timer: 1000, showConfirmButton: false, toast: true, position: 'top'});
         };
+
+        // Scroll Spy
+        const sections = document.querySelectorAll('section');
+        const navLi = document.querySelectorAll('.nav-item');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 200) { current = section.getAttribute('id'); }
+            });
+            navLi.forEach(li => {
+                li.classList.remove('active');
+                if (li.getAttribute('href') && li.getAttribute('href').includes(current)) li.classList.add('active');
+            });
+        });
+
+        // === LOAD DATA (INTELLIGENT LOGIC) ===
+        onAuthStateChanged(auth, async (currentUser) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            // Ambil UID dari URL (prioritas) atau dari User Login (preview dashboard)
+            const targetUID = urlParams.get('uid') || (currentUser ? currentUser.uid : null);
+            const guestName = urlParams.get('to');
+
+            if(guestName) document.getElementById('guestNameDisplay').innerText = decodeURIComponent(guestName);
+            if(!targetUID) return; // Kalau tidak ada UID sama sekali, stop.
+
+            try {
+                const docSnap = await getDoc(doc(db, "invitations", targetUID));
+                if(docSnap.exists()) {
+                    const data = docSnap.data();
+                    
+                    // CEK APAKAH YANG MELIHAT ADALAH PEMILIK (OWNER)?
+                    // Logic: Kalau user login & UID-nya sama dengan UID undangan = Owner.
+                    const isOwner = (currentUser && currentUser.uid === targetUID);
+                    
+                    renderData(data, isOwner);
+                }
+            } catch(e) { console.error(e); }
+        });
+
+        function renderData(data, isOwner) {
+            // Text & Images (Standard)
+            document.getElementById('coverNames').innerText = `${data.groomNick || 'Pria'} & ${data.brideNick || 'Wanita'}`;
+            document.getElementById('groomNickDisplay').innerText = data.groomNick;
+            document.getElementById('brideNickDisplay').innerText = data.brideNick;
+            document.getElementById('groomNameDisplay').innerText = data.groomName;
+            document.getElementById('groomParents').innerText = `Bpk. ${data.groomFather} & Ibu ${data.groomMother}`;
+            document.getElementById('brideNameDisplay').innerText = data.brideName;
+            document.getElementById('brideParents').innerText = `Bpk. ${data.brideFather} & Ibu ${data.brideMother}`;
+
+            if(data.coverPhoto) document.getElementById('coverBg').src = data.coverPhoto;
+            if(data.groomPhoto) document.getElementById('groomImg').src = data.groomPhoto;
+            if(data.bridePhoto) document.getElementById('brideImg').src = data.bridePhoto;
+
+            // Event & Bank
+            if(data.eventDate) {
+                const dateObj = new Date(data.eventDate);
+                const opts = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+                document.getElementById('dateDisplay').innerText = dateObj.toLocaleDateString('id-ID', opts);
+            }
+            document.getElementById('timeDisplay').innerText = (data.eventTime || '00:00');
+            document.getElementById('locationDisplay').innerText = data.eventLocation;
+            if(data.mapsUrl) document.getElementById('btnMap').href = data.mapsUrl;
+            document.getElementById('bankNameDisplay').innerText = data.bankName;
+            document.getElementById('rekDisplay').innerText = data.accountNumber;
+            document.getElementById('rekHolderDisplay').innerText = data.accountHolder;
+
+            // === LOGIC FITUR PREMIUM (MUSIK & GALERI) ===
+            const plan = data.plan || 'free'; 
+            
+            // ATURAN: 
+            // 1. Jika Premium/Pro -> Tampilkan Semua
+            // 2. Jika Free TAPI Owner (Preview) -> Tampilkan Semua (Biar seneng)
+            // 3. Jika Free DAN Tamu (Public) -> Sembunyikan
+            
+            const showPremiumFeatures = (plan !== 'free') || isOwner;
+
+            // --- 1. MUSIK ---
+            if (showPremiumFeatures) {
+                if(data.music) {
+                    // Cek apakah musik link luar atau file upload sendiri
+                    if(musicLibrary[data.music]) bgm.src = musicLibrary[data.music];
+                    else bgm.src = data.music; // Custom Upload URL
+                } else {
+                    bgm.src = musicLibrary['romance1.mp3']; // Default
+                }
+            } else {
+                // Kalo Free & Public = No Music
+                bgm.src = ""; 
+                document.getElementById('navMusicIcon').style.display = 'none'; // Sembunyikan tombol musik
+            }
+
+            // --- 2. GALERI ---
+            const gallerySection = document.getElementById('gallerySection');
+            const galleryGrid = document.getElementById('galleryGrid');
+            const navGallery = document.getElementById('navGallery');
+            const demoImg = data.coverPhoto || 'https://placehold.co/400x600/A47E5C/ffffff?text=Undagi';
+
+            // Reset dulu
+            gallerySection.style.display = 'none';
+            navGallery.style.display = 'none';
+
+            if (showPremiumFeatures) {
+                // Tampilkan Galeri (Simulasi jumlah foto berdasarkan plan bayangan)
+                gallerySection.style.display = 'block';
+                navGallery.style.display = 'block';
+                gallerySection.classList.remove('hidden');
+
+                // Jika Owner Free (Preview), kita kasih lihat seolah-olah Pro (5 Foto)
+                const displayCount = (plan === 'premium') ? 8 : 5;
+                
+                let html = "";
+                // Logic Grid Gallery
+                if(displayCount === 5) {
+                     galleryGrid.className = "grid grid-cols-2 gap-2";
+                     html = `
+                        <div class="h-48 rounded-lg overflow-hidden bg-gray-200"><img src="${demoImg}" class="w-full h-full object-cover"></div>
+                        <div class="h-48 rounded-lg overflow-hidden bg-gray-200"><img src="${demoImg}" class="w-full h-full object-cover"></div>
+                        <div class="col-span-2 h-48 rounded-lg overflow-hidden bg-gray-200"><img src="${demoImg}" class="w-full h-full object-cover"></div>
+                        <div class="h-48 rounded-lg overflow-hidden bg-gray-200"><img src="${demoImg}" class="w-full h-full object-cover"></div>
+                        <div class="h-48 rounded-lg overflow-hidden bg-gray-200"><img src="${demoImg}" class="w-full h-full object-cover"></div>
+                    `;
+                } else {
+                    // Premium 8 Foto
+                    galleryGrid.className = "grid grid-cols-2 md:grid-cols-4 gap-2";
+                    for(let i=0; i<8; i++) {
+                        html += `<div class="h-40 rounded-lg overflow-hidden bg-gray-200 shadow-sm"><img src="${demoImg}" class="w-full h-full object-cover"></div>`;
+                    }
+                }
+                galleryGrid.innerHTML = html;
+            }
+            
+            // ALERT KHUSUS OWNER (JIKA FREE)
+            if(isOwner && plan === 'free') {
+                Swal.fire({
+                    toast: true, position: 'top-end', showConfirmButton: false, timer: 3000,
+                    icon: 'info', title: 'Mode Preview',
+                    text: 'Fitur Musik & Galeri terlihat karena Anda pemilik. Tamu tidak akan melihat ini sebelum Upgrade.'
+                });
+            }
+        }
     </script>
-</body>
-</html>
