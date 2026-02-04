@@ -24,47 +24,40 @@
                 <p class="text-sm text-gray-500 mt-2">Masuk atau Daftar dengan akun Google.</p>
             </div>
 
-            <div class="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-xl mb-6 text-xs text-left flex gap-3 items-start">
-                <i class="fas fa-info-circle text-lg mt-0.5"></i>
-                <div>
-                    <strong>Otomatis Terdaftar</strong><br>
-                    Cukup login sekali, akunmu langsung aktif.
-                </div>
-            </div>
-
             <button id="btnLogin" class="w-full border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 px-4 rounded-xl shadow-sm transition transform hover:scale-105 flex items-center justify-center gap-3">
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-6 h-6">
                 <span id="btnText">Masuk dengan Google</span>
             </button>
 
-            <p class="text-xs text-center text-gray-400 mt-8">
-                &copy; 2026 Undagi Platform.
-            </p>
+            <p class="text-xs text-center text-gray-400 mt-8">&copy; 2026 Undagi Platform.</p>
         </div>
     </div>
 
     <script type="module">
-        // Import Config (Pakai cache busting biar update)
-        import { auth, provider, signInWithPopup, onAuthStateChanged } from './firebase-config.js?v=2';
+        // Tambahkan "?v=3" untuk memaksa browser melupakan file lama
+        import { auth, provider, signInWithPopup, onAuthStateChanged } from './firebase-config.js?v=3';
 
         const btn = document.getElementById('btnLogin');
         const btnText = document.getElementById('btnText');
 
-        // 1. Redirect kalau sudah login
+        // Cek jika user sudah login
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 window.location.href = "dashboard.html";
             }
         });
 
-        // 2. Fungsi Login
         btn.addEventListener('click', async () => {
             btn.disabled = true;
             btn.classList.add('opacity-50');
             btnText.innerText = "Menghubungkan...";
             
             try {
+                // Cek apakah provider terbaca
+                if (!provider) throw new Error("Config Error: Provider Google belum siap.");
+
                 const result = await signInWithPopup(auth, provider);
+                
                 Swal.fire({
                     icon: 'success',
                     title: 'Berhasil!',
@@ -74,17 +67,18 @@
                 }).then(() => {
                     window.location.href = "dashboard.html";
                 });
+
             } catch (error) {
                 console.error(error);
                 btn.disabled = false;
                 btn.classList.remove('opacity-50');
                 btnText.innerText = "Masuk dengan Google";
                 
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal Masuk',
-                    text: error.message
-                });
+                let msg = error.message;
+                if(error.code === 'auth/popup-closed-by-user') msg = "Login dibatalkan.";
+                if(error.code === 'auth/unauthorized-domain') msg = "Domain belum diizinkan di Firebase Console!";
+
+                Swal.fire({ icon: 'error', title: 'Gagal Masuk', text: msg });
             }
         });
     </script>
