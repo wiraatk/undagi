@@ -136,7 +136,7 @@
             <div class="text-center mb-8">
                 <h2 class="font-script text-4xl text-theme_brown">Our Gallery</h2>
             </div>
-            <div id="galleryGrid" class="grid gap-2">
+            <div id="galleryGrid" class="grid gap-3 sm:gap-4">
                 </div>
         </section>
 
@@ -211,6 +211,7 @@
             Swal.fire({icon: 'success', title: 'Tersalin', timer: 1000, showConfirmButton: false, toast: true, position: 'top'});
         };
 
+        // Lightbox Feature
         window.viewPhoto = (url) => {
             Swal.fire({
                 imageUrl: url,
@@ -279,11 +280,9 @@
             document.getElementById('rekDisplay').innerText = data.accountNumber;
             document.getElementById('rekHolderDisplay').innerText = data.accountHolder;
 
-            // === PREMIUM & GALLERY LOGIC ===
             const plan = data.plan || 'free'; 
             const showPremiumFeatures = (plan !== 'free') || isOwner;
 
-            // Musik
             if (showPremiumFeatures) {
                 if(data.music) {
                     if(musicLibrary[data.music]) bgm.src = musicLibrary[data.music];
@@ -296,41 +295,36 @@
                 document.getElementById('navMusicIcon').style.display = 'none';
             }
 
-            // Galeri (THE FIX)
+            // === LOGIK GRID 2x4 BESAR ===
             const gallerySection = document.getElementById('gallerySection');
             const galleryGrid = document.getElementById('galleryGrid');
             const navGallery = document.getElementById('navGallery');
-            
-            // Ambil data Array Galeri dari Database (atau array kosong)
             const galleryData = data.gallery || [];
 
             if (showPremiumFeatures) {
                 gallerySection.classList.remove('hidden');
                 
-                // Batasi jumlah foto sesuai paket (Pro=5, Premium/Owner=8)
                 const isPremium = (plan === 'premium');
                 const limit = (isOwner || isPremium) ? 8 : 5;
                 
-                let html = "";
-                
-                // Set Grid Layout
-                galleryGrid.className = (limit === 5) ? "grid grid-cols-2 gap-2" : "grid grid-cols-2 md:grid-cols-4 gap-2";
+                // FORCE GRID 2 KOLOM (BESAR)
+                galleryGrid.className = "grid grid-cols-2 gap-3"; 
 
-                // Loop data asli
+                let html = "";
                 let count = 0;
                 for(let i=0; i < galleryData.length; i++) {
-                    if(count >= limit) break; // Stop kalau sudah limit
-                    if(galleryData[i]) { // Cek slot tidak kosong
-                        html += `<div class="h-40 rounded-lg overflow-hidden bg-gray-200 shadow-sm cursor-pointer hover:scale-105 transition duration-500">
-                                    <img src="${galleryData[i]}" class="w-full h-full object-cover" onclick="viewPhoto('${galleryData[i]}')">
+                    if(count >= limit) break; 
+                    if(galleryData[i]) { 
+                        // Aspect Ratio Portrait (3:4) agar foto jelas & besar
+                        html += `<div class="aspect-[3/4] rounded-xl overflow-hidden bg-gray-200 shadow-md cursor-pointer relative group">
+                                    <img src="${galleryData[i]}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" onclick="viewPhoto('${galleryData[i]}')">
+                                    <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition"></div>
                                  </div>`;
                         count++;
                     }
                 }
                 
-                // Jika kosong total
-                if(html === "") html = "<p class='text-center col-span-4 text-xs text-gray-400'>Belum ada foto galeri.</p>";
-                
+                if(html === "") html = "<p class='text-center col-span-2 text-xs text-gray-400'>Belum ada foto galeri.</p>";
                 galleryGrid.innerHTML = html;
             } else {
                 gallerySection.style.display = 'none';
