@@ -1,27 +1,13 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Pawiwahan</title>
+    <title>The Wedding</title>
     
-    <script>
-        window.onerror = function(msg, url, line, col, error) {
-            const box = document.getElementById('debug-console');
-            if(box) {
-                box.style.display = 'block';
-                box.innerHTML += `<div style="margin-bottom:10px; border-bottom:1px solid #ffcccc; padding-bottom:5px;">
-                    <strong>⛔ ERROR TERDETEKSI:</strong><br>${msg}<br>
-                    <small style="opacity:0.8">Baris: ${line} | File: ${url}</small>
-                </div>`;
-            }
-            return false;
-        };
-    </script>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@300;400;700&family=Pinyon+Script&family=Noto+Serif+Balinese&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Great+Vibes&family=Nunito+Sans:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -30,19 +16,19 @@
             theme: {
                 extend: {
                     colors: {
-                        gold: '#C5A059',
-                        paper: '#FAFAF9',
-                        ink: '#44403C',
+                        theme_brown: '#A47E5C', 
+                        theme_cream: '#FAF9F6', 
+                        theme_dark: '#4A4A4A', 
+                        theme_gold: '#D4AF37',
                     },
                     fontFamily: {
                         serif: ['"Cormorant Garamond"', 'serif'],
-                        script: ['"Pinyon Script"', 'cursive'],
-                        sans: ['"Lato"', 'sans-serif'],
-                        bali: ['"Noto Serif Balinese"', 'serif']
+                        script: ['"Great Vibes"', 'cursive'],
+                        sans: ['"Nunito Sans"', 'sans-serif'],
                     },
                     animation: {
-                        'spin-slow': 'spin 15s linear infinite',
-                        'pulse-slow': 'pulse 3s infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
                     }
                 }
             }
@@ -50,129 +36,152 @@
     </script>
 
     <style>
-        body { background-color: #FAFAF9; color: #44403C; overflow-x: hidden; }
+        body { background-color: #FAF9F6; color: #4A4A4A; overflow-x: hidden; }
         
-        /* DEBUG BOX (Hanya muncul jika ada error) */
-        #debug-console {
-            display: none;
-            position: fixed; top: 0; left: 0; width: 100%; height: auto; max-height: 50vh;
-            background: #990000; color: white; z-index: 999999;
-            padding: 20px; font-family: monospace; font-size: 12px;
-            overflow-y: scroll; border-bottom: 3px solid #ff0000;
-        }
-
-        /* --- STYLING UTAMA --- */
-        #envelope-layer {
-            position: fixed; inset: 0; z-index: 50;
-            background: linear-gradient(135deg, #d4af37 0%, #f3e5ab 50%, #b8860b 100%);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
-        }
-        #envelope-layer.open { transform: translateY(100%); }
-        .wax-seal {
-            width: 80px; height: 80px; background: #8A6D3B; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 2px solid rgba(255,255,255,0.2);
-            color: white; font-size: 24px; margin-bottom: 20px; animation: pulse-slow;
-        }
+        /* FOTO BULAT CLEAN */
         .photo-circle {
-            width: 140px; height: 140px; border-radius: 50%; border: 3px solid #C5A059;
-            padding: 3px; background: white; object-fit: cover;
+            width: 160px; height: 160px;
+            border-radius: 50%;
+            border: 2px solid #A47E5C;
+            padding: 4px;
+            object-fit: cover;
+            transition: transform 0.5s;
         }
+        .photo-circle:hover { transform: scale(1.05); }
+
+        /* NAVIGATION BAR (HIDDEN BY DEFAULT) */
         .bottom-nav {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(200%);
-            width: 90%; max-width: 350px; background-color: #A47E5C; border-radius: 50px;
-            display: flex; justify-content: space-around; align-items: center; padding: 12px 20px;
-            z-index: 100; transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(200%); /* Turun ke bawah layar */
+            width: 90%; max-width: 350px;
+            background-color: #A47E5C; 
+            border-radius: 50px;
+            display: flex; justify-content: space-around; align-items: center;
+            padding: 12px 20px;
+            z-index: 100;
+            box-shadow: 0 10px 20px rgba(164, 126, 92, 0.4);
+            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efek membal */
         }
+        /* Class untuk memunculkan Nav */
         .bottom-nav.show { transform: translateX(-50%) translateY(0); }
+
         .nav-item { color: rgba(255,255,255,0.7); font-size: 18px; transition: 0.3s; }
         .nav-item.active { color: white; transform: translateY(-3px); }
+
+        /* COVER TRANSITION */
+        #cover-screen { transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1); }
+        #cover-screen.open { transform: translateY(-100%); }
     </style>
 </head>
-<body>
-
-    <div id="debug-console">
-        <h3 class="font-bold border-b border-white/20 pb-2 mb-2">⚠️ SYSTEM DIAGNOSTIC</h3>
-    </div>
+<body class="antialiased">
 
     <audio id="bgm" loop><source src="" type="audio/mp3"></audio>
-    <button id="musicBtn" onclick="toggleMusic()" class="fixed bottom-6 left-6 z-40 w-10 h-10 bg-gold text-white rounded-full flex items-center justify-center shadow-lg hidden animate-spin-slow">
-        <i class="fas fa-compact-disc"></i>
-    </button>
 
-    <section id="envelope-layer">
-        <div class="relative z-10 text-center w-full px-6">
-            <p class="font-serif text-white/80 tracking-[0.3em] text-sm uppercase mb-8">Undangan Pawiwahan</p>
-            <div class="bg-white/90 p-6 rounded shadow-xl max-w-xs mx-auto transform rotate-1 mb-8">
-                <div class="border border-gold p-4 text-center">
-                    <p class="font-sans text-[10px] text-gray-500 uppercase tracking-widest mb-2">Kepada Yth:</p>
-                    <h3 class="font-serif text-2xl font-bold text-ink" id="guestNameDisplay">Tamu Undangan</h3>
-                </div>
+    <section id="cover-screen" class="fixed inset-0 z-50 bg-theme_cream flex flex-col justify-center items-center px-6 text-center">
+        
+        <div data-aos="fade-up" data-aos-duration="1500" class="relative z-10 w-full max-w-sm">
+            
+            <p class="font-serif text-theme_brown tracking-[0.3em] text-xs uppercase mb-6">The Wedding of</p>
+            
+            <div class="mb-8 relative mx-auto w-56 h-56">
+                <img id="coverBg" src="" class="w-full h-full rounded-full object-cover border border-theme_brown/30 shadow-lg p-1 bg-white">
             </div>
-            <button onclick="openEnvelope()" class="flex flex-col items-center gap-2 mx-auto group">
-                <div class="wax-seal group-hover:scale-110 transition"><span class="font-bali text-xl">ᬏᬁ</span></div>
-                <span class="text-white font-serif text-sm tracking-widest border-b border-white/50 pb-1">BUKA AMPLOP</span>
+
+            <h1 class="font-script text-5xl md:text-6xl text-theme_brown mb-8 leading-tight" id="coverNames">...</h1>
+
+            <div class="bg-white border border-theme_brown/20 p-6 rounded-xl shadow-sm mb-8 max-w-xs mx-auto">
+                <p class="font-sans text-[10px] text-gray-400 uppercase tracking-widest mb-2">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
+                <h3 class="font-serif text-xl font-bold text-theme_dark" id="guestNameDisplay">Tamu Undangan</h3>
+            </div>
+
+            <button onclick="openInvitation()" class="bg-theme_brown text-white px-8 py-3 rounded-full font-sans text-xs font-bold tracking-widest hover:bg-theme_dark transition shadow-lg flex items-center justify-center gap-2 mx-auto animate-bounce">
+                <i class="fas fa-envelope-open"></i> BUKA UNDANGAN
             </button>
         </div>
     </section>
 
-    <main class="max-w-md mx-auto bg-white min-h-screen shadow-2xl pb-32 border-x border-gray-100">
+    <main class="relative max-w-md mx-auto bg-white min-h-screen shadow-2xl pb-32 border-x border-gray-100">
+        
         <section id="home" class="pt-20 pb-10 px-6 text-center">
             <div data-aos="fade-down">
-                <span class="text-4xl text-gold font-bali">ᬏᬁ</span>
-                <h1 class="font-serif text-4xl md:text-5xl text-gold mb-6 font-bold">Om Swastyastu</h1>
-                <p class="font-sans text-sm text-ink leading-relaxed px-4">Atas Asung Kertha Wara Nugraha Ida Sang Hyang Widhi Wasa, kami bermaksud menyelenggarakan upacara Pawiwahan:</p>
+                <div class="text-3xl text-theme_brown mb-4 font-serif">ॐ</div>
+                <h2 class="font-script text-5xl text-theme_brown mb-4">Om Swastyastu</h2>
+                <p class="font-serif text-xs text-gray-400 italic mb-8">"Mohon Doa Restu"</p>
+
+                <p class="font-sans text-sm text-theme_dark leading-relaxed px-4">
+                    Atas Asung Kertha Wara Nugraha Ida Sang Hyang Widhi Wasa, kami bermaksud menyelenggarakan upacara Pawiwahan putra-putri kami:
+                </p>
             </div>
         </section>
 
         <section id="couple" class="py-10 px-6 text-center">
             <div class="mb-12" data-aos="fade-up">
                 <img id="groomImg" src="" class="photo-circle mx-auto mb-4">
-                <h2 class="font-serif text-3xl text-ink font-bold" id="groomNameDisplay">...</h2>
-                <p class="font-sans text-xs text-gold uppercase tracking-widest">Mempelai Pria</p>
-                <p class="text-xs text-gray-500 mt-2">Putra dari Bpk. <span id="groomFather">...</span> & Ibu <span id="groomMother">...</span></p>
+                <h3 class="font-script text-4xl text-theme_brown mb-1" id="groomNickDisplay">Putra</h3>
+                <p class="font-serif text-lg font-bold text-theme_dark" id="groomNameDisplay">Nama Lengkap</p>
+                <p class="font-sans text-xs text-gray-500 mt-2">Putra dari Pasangan<br><span id="groomParents" class="font-bold">...</span></p>
             </div>
-            <div class="font-script text-5xl text-gold/40 mb-12">&</div>
+
+            <div class="font-script text-3xl text-theme_brown/30 mb-12">&</div>
+
             <div data-aos="fade-up">
                 <img id="brideImg" src="" class="photo-circle mx-auto mb-4">
-                <h2 class="font-serif text-3xl text-ink font-bold" id="brideNameDisplay">...</h2>
-                <p class="font-sans text-xs text-gold uppercase tracking-widest">Mempelai Wanita</p>
-                <p class="text-xs text-gray-500 mt-2">Putri dari Bpk. <span id="brideFather">...</span> & Ibu <span id="brideMother">...</span></p>
+                <h3 class="font-script text-4xl text-theme_brown mb-1" id="brideNickDisplay">Putri</h3>
+                <p class="font-serif text-lg font-bold text-theme_dark" id="brideNameDisplay">Nama Lengkap</p>
+                <p class="font-sans text-xs text-gray-500 mt-2">Putri dari Pasangan<br><span id="brideParents" class="font-bold">...</span></p>
             </div>
         </section>
 
-        <section id="event" class="py-16 px-6 bg-paper">
+        <section id="event" class="py-16 px-6 bg-theme_cream/50">
             <div class="text-center" data-aos="zoom-in">
-                <h3 class="font-serif text-2xl text-ink mb-6 font-bold">Rangkaian Acara</h3>
-                <div class="bg-white p-6 border border-gold/20 rounded-xl">
-                    <p class="font-serif text-xl text-ink font-bold" id="dateDisplay">...</p>
-                    <p class="font-sans text-sm text-gray-500 mb-4" id="timeDisplay">...</p>
-                    <p class="font-sans text-sm text-ink font-bold px-4 leading-relaxed" id="locationDisplay">...</p>
-                    <a id="btnMap" href="#" target="_blank" class="mt-4 inline-block text-xs font-bold text-gold border-b border-gold pb-1">Buka Google Maps</a>
+                <p class="font-script text-4xl text-theme_brown mb-6">Pawiwahan</p>
+                
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-theme_brown/10">
+                    <p class="font-serif text-xl font-bold text-theme_dark mb-1" id="dateDisplay">...</p>
+                    <p class="font-sans text-sm text-gray-500 mb-6">Pukul <span id="timeDisplay">...</span> WITA</p>
+                    
+                    <div class="h-px w-20 bg-theme_brown/20 mx-auto mb-6"></div>
+
+                    <p class="font-sans text-sm text-theme_dark px-2 mb-6 font-bold leading-relaxed" id="locationDisplay">...</p>
+                    
+                    <a id="btnMap" href="#" target="_blank" class="inline-flex items-center gap-2 bg-theme_brown text-white px-6 py-2 rounded-full text-xs font-bold hover:bg-theme_dark transition shadow-md">
+                        <i class="fas fa-map-marked-alt"></i> Google Maps
+                    </a>
                 </div>
             </div>
         </section>
 
-        <section id="gallerySection" class="py-16 px-4 hidden">
-            <h2 class="font-script text-4xl text-gold text-center mb-6">Our Gallery</h2>
-            <div id="galleryGrid" class="grid gap-2"></div>
+        <section id="gallerySection" class="py-16 px-4 hidden"> <div class="text-center mb-8">
+                <h2 class="font-script text-4xl text-theme_brown">Our Gallery</h2>
+            </div>
+            
+            <div id="galleryGrid" class="grid gap-2">
+                </div>
         </section>
 
-        <section class="py-16 px-6 text-center">
-            <div class="max-w-xs mx-auto border border-gold/30 p-6 rounded-lg bg-white shadow-sm">
-                <h3 class="font-serif text-lg text-ink mb-1">Tanda Kasih</h3>
-                <p class="font-bold text-ink" id="bankNameDisplay">BANK</p>
-                <p class="font-mono text-xl text-ink tracking-widest my-2 select-all bg-paper py-2" id="rekDisplay">0000</p>
-                <p class="font-sans text-xs text-gray-500 mb-4">a.n <span id="rekHolderDisplay">...</span></p>
-                <button onclick="copyRek()" class="w-full bg-gold hover:bg-ink text-white py-2 rounded text-xs font-bold transition">SALIN</button>
+        <section class="py-16 px-6 text-center bg-white">
+            <h2 class="font-script text-3xl text-theme_brown mb-6">Tanda Kasih</h2>
+            <div class="bg-theme_cream p-8 rounded-2xl border border-theme_brown/20 max-w-xs mx-auto" data-aos="flip-up">
+                <p class="font-serif text-lg font-bold text-gray-800 mb-1" id="bankNameDisplay">BANK</p>
+                <p class="font-mono text-2xl text-theme_brown tracking-widest mb-4" id="rekDisplay">0000</p>
+                <p class="font-sans text-xs text-gray-500 mb-6 uppercase">a.n <span id="rekHolderDisplay" class="font-bold">...</span></p>
+                <button onclick="copyRek()" class="w-full bg-white border border-theme_brown text-theme_brown py-2 rounded-lg text-xs font-bold hover:bg-theme_brown hover:text-white transition">
+                    Salin Nomor
+                </button>
             </div>
         </section>
 
-        <footer class="py-16 px-6 text-center bg-ink text-white">
-            <p class="font-sans text-xs opacity-80 italic mb-4">"Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir."</p>
-            <h2 class="font-serif text-xl text-gold">Om Shanti Shanti Shanti Om</h2>
+        <footer class="py-16 px-6 text-center bg-theme_dark text-white">
+            <div class="max-w-xs mx-auto mb-8">
+                <p class="font-sans text-xs leading-relaxed opacity-80 italic">
+                    "Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu kepada kedua mempelai. Atas kehadiran dan doa restunya, kami ucapkan terima kasih."
+                </p>
+            </div>
+            
+            <h2 class="font-serif text-xl mb-2 text-theme_brown">Om Shanti Shanti Shanti Om</h2>
+            <div class="h-px w-10 bg-white/20 mx-auto my-4"></div>
+            <p class="text-[10px] opacity-50 uppercase tracking-widest">Undagi Digital Invitation</p>
         </footer>
+
     </main>
 
     <nav class="bottom-nav">
@@ -185,28 +194,31 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script type="module">
-        // JEBAKAN IMPORT - UNTUK CEK CONFIG
-        try {
-            var { auth, db, doc, getDoc, onAuthStateChanged } = await import('./firebase-config.js?v=' + Math.random());
-        } catch (e) {
-            document.getElementById('debug-console').style.display = 'block';
-            document.getElementById('debug-console').innerHTML += `<br><strong>FATAL ERROR:</strong> Gagal memuat firebase-config.js!<br>Pastikan file ada di GitHub.<br>Detail: ${e.message}`;
-            throw e;
-        }
+        // PENTING: IMPORT STANDAR (JANGAN UBAH INI)
+        import { auth, db, doc, getDoc, onAuthStateChanged } from './firebase-config.js';
 
         AOS.init({ duration: 1000, once: true });
 
+        // === LOGIC ===
         const bgm = document.getElementById('bgm');
         let isPlaying = false;
+
         const musicLibrary = {
             'romance1.mp3': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
             'acoustic.mp3': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3', 
             'wedding.mp3': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
         };
 
-        window.openEnvelope = () => {
-            document.getElementById('envelope-layer').classList.add('open');
-            setTimeout(() => { document.querySelector('.bottom-nav').classList.add('show'); }, 500);
+        window.openInvitation = () => {
+            // 1. Hilangkan Cover
+            document.getElementById('cover-screen').classList.add('open');
+            
+            // 2. Munculkan Navigasi (Slide Up)
+            setTimeout(() => {
+                document.querySelector('.bottom-nav').classList.add('show');
+            }, 500); // Delay sedikit biar smooth
+
+            // 3. Play Music
             if(bgm.src) {
                 bgm.play().then(() => {
                     isPlaying = true;
@@ -227,6 +239,7 @@
             Swal.fire({icon: 'success', title: 'Tersalin', timer: 1000, showConfirmButton: false, toast: true, position: 'top'});
         };
 
+        // NAVIGATION ACTIVE STATE
         const sections = document.querySelectorAll('section');
         const navLi = document.querySelectorAll('.nav-item');
         window.addEventListener('scroll', () => {
@@ -237,72 +250,77 @@
             });
             navLi.forEach(li => {
                 li.classList.remove('active');
-                if (li.getAttribute('href') && li.getAttribute('href').includes(current)) li.classList.add('active');
+                if (li.getAttribute('href') && li.getAttribute('href').includes(current)) {
+                    li.classList.add('active');
+                }
             });
         });
 
         // LOAD DATA
-        onAuthStateChanged(auth, async (currentUser) => {
+        onAuthStateChanged(auth, async (user) => {
             const urlParams = new URLSearchParams(window.location.search);
-            const targetUID = urlParams.get('uid') || (currentUser ? currentUser.uid : null);
+            // Ambil UID dari URL atau Login. Jika keduanya kosong, targetUID = null.
+            const targetUID = urlParams.get('uid') || (user ? user.uid : null);
             const guestName = urlParams.get('to');
 
-            // DEBUG UID
-            if(!targetUID) {
-                document.getElementById('debug-console').style.display = 'block';
-                document.getElementById('debug-console').innerHTML += `<br><strong>WARNING:</strong> UID Kosong!<br>Pastikan link mengandung ?uid=...`;
-                return;
-            }
-
+            // Set Nama Tamu
             if(guestName) document.getElementById('guestNameDisplay').innerText = decodeURIComponent(guestName);
+            
+            // STOP jika tidak ada UID (Mencegah error 'unexpected state')
+            if(!targetUID) return;
 
             try {
-                const docSnap = await getDoc(doc(db, "invitations", targetUID));
+                const docRef = doc(db, "invitations", targetUID);
+                const docSnap = await getDoc(docRef);
+                
                 if(docSnap.exists()) {
-                    const data = docSnap.data();
-                    const isOwner = (currentUser && currentUser.uid === targetUID);
-                    renderData(data, isOwner);
-                } else {
-                    document.getElementById('debug-console').style.display = 'block';
-                    document.getElementById('debug-console').innerHTML += `<br><strong>DATA TIDAK DITEMUKAN:</strong> UID ${targetUID} tidak ada di database.`;
+                    // Logic: Owner boleh lihat fitur premium meskipun status 'free'
+                    const isOwner = (user && user.uid === targetUID);
+                    renderData(docSnap.data(), isOwner);
                 }
             } catch(e) { 
-                console.error(e);
-                throw e; // Biar ditangkap window.onerror
+                console.error("Gagal memuat data:", e); 
             }
         });
 
         function renderData(data, isOwner) {
-            document.getElementById('groomNickDisplay').innerText = data.groomNick || 'Putra'; // Fix error null
+            // Text Data
+            const groomNick = data.groomNick || 'Pria';
+            const brideNick = data.brideNick || 'Wanita';
+            document.getElementById('coverNames').innerText = `${groomNick} & ${brideNick}`;
+            document.getElementById('groomNickDisplay').innerText = groomNick;
+            document.getElementById('brideNickDisplay').innerText = brideNick;
             
-            document.getElementById('groomNameDisplay').innerText = data.groomName || 'Nama Pria';
-            document.getElementById('groomFather').innerText = data.groomFather || '...';
-            document.getElementById('groomMother').innerText = data.groomMother || '...';
-            
-            document.getElementById('brideNameDisplay').innerText = data.brideName || 'Nama Wanita';
-            document.getElementById('brideFather').innerText = data.brideFather || '...';
-            document.getElementById('brideMother').innerText = data.brideMother || '...';
+            document.getElementById('groomNameDisplay').innerText = data.groomName;
+            document.getElementById('groomParents').innerText = `Bpk. ${data.groomFather} & Ibu ${data.groomMother}`;
+            document.getElementById('brideNameDisplay').innerText = data.brideName;
+            document.getElementById('brideParents').innerText = `Bpk. ${data.brideFather} & Ibu ${data.brideMother}`;
 
-            if(data.coverPhoto) { /* Cover dihandle CSS atau Custom */ }
+            // Images
+            if(data.coverPhoto) document.getElementById('coverBg').src = data.coverPhoto;
             if(data.groomPhoto) document.getElementById('groomImg').src = data.groomPhoto;
             if(data.bridePhoto) document.getElementById('brideImg').src = data.bridePhoto;
 
+            // Event
             if(data.eventDate) {
                 const dateObj = new Date(data.eventDate);
                 const opts = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
                 document.getElementById('dateDisplay').innerText = dateObj.toLocaleDateString('id-ID', opts);
             }
-            document.getElementById('timeDisplay').innerText = (data.eventTime || '00:00') + ' WITA';
-            document.getElementById('locationDisplay').innerText = data.eventLocation || 'Lokasi...';
+            document.getElementById('timeDisplay').innerText = (data.eventTime || '00:00') + " WITA";
+            document.getElementById('locationDisplay').innerText = data.eventLocation;
             if(data.mapsUrl) document.getElementById('btnMap').href = data.mapsUrl;
-            document.getElementById('bankNameDisplay').innerText = data.bankName || 'BANK';
-            document.getElementById('rekDisplay').innerText = data.accountNumber || '0000';
-            document.getElementById('rekHolderDisplay').innerText = data.accountHolder || '...';
 
-            // PREMIUM LOGIC
+            // Bank
+            document.getElementById('bankNameDisplay').innerText = data.bankName;
+            document.getElementById('rekDisplay').innerText = data.accountNumber;
+            document.getElementById('rekHolderDisplay').innerText = data.accountHolder;
+
+            // === PREMIUM LOGIC ===
             const plan = data.plan || 'free'; 
             const showPremiumFeatures = (plan !== 'free') || isOwner;
 
+            // Musik
             if (showPremiumFeatures) {
                 if(data.music) {
                     if(musicLibrary[data.music]) bgm.src = musicLibrary[data.music];
@@ -315,21 +333,20 @@
                 document.getElementById('navMusicIcon').style.display = 'none';
             }
 
-            // GALERI
+            // Galeri
             const gallerySection = document.getElementById('gallerySection');
             const galleryGrid = document.getElementById('galleryGrid');
             const navGallery = document.getElementById('navGallery');
             const demoImg = data.coverPhoto || 'https://placehold.co/400x600/A47E5C/ffffff?text=Undagi';
-
-            gallerySection.style.display = 'none';
-            navGallery.style.display = 'none';
-
+            
             if (showPremiumFeatures) {
-                gallerySection.style.display = 'block';
-                navGallery.style.display = 'block';
                 gallerySection.classList.remove('hidden');
+                
+                // Tampilan jumlah foto sesuai plan (atau Owner)
+                const isPremium = (plan === 'premium');
+                // Jika Owner Free, tampilkan 5 foto saja (seperti Pro) agar tidak PHP
+                const displayCount = isPremium ? 8 : 5;
 
-                const displayCount = (plan === 'premium') ? 8 : 5;
                 let html = "";
                 if(displayCount === 5) {
                      galleryGrid.className = "grid grid-cols-2 gap-2";
@@ -347,14 +364,9 @@
                     }
                 }
                 galleryGrid.innerHTML = html;
-            }
-            
-            if(isOwner && plan === 'free') {
-                Swal.fire({
-                    toast: true, position: 'top-end', showConfirmButton: false, timer: 3000,
-                    icon: 'info', title: 'Mode Preview',
-                    text: 'Fitur Premium terlihat karena Anda pemilik.'
-                });
+            } else {
+                gallerySection.style.display = 'none';
+                navGallery.style.display = 'none'; 
             }
         }
     </script>
