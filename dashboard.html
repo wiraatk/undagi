@@ -13,6 +13,7 @@
         ::-webkit-scrollbar { width: 0px; background: transparent; }
         .glass-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-top: 1px solid #e5e7eb; }
         
+        /* Style Kotak Galeri */
         .gallery-slot {
             aspect-ratio: 1; border: 2px dashed #cbd5e1; border-radius: 0.75rem;
             display: flex; align-items: center; justify-content: center;
@@ -32,15 +33,21 @@
     <nav class="bg-slate-900 text-white p-4 sticky top-0 z-30 shadow-md">
         <div class="max-w-3xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <a href="index.html" class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white hover:bg-blue-500 transition">U</a>
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white">U</div>
                 <div>
                     <h1 class="font-bold text-sm">Dashboard</h1>
                     <p class="text-[10px] text-slate-400" id="userEmail">Memuat...</p>
                 </div>
             </div>
+
             <div class="flex items-center gap-2">
-                <span id="planBadge" class="bg-gray-700 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider mr-2">FREE</span>
+                <span id="planBadge" class="hidden sm:inline-block bg-gray-700 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider mr-1">FREE</span>
                 
+                <a href="market.html" class="w-8 h-8 flex items-center justify-center rounded-full bg-purple-100 hover:bg-purple-200 text-purple-600 transition relative" title="Undagi Store">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full animate-ping"></span> 
+                </a>
+
                 <a href="index.html" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="Ke Halaman Utama">
                     <i class="fas fa-home"></i>
                 </a>
@@ -60,7 +67,7 @@
             <div class="mb-4">
                 <label class="text-xs font-bold text-slate-500">Tema Desain</label>
                 <select id="theme" class="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm focus:border-blue-500 outline-none">
-                    <option value="gold">Gold Luxury</option>
+                    <option value="gold">Gold Luxury (Default)</option>
                     <option value="silver">Silver Minimal</option>
                     <option value="sage">Sage Nature</option>
                     <option value="maroon">Red Maroon</option>
@@ -206,6 +213,7 @@
         let currentData = {};
         let galleryData = ["", "", "", "", "", "", "", ""]; 
 
+        // 1. CEK LOGIN
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
@@ -216,38 +224,42 @@
             }
         });
 
+        // 2. LOAD DATA (SMART FILL)
         async function loadData(uid) {
             try {
                 const docSnap = await getDoc(doc(db, "invitations", uid));
                 if (docSnap.exists()) {
                     currentData = docSnap.data();
                     
-                    // Helper Smart Load (Support data lama)
+                    // Helper untuk ambil data (support data lama dan baru)
                     const getVal = (field, oldField) => {
                         return currentData[field] || (currentData[oldField.split('.')[0]] ? currentData[oldField.split('.')[0]][oldField.split('.')[1]] : '') || '';
                     };
 
                     fillForm(currentData, getVal);
 
+                    // Load Gallery (Merge jika ada data)
                     if (currentData.gallery && Array.isArray(currentData.gallery)) {
                         galleryData = currentData.gallery.concat(Array(8).fill("")).slice(0, 8);
                     }
                     renderGalleryGrid();
 
+                    // Badge Plan
                     const plan = currentData.plan || 'free';
                     const badge = document.getElementById('planBadge');
                     if(plan === 'premium') {
                         badge.innerText = "PREMIUM";
-                        badge.className = "bg-yellow-500 text-black text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider";
+                        badge.className = "bg-yellow-500 text-black text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider mr-1";
                     }
                 } else {
-                    renderGalleryGrid();
+                    renderGalleryGrid(); // User baru, render galeri kosong
                 }
             } catch (e) {
                 console.error("Error load:", e);
             }
         }
 
+        // 3. ISI FORM
         function fillForm(data, getVal) {
             document.getElementById('theme').value = data.theme || 'gold';
             document.getElementById('music').value = data.music || '';
@@ -275,6 +287,7 @@
             document.getElementById('accountHolder').value = getVal('accountHolder', 'amplop.an');
         }
 
+        // 4. RENDER GALERI
         function renderGalleryGrid() {
             const container = document.getElementById('galleryContainer');
             container.innerHTML = "";
@@ -297,6 +310,7 @@
             });
         }
 
+        // 5. LOGIC UPLOAD
         window.uploadGallery = async (index) => {
             const { value: file } = await Swal.fire({
                 title: `Foto Galeri ${index + 1}`, input: 'file', inputAttributes: { 'accept': 'image/*' }
@@ -328,6 +342,7 @@
             }
         };
 
+        // 6. SIMPAN DATA
         window.saveData = async () => {
             if (!currentUser) return;
             const btn = document.querySelector('button[onclick="saveData()"]');
@@ -377,6 +392,7 @@
             }
         };
 
+        // 7. NAVIGASI
         window.previewInvitation = () => {
             if (!currentUser) return;
             Swal.fire({ title: 'Menyiapkan Preview...', timer: 1000, didOpen: () => { Swal.showLoading() } })
