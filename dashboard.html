@@ -12,22 +12,42 @@
         body{font-family:'Montserrat',sans-serif}
         ::-webkit-scrollbar { width: 0px; background: transparent; }
         .glass-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-top: 1px solid #e5e7eb; }
+        
+        .gallery-slot {
+            aspect-ratio: 1; border: 2px dashed #cbd5e1; border-radius: 0.75rem;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; overflow: hidden; position: relative; background-color: #f8fafc; transition: all 0.3s;
+        }
+        .gallery-slot:hover { border-color: #3b82f6; background-color: #eff6ff; }
+        .gallery-slot img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-slot .overlay {
+            position: absolute; inset: 0; background: rgba(0,0,0,0.5);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s;
+        }
+        .gallery-slot:hover .overlay { opacity: 1; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 pb-24">
+<body class="bg-slate-50 text-slate-800 pb-28">
 
     <nav class="bg-slate-900 text-white p-4 sticky top-0 z-30 shadow-md">
         <div class="max-w-3xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold">U</div>
+                <a href="index.html" class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white hover:bg-blue-500 transition">U</a>
                 <div>
                     <h1 class="font-bold text-sm">Dashboard</h1>
                     <p class="text-[10px] text-slate-400" id="userEmail">Memuat...</p>
                 </div>
             </div>
-            <div>
-                <span id="planBadge" class="bg-gray-700 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider">FREE</span>
-                <button onclick="logout()" class="ml-2 text-slate-400 hover:text-white"><i class="fas fa-sign-out-alt"></i></button>
+            <div class="flex items-center gap-2">
+                <span id="planBadge" class="bg-gray-700 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider mr-2">FREE</span>
+                
+                <a href="index.html" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="Ke Halaman Utama">
+                    <i class="fas fa-home"></i>
+                </a>
+
+                <button onclick="logout()" class="w-8 h-8 flex items-center justify-center rounded-full bg-red-900/50 hover:bg-red-600 text-red-200 hover:text-white transition" title="Keluar Akun">
+                    <i class="fas fa-power-off"></i>
+                </button>
             </div>
         </div>
     </nav>
@@ -45,20 +65,6 @@
                     <option value="sage">Sage Nature</option>
                     <option value="maroon">Red Maroon</option>
                 </select>
-            </div>
-
-            <div class="mb-4">
-                <label class="text-xs font-bold text-slate-500 flex justify-between">
-                    Musik Latar (MP3)
-                    <span class="text-[10px] text-green-600 bg-green-50 px-2 rounded-full">Fitur Pro (Preview Only)</span>
-                </label>
-                <div class="flex gap-2 mt-1">
-                    <input type="text" id="music" placeholder="Link musik / Upload MP3..." class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-gray-500" readonly>
-                    <button onclick="handleFileUpload('music', 'audio')" class="bg-purple-100 text-purple-600 px-4 rounded-xl hover:bg-purple-200 transition flex items-center gap-2 font-bold text-xs whitespace-nowrap">
-                        <i class="fas fa-music"></i> Upload
-                    </button>
-                </div>
-                <p class="text-[10px] text-gray-400 mt-1">*Bebas upload untuk dicoba.</p>
             </div>
 
             <div>
@@ -145,6 +151,37 @@
             </div>
         </div>
 
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <h2 class="font-bold text-blue-600 mb-4 flex items-center gap-2"><i class="fas fa-images"></i> Galeri & Musik</h2>
+            
+            <div class="mb-6">
+                <label class="text-xs font-bold text-slate-500 mb-2 block flex justify-between">
+                    Galeri Foto (Maks 8)
+                    <span class="text-[10px] bg-green-100 text-green-700 px-2 rounded-full">Semua Paket</span>
+                </label>
+                
+                <div class="grid grid-cols-4 gap-2" id="galleryContainer">
+                    </div>
+                <p class="text-[10px] text-gray-400 mt-2">*Klik kotak untuk upload/ganti foto.</p>
+            </div>
+
+            <hr class="border-dashed border-slate-200 my-6">
+
+            <div>
+                <label class="text-xs font-bold text-slate-500 flex justify-between">
+                    Musik Latar (MP3)
+                    <span class="text-[10px] text-blue-600 bg-blue-50 px-2 rounded-full">Upload Bebas</span>
+                </label>
+                <div class="flex gap-2 mt-1">
+                    <input type="text" id="music" placeholder="Link musik / Upload MP3..." class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-gray-500" readonly>
+                    <button onclick="handleFileUpload('music', 'audio')" class="bg-purple-100 text-purple-600 px-4 rounded-xl hover:bg-purple-200 transition flex items-center gap-2 font-bold text-xs whitespace-nowrap">
+                        <i class="fas fa-music"></i> Upload
+                    </button>
+                </div>
+                <p class="text-[10px] text-gray-400 mt-1">*Musik akan otomatis diputar saat undangan dibuka.</p>
+            </div>
+        </div>
+
     </main>
 
     <div class="fixed bottom-0 w-full glass-nav p-4 z-40">
@@ -167,6 +204,7 @@
 
         let currentUser = null;
         let currentData = {};
+        let galleryData = ["", "", "", "", "", "", "", ""]; 
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -184,54 +222,111 @@
                 if (docSnap.exists()) {
                     currentData = docSnap.data();
                     
-                    // --- SMART FILL: Cek Data Baru ATAU Data Lama ---
-                    // Ini kunci perbaikannya. Jika 'groomName' kosong, dia cari di 'pria.nama'
-                    
-                    // Helper untuk ambil data aman
+                    // Helper Smart Load (Support data lama)
                     const getVal = (field, oldField) => {
                         return currentData[field] || (currentData[oldField.split('.')[0]] ? currentData[oldField.split('.')[0]][oldField.split('.')[1]] : '') || '';
                     };
 
-                    document.getElementById('theme').value = currentData.theme || 'gold';
-                    document.getElementById('music').value = currentData.music || '';
-                    document.getElementById('coverPhoto').value = currentData.coverPhoto || '';
+                    fillForm(currentData, getVal);
 
-                    // Mempelai Pria
-                    document.getElementById('groomName').value = getVal('groomName', 'pria.nama');
-                    document.getElementById('groomNick').value = getVal('groomNick', 'pria.panggilan'); // Asumsi field lama
-                    document.getElementById('groomPhoto').value = getVal('groomPhoto', 'pria.foto');
-                    document.getElementById('groomFather').value = getVal('groomFather', 'pria.ayah');
-                    document.getElementById('groomMother').value = getVal('groomMother', 'pria.ibu');
+                    if (currentData.gallery && Array.isArray(currentData.gallery)) {
+                        galleryData = currentData.gallery.concat(Array(8).fill("")).slice(0, 8);
+                    }
+                    renderGalleryGrid();
 
-                    // Mempelai Wanita
-                    document.getElementById('brideName').value = getVal('brideName', 'wanita.nama');
-                    document.getElementById('brideNick').value = getVal('brideNick', 'wanita.panggilan');
-                    document.getElementById('bridePhoto').value = getVal('bridePhoto', 'wanita.foto');
-                    document.getElementById('brideFather').value = getVal('brideFather', 'wanita.ayah');
-                    document.getElementById('brideMother').value = getVal('brideMother', 'wanita.ibu');
-
-                    // Acara & Lainnya
-                    document.getElementById('eventDate').value = getVal('eventDate', 'acara.tanggal');
-                    document.getElementById('eventTime').value = getVal('eventTime', 'acara.waktu');
-                    document.getElementById('eventLocation').value = getVal('eventLocation', 'acara.alamat_lokasi');
-                    document.getElementById('mapsUrl').value = getVal('mapsUrl', 'acara.map');
-                    
-                    document.getElementById('bankName').value = getVal('bankName', 'amplop.bank');
-                    document.getElementById('accountNumber').value = getVal('accountNumber', 'amplop.rek');
-                    document.getElementById('accountHolder').value = getVal('accountHolder', 'amplop.an');
-
-                    // Badge Paket
                     const plan = currentData.plan || 'free';
                     const badge = document.getElementById('planBadge');
                     if(plan === 'premium') {
                         badge.innerText = "PREMIUM";
                         badge.className = "bg-yellow-500 text-black text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider";
                     }
+                } else {
+                    renderGalleryGrid();
                 }
             } catch (e) {
                 console.error("Error load:", e);
             }
         }
+
+        function fillForm(data, getVal) {
+            document.getElementById('theme').value = data.theme || 'gold';
+            document.getElementById('music').value = data.music || '';
+            document.getElementById('coverPhoto').value = data.coverPhoto || '';
+
+            document.getElementById('groomName').value = getVal('groomName', 'pria.nama');
+            document.getElementById('groomNick').value = getVal('groomNick', 'pria.panggilan');
+            document.getElementById('groomPhoto').value = getVal('groomPhoto', 'pria.foto');
+            document.getElementById('groomFather').value = getVal('groomFather', 'pria.ayah');
+            document.getElementById('groomMother').value = getVal('groomMother', 'pria.ibu');
+
+            document.getElementById('brideName').value = getVal('brideName', 'wanita.nama');
+            document.getElementById('brideNick').value = getVal('brideNick', 'wanita.panggilan');
+            document.getElementById('bridePhoto').value = getVal('bridePhoto', 'wanita.foto');
+            document.getElementById('brideFather').value = getVal('brideFather', 'wanita.ayah');
+            document.getElementById('brideMother').value = getVal('brideMother', 'wanita.ibu');
+
+            document.getElementById('eventDate').value = getVal('eventDate', 'acara.tanggal');
+            document.getElementById('eventTime').value = getVal('eventTime', 'acara.waktu');
+            document.getElementById('eventLocation').value = getVal('eventLocation', 'acara.alamat_lokasi');
+            document.getElementById('mapsUrl').value = getVal('mapsUrl', 'acara.map');
+            
+            document.getElementById('bankName').value = getVal('bankName', 'amplop.bank');
+            document.getElementById('accountNumber').value = getVal('accountNumber', 'amplop.rek');
+            document.getElementById('accountHolder').value = getVal('accountHolder', 'amplop.an');
+        }
+
+        function renderGalleryGrid() {
+            const container = document.getElementById('galleryContainer');
+            container.innerHTML = "";
+            galleryData.forEach((url, index) => {
+                const div = document.createElement('div');
+                div.className = "gallery-slot";
+                div.onclick = () => uploadGallery(index); 
+                if (url) {
+                    div.innerHTML = `
+                        <img src="${url}">
+                        <div class="overlay">
+                            <i class="fas fa-camera text-white text-xl mb-2"></i>
+                            <span class="text-[8px] text-white bg-red-500 px-2 py-1 rounded" onclick="event.stopPropagation(); deleteGallery(${index})">HAPUS</span>
+                        </div>
+                    `;
+                } else {
+                    div.innerHTML = `<i class="fas fa-plus text-slate-300 text-xl"></i>`;
+                }
+                container.appendChild(div);
+            });
+        }
+
+        window.uploadGallery = async (index) => {
+            const { value: file } = await Swal.fire({
+                title: `Foto Galeri ${index + 1}`, input: 'file', inputAttributes: { 'accept': 'image/*' }
+            });
+            if (file) {
+                Swal.fire({ title: 'Mengupload...', didOpen: () => Swal.showLoading() });
+                const url = await uploadFile(file);
+                if (url) {
+                    galleryData[index] = url; renderGalleryGrid(); Swal.close(); saveData();
+                }
+            }
+        };
+
+        window.deleteGallery = (index) => {
+            galleryData[index] = ""; renderGalleryGrid(); saveData();
+        };
+
+        window.handleFileUpload = async (inputId, type) => {
+            const acceptType = type === 'audio' ? 'audio/*' : 'image/*';
+            const { value: file } = await Swal.fire({
+                title: 'Pilih File', input: 'file', inputAttributes: { 'accept': acceptType }
+            });
+            if (file) {
+                Swal.fire({ title: 'Mengupload...', didOpen: () => Swal.showLoading() });
+                const url = await uploadFile(file);
+                if (url) {
+                    document.getElementById(inputId).value = url; Swal.close(); saveData(); 
+                }
+            }
+        };
 
         window.saveData = async () => {
             if (!currentUser) return;
@@ -240,7 +335,6 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
             btn.disabled = true;
 
-            // AMBIL DATA DARI INPUT (STRUKTUR BARU)
             const newData = {
                 uid: currentUser.uid,
                 email: currentUser.email,
@@ -248,41 +342,32 @@
                 theme: document.getElementById('theme').value,
                 music: document.getElementById('music').value,
                 coverPhoto: document.getElementById('coverPhoto').value,
-                
                 groomName: document.getElementById('groomName').value,
                 groomNick: document.getElementById('groomNick').value,
                 groomPhoto: document.getElementById('groomPhoto').value,
                 groomFather: document.getElementById('groomFather').value,
                 groomMother: document.getElementById('groomMother').value,
-                
                 brideName: document.getElementById('brideName').value,
                 brideNick: document.getElementById('brideNick').value,
                 bridePhoto: document.getElementById('bridePhoto').value,
                 brideFather: document.getElementById('brideFather').value,
                 brideMother: document.getElementById('brideMother').value,
-                
                 eventDate: document.getElementById('eventDate').value,
                 eventTime: document.getElementById('eventTime').value,
                 eventLocation: document.getElementById('eventLocation').value,
                 mapsUrl: document.getElementById('mapsUrl').value,
-                
                 bankName: document.getElementById('bankName').value,
                 accountNumber: document.getElementById('accountNumber').value,
                 accountHolder: document.getElementById('accountHolder').value,
-                
+                gallery: galleryData, 
                 plan: currentData.plan || 'free'
             };
 
             try {
-                // MERGE: Simpan struktur baru tanpa menghapus data lain yg mungkin ada
                 await setDoc(doc(db, "invitations", currentUser.uid), newData, { merge: true });
                 currentData = newData; 
-                
                 Swal.fire({
-                    icon: 'success', title: 'Tersimpan!',
-                    text: 'Data berhasil diperbarui untuk tampilan baru.',
-                    timer: 1500, showConfirmButton: false,
-                    toast: true, position: 'top-end'
+                    icon: 'success', title: 'Tersimpan!', timer: 1500, showConfirmButton: false, toast: true, position: 'top-end'
                 });
             } catch (e) {
                 Swal.fire('Error', e.message, 'error');
@@ -294,42 +379,13 @@
 
         window.previewInvitation = () => {
             if (!currentUser) return;
-            // Penting: Simpan dulu baru preview agar data terbaru muncul
-            Swal.fire({
-                title: 'Menyiapkan Preview...',
-                timer: 1000,
-                didOpen: () => { Swal.showLoading() }
-            }).then(() => {
-                window.open(`view.html?uid=${currentUser.uid}`, '_blank');
-            });
-        };
-
-        window.handleFileUpload = async (inputId, type) => {
-            const acceptType = type === 'audio' ? 'audio/*' : 'image/*';
-            const { value: file } = await Swal.fire({
-                title: 'Pilih File', input: 'file',
-                inputAttributes: { 'accept': acceptType }
-            });
-
-            if (file) {
-                Swal.fire({ title: 'Mengupload...', didOpen: () => Swal.showLoading() });
-                const url = await uploadFile(file);
-                if (url) {
-                    document.getElementById(inputId).value = url;
-                    Swal.close();
-                    saveData(); // Auto save setelah upload
-                } else {
-                    Swal.fire('Gagal', 'Terjadi kesalahan upload.', 'error');
-                }
-            }
+            Swal.fire({ title: 'Menyiapkan Preview...', timer: 1000, didOpen: () => { Swal.showLoading() } })
+            .then(() => window.open(`view.html?uid=${currentUser.uid}`, '_blank'));
         };
 
         window.logout = () => {
-            Swal.fire({
-                title: 'Keluar?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya'
-            }).then((result) => {
-                if (result.isConfirmed) signOut(auth).then(() => window.location.href = "index.html");
-            });
+            Swal.fire({ title: 'Keluar?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya' })
+            .then((result) => { if (result.isConfirmed) signOut(auth).then(() => window.location.href = "index.html"); });
         };
     </script>
 </body>
