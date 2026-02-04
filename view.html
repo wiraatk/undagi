@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,22 +17,22 @@
         :root { --c-bg: #FAF9F6; --c-prim: #A47E5C; --c-dark: #4A4A4A; --c-acc: #D4AF37; }
         body { background-color: var(--c-bg); color: var(--c-dark); overflow-x: hidden; }
         
-        /* Utility Classes */
+        /* Font Utilities */
         .font-great { font-family: 'Great Vibes', cursive; }
         .font-cormorant { font-family: 'Cormorant Garamond', serif; }
-        .font-cinzel { font-family: 'Cinzel', serif; } /* Untuk Luxury/Bali */
-        .font-dancing { font-family: 'Dancing Script', cursive; } /* Untuk Rustic */
-        .font-playfair { font-family: 'Playfair Display', serif; } /* Untuk Modern */
-        .font-montserrat { font-family: 'Montserrat', sans-serif; } /* Untuk Minimalist */
-        .font-satisfy { font-family: 'Satisfy', cursive; } /* Untuk Beach */
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .font-dancing { font-family: 'Dancing Script', cursive; }
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .font-montserrat { font-family: 'Montserrat', sans-serif; }
+        .font-satisfy { font-family: 'Satisfy', cursive; }
 
         /* Animations */
         .spin-slow { animation: spin 10s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        .fade-in { animation: fadeIn 1s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .open-btn { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,255,255, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255,255,255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255,255,255, 0); } }
 
-        /* Custom Components */
+        /* Custom UI */
         .photo-circle { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; }
         .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%); transition: 0.5s; z-index: 50; }
         .bottom-nav.show { transform: translateX(-50%) translateY(0); }
@@ -74,7 +74,7 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script type="module">
-        import { db, doc, getDoc } from './firebase-config.js'; // Pastikan path benar
+        import { db, doc, getDoc } from './firebase-config.js';
 
         // --- INIT ---
         const urlParams = new URLSearchParams(window.location.search);
@@ -83,42 +83,40 @@
         document.getElementById('guestNameDisplay').innerText = guest;
 
         if(uid) loadData(uid);
-        else console.log("No UID provided");
+        else Swal.fire('Error', 'Link tidak valid.', 'error');
 
         async function loadData(id) {
             try {
                 const docSnap = await getDoc(doc(db, "invitations", id));
                 if(docSnap.exists()) {
-                    const data = docSnap.data();
-                    setupInvitation(data);
+                    setupInvitation(docSnap.data());
+                } else {
+                    document.getElementById('app').innerHTML = "<h1 class='text-center mt-10'>Data tidak ditemukan.</h1>";
                 }
             } catch(e) { console.error(e); }
         }
 
         function setupInvitation(data) {
             // Setup Cover & Music
-            document.getElementById('coverNames').innerText = `${data.groomNick} & ${data.brideNick}`;
+            document.getElementById('coverNames').innerText = `${data.groomNick || 'Pria'} & ${data.brideNick || 'Wanita'}`;
             if(data.music) {
                 document.getElementById('bgm').src = data.music; 
                 document.getElementById('musicControl').classList.remove('hidden');
             }
 
-            // RENDER TEMPLATE BERDASARKAN TEMA
-            const theme = data.theme || 'classic'; // Default
+            // PILIH TEMPLATE
+            const theme = data.theme || 'gold'; 
             const app = document.getElementById('app');
             
-            // Panggil fungsi render sesuai nama tema
-            if(templates[theme]) {
-                app.innerHTML = templates[theme](data);
-            } else {
-                app.innerHTML = templates['classic'](data); // Fallback
-            }
+            // Render Template
+            if(templates[theme]) app.innerHTML = templates[theme](data);
+            else app.innerHTML = templates['gold'](data);
 
-            // Re-Init AOS setelah render HTML baru
+            // Re-Init Animations
             setTimeout(() => AOS.init(), 500);
         }
 
-        // --- HELPER COMPONENTS (Biar Gak Nulis Ulang) ---
+        // --- HELPER COMPONENTS ---
         const comp = {
             gallery: (photos) => {
                 if(!photos || photos.length === 0) return '';
@@ -132,7 +130,7 @@
                         <p class="font-bold text-lg mb-1">${d.bankName}</p>
                         <p class="font-mono text-2xl tracking-widest mb-2" id="rek">${d.accountNumber}</p>
                         <p class="text-xs text-gray-500 mb-4">a.n ${d.accountHolder}</p>
-                        <button onclick="copyRek()" class="bg-black text-white px-6 py-2 rounded text-xs">Salin</button>
+                        <button onclick="copyRek()" class="bg-black text-white px-6 py-2 rounded text-xs hover:bg-gray-800">Salin Nomor</button>
                     </div>
                 </section>
             `,
@@ -141,8 +139,7 @@
 
         // --- 10 TEMPLATE DEFINITIONS ---
         const templates = {
-            
-            // 1. CLASSIC GOLD (Elegan, Center)
+            // 1. CLASSIC GOLD
             'gold': (d) => `
                 <div class="bg-[#FAF9F6] text-[#4A4A4A] font-cormorant">
                     <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center p-6">
@@ -163,13 +160,10 @@
                         <p class="mt-4 max-w-md mx-auto">${d.eventLocation}</p>
                         <a href="${d.mapsUrl}" class="inline-block mt-8 bg-white text-[#A47E5C] px-8 py-3 rounded-full font-bold">Google Maps</a>
                     </section>
-                    ${comp.gallery(d.gallery)}
-                    ${comp.bank(d)}
-                    ${comp.footer()}
-                </div>
-            `,
+                    ${comp.gallery(d.gallery)} ${comp.bank(d)} ${comp.footer()}
+                </div>`,
 
-            // 2. MODERN SPLIT (Kiri Foto, Kanan Teks)
+            // 2. MODERN SPLIT
             'modern': (d) => `
                 <div class="bg-white text-slate-800 font-playfair">
                     <section id="home" class="min-h-screen flex flex-col md:flex-row">
@@ -180,14 +174,8 @@
                         </div>
                     </section>
                     <section id="couple" class="py-20 px-6 max-w-5xl mx-auto grid md:grid-cols-2 gap-10">
-                        <div class="flex items-center gap-4" data-aos="fade-up">
-                            <img src="${d.groomPhoto}" class="w-32 h-32 object-cover grayscale">
-                            <div><h3 class="text-2xl font-bold">${d.groomName}</h3><p class="text-sm text-gray-500">The Groom</p></div>
-                        </div>
-                        <div class="flex items-center gap-4 justify-end text-right" data-aos="fade-up">
-                            <div><h3 class="text-2xl font-bold">${d.brideName}</h3><p class="text-sm text-gray-500">The Bride</p></div>
-                            <img src="${d.bridePhoto}" class="w-32 h-32 object-cover grayscale">
-                        </div>
+                        <div class="flex items-center gap-4" data-aos="fade-up"><img src="${d.groomPhoto}" class="w-32 h-32 object-cover grayscale"><div><h3 class="text-2xl font-bold">${d.groomName}</h3><p class="text-sm text-gray-500">The Groom</p></div></div>
+                        <div class="flex items-center gap-4 justify-end text-right" data-aos="fade-up"><div><h3 class="text-2xl font-bold">${d.brideName}</h3><p class="text-sm text-gray-500">The Bride</p></div><img src="${d.bridePhoto}" class="w-32 h-32 object-cover grayscale order-last"></div>
                     </section>
                     <section id="event" class="py-20 text-center bg-slate-900 text-white">
                         <div class="border border-white/20 p-10 inline-block max-w-lg">
@@ -196,13 +184,10 @@
                             <a href="${d.mapsUrl}" class="border-b border-white pb-1">View Location</a>
                         </div>
                     </section>
-                    ${comp.gallery(d.gallery)}
-                    ${comp.bank(d)}
-                    ${comp.footer()}
-                </div>
-            `,
+                    ${comp.gallery(d.gallery)} ${comp.bank(d)} ${comp.footer()}
+                </div>`,
 
-            // 3. BALINESE (Traditional, Pattern)
+            // 3. BALINESE
             'bali': (d) => `
                 <div class="bg-[#fffdf5] text-[#5c4033] font-cinzel bg-[url('https://www.transparenttextures.com/patterns/batik-2.png')]">
                     <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center p-6 border-[20px] border-double border-[#d4af37]">
@@ -223,13 +208,10 @@
                             <p class="font-sans text-sm">${d.eventLocation}</p>
                         </div>
                     </section>
-                    ${comp.gallery(d.gallery)}
-                    ${comp.bank(d)}
-                    ${comp.footer()}
-                </div>
-            `,
+                    ${comp.gallery(d.gallery)} ${comp.bank(d)} ${comp.footer()}
+                </div>`,
 
-            // 4. RUSTIC (Wood, Earthy, Handwriting)
+            // 4. RUSTIC
             'rustic': (d) => `
                 <div class="bg-[#F4F1EA] text-[#5D4037] font-dancing">
                     <section id="home" class="min-h-screen flex justify-center items-center bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]">
@@ -250,13 +232,10 @@
                             <p>${d.eventTime} • ${d.eventLocation}</p>
                         </div>
                     </section>
-                    ${comp.gallery(d.gallery)}
-                    ${comp.bank(d)}
-                    ${comp.footer()}
-                </div>
-            `,
+                    ${comp.gallery(d.gallery)} ${comp.bank(d)} ${comp.footer()}
+                </div>`,
 
-            // 5. LUXURY DARK (Premium, Gold on Black)
+            // 5. LUXURY
             'luxury': (d) => `
                 <div class="bg-[#1a1a1a] text-[#D4AF37] font-cinzel">
                     <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center p-6 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-800 to-black">
@@ -265,8 +244,8 @@
                     </section>
                     <section id="couple" class="py-20 text-center">
                         <div class="grid md:grid-cols-2 gap-10 max-w-4xl mx-auto">
-                            <div class="border border-[#D4AF37] p-6"><h3 class="text-2xl text-white mb-2">${d.groomName}</h3><p class="text-xs text-gray-400">The Groom</p></div>
-                            <div class="border border-[#D4AF37] p-6"><h3 class="text-2xl text-white mb-2">${d.brideName}</h3><p class="text-xs text-gray-400">The Bride</p></div>
+                            <div class="border border-[#D4AF37] p-6"><h3 class="text-2xl text-white mb-2">${d.groomName}</h3></div>
+                            <div class="border border-[#D4AF37] p-6"><h3 class="text-2xl text-white mb-2">${d.brideName}</h3></div>
                         </div>
                     </section>
                     <section id="event" class="py-20 text-center text-white">
@@ -276,18 +255,13 @@
                             <p class="font-sans">${d.eventLocation}</p>
                         </div>
                     </section>
-                    ${comp.gallery(d.gallery)}
-                    ${comp.bank(d)}
-                    ${comp.footer()}
-                </div>
-            `,
+                    ${comp.gallery(d.gallery)} ${comp.bank(d)} ${comp.footer()}
+                </div>`,
 
-            // 6. FLORAL (Soft, Pink/Pastel)
+            // 6. FLORAL
             'floral': (d) => `
                 <div class="bg-[#FFF0F5] text-[#8B4A62] font-playfair">
                     <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center p-6 border-[16px] border-white relative">
-                        <div class="absolute top-0 left-0 text-6xl opacity-20">🌸</div>
-                        <div class="absolute bottom-0 right-0 text-6xl opacity-20">🌸</div>
                         <h1 class="text-6xl md:text-8xl font-bold mb-4">${d.groomNick} <br>&<br> ${d.brideNick}</h1>
                         <p class="text-xl italic">We are getting married</p>
                     </section>
@@ -297,23 +271,16 @@
                             <span class="text-4xl">&</span>
                             <img src="${d.bridePhoto}" class="w-32 h-32 rounded-full border-4 border-white shadow-md">
                         </div>
-                        <div class="mt-8 font-sans">
-                            <p class="font-bold text-xl">${d.groomName}</p>
-                            <p class="font-bold text-xl">${d.brideName}</p>
-                        </div>
                     </section>
                     <section id="event" class="py-20 bg-white text-center rounded-[3rem] mx-4 shadow-sm">
                         <h2 class="text-4xl mb-6">The Day</h2>
                         <p class="font-sans text-gray-500">${d.eventDate} <br> ${d.eventTime}</p>
                         <p class="font-sans mt-4 font-bold">${d.eventLocation}</p>
                     </section>
-                    ${comp.gallery(d.gallery)}
-                    ${comp.bank(d)}
-                    ${comp.footer()}
-                </div>
-            `,
+                    ${comp.gallery(d.gallery)} ${comp.bank(d)} ${comp.footer()}
+                </div>`,
 
-            // 7. BEACH (Blue, Relaxed)
+            // 7. BEACH
             'beach': (d) => `
                 <div class="bg-[#E0F7FA] text-[#006064] font-satisfy">
                     <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center bg-gradient-to-b from-[#E0F7FA] to-[#B2EBF2]">
@@ -332,13 +299,10 @@
                             <p class="text-sm">${d.eventLocation}</p>
                         </div>
                     </section>
-                    ${comp.gallery(d.gallery)}
-                    ${comp.bank(d)}
-                    ${comp.footer()}
-                </div>
-            `,
+                    ${comp.gallery(d.gallery)} ${comp.bank(d)} ${comp.footer()}
+                </div>`,
 
-            // 8. MINIMALIST (Clean, Sans Serif, B&W)
+            // 8. MINIMAL
             'minimal': (d) => `
                 <div class="bg-white text-black font-montserrat">
                     <section id="home" class="min-h-screen flex justify-center items-center px-6">
@@ -363,13 +327,10 @@
                             <a href="${d.mapsUrl}" class="underline text-sm mt-4 block">Get Directions</a>
                         </div>
                     </section>
-                    ${comp.gallery(d.gallery)}
-                    ${comp.bank(d)}
-                    ${comp.footer()}
-                </div>
-            `,
+                    ${comp.gallery(d.gallery)} ${comp.bank(d)} ${comp.footer()}
+                </div>`,
 
-            // 9. GRID (Instagram Style)
+            // 9. GRID (Insta)
             'grid': (d) => `
                 <div class="bg-gray-50 text-gray-800 font-sans">
                     <section id="home" class="min-h-screen flex flex-col justify-center items-center bg-white m-4 border border-gray-200 shadow-sm">
@@ -378,34 +339,14 @@
                         <button class="bg-blue-500 text-white px-6 py-1 rounded mt-4 font-bold text-sm">Follow Event</button>
                     </section>
                     <section id="couple" class="py-10 px-4">
-                        <div class="bg-white p-4 rounded shadow-sm mb-4">
-                            <div class="flex items-center gap-2 mb-2">
-                                <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
-                                <span class="font-bold text-sm">${d.groomName}</span>
-                            </div>
-                            <img src="${d.groomPhoto}" class="w-full aspect-square object-cover rounded">
-                        </div>
-                        <div class="bg-white p-4 rounded shadow-sm">
-                            <div class="flex items-center gap-2 mb-2">
-                                <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
-                                <span class="font-bold text-sm">${d.brideName}</span>
-                            </div>
-                            <img src="${d.bridePhoto}" class="w-full aspect-square object-cover rounded">
-                        </div>
+                        <div class="bg-white p-4 rounded shadow-sm mb-4"><div class="flex items-center gap-2 mb-2"><div class="w-8 h-8 bg-gray-200 rounded-full"></div><span class="font-bold text-sm">${d.groomName}</span></div><img src="${d.groomPhoto}" class="w-full aspect-square object-cover rounded"></div>
+                        <div class="bg-white p-4 rounded shadow-sm"><div class="flex items-center gap-2 mb-2"><div class="w-8 h-8 bg-gray-200 rounded-full"></div><span class="font-bold text-sm">${d.brideName}</span></div><img src="${d.bridePhoto}" class="w-full aspect-square object-cover rounded"></div>
                     </section>
-                    <section id="event" class="py-10 px-4 text-center">
-                        <div class="bg-white p-6 shadow-sm">
-                            <h2 class="font-bold mb-2">Event Details</h2>
-                            <p class="text-sm text-gray-500">${d.eventDate} @ ${d.eventLocation}</p>
-                        </div>
-                    </section>
-                    ${comp.gallery(d.gallery)}
-                    ${comp.bank(d)}
-                    ${comp.footer()}
-                </div>
-            `,
+                    <section id="event" class="py-10 px-4 text-center"><div class="bg-white p-6 shadow-sm"><h2 class="font-bold mb-2">Event Details</h2><p class="text-sm text-gray-500">${d.eventDate} @ ${d.eventLocation}</p></div></section>
+                    ${comp.gallery(d.gallery)} ${comp.bank(d)} ${comp.footer()}
+                </div>`,
 
-            // 10. CINEMATIC (Full Screen Image)
+            // 10. CINEMATIC
             'cinematic': (d) => `
                 <div class="bg-black text-white font-montserrat">
                     <section id="home" class="h-screen w-screen relative flex items-end pb-20 px-10">
@@ -418,17 +359,11 @@
                     <section id="couple" class="py-24 px-10 bg-zinc-900">
                         <div class="flex flex-col md:flex-row gap-10 items-center">
                             <img src="${d.groomPhoto}" class="w-full md:w-1/2 h-96 object-cover grayscale hover:grayscale-0 transition duration-700">
-                            <div class="text-center md:text-left">
-                                <h2 class="text-4xl font-bold mb-2">${d.groomName}</h2>
-                                <p class="text-gray-400">The Groom</p>
-                            </div>
+                            <div class="text-center md:text-left"><h2 class="text-4xl font-bold mb-2">${d.groomName}</h2></div>
                         </div>
                         <div class="flex flex-col md:flex-row-reverse gap-10 items-center mt-10">
                             <img src="${d.bridePhoto}" class="w-full md:w-1/2 h-96 object-cover grayscale hover:grayscale-0 transition duration-700">
-                            <div class="text-center md:text-right">
-                                <h2 class="text-4xl font-bold mb-2">${d.brideName}</h2>
-                                <p class="text-gray-400">The Bride</p>
-                            </div>
+                            <div class="text-center md:text-right"><h2 class="text-4xl font-bold mb-2">${d.brideName}</h2></div>
                         </div>
                     </section>
                     <section id="event" class="h-[50vh] flex justify-center items-center bg-fixed bg-cover bg-center relative" style="background-image: url('${d.coverPhoto}')">
@@ -437,14 +372,11 @@
                             <p class="text-xl">${d.eventDate} • ${d.eventLocation}</p>
                         </div>
                     </section>
-                    ${comp.gallery(d.gallery)}
-                    ${comp.bank(d)}
-                    ${comp.footer()}
-                </div>
-            `
+                    ${comp.gallery(d.gallery)} ${comp.bank(d)} ${comp.footer()}
+                </div>`
         };
 
-        // --- GLOBAL FUNCTIONS (Actions) ---
+        // --- GLOBAL ACTIONS ---
         window.openInvitation = () => {
             document.getElementById('cover-screen').style.transform = 'translateY(-100%)';
             document.getElementById('app').style.opacity = '1';
