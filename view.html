@@ -16,10 +16,11 @@
             theme: {
                 extend: {
                     colors: {
-                        theme_brown: '#A47E5C', 
-                        theme_cream: '#FAF9F6', 
-                        theme_dark: '#4A4A4A', 
-                        theme_gold: '#D4AF37',
+                        // Warna ini akan dikendalikan oleh CSS Variable (Dinmis)
+                        t_bg: 'var(--c-bg)',       /* Background Utama */
+                        t_primary: 'var(--c-prim)', /* Warna Dominan (Judul/Tombol) */
+                        t_dark: 'var(--c-dark)',    /* Teks Bacaan */
+                        t_accent: 'var(--c-acc)',   /* Aksen/Border */
                     },
                     fontFamily: {
                         serif: ['"Cormorant Garamond"', 'serif'],
@@ -28,7 +29,6 @@
                     },
                     animation: {
                         'spin-slow': 'spin 12s linear infinite',
-                        'float': 'float 6s ease-in-out infinite',
                     }
                 }
             }
@@ -36,14 +36,21 @@
     </script>
 
     <style>
-        body { background-color: #FAF9F6; color: #4A4A4A; overflow-x: hidden; }
+        /* --- DEFINISI WARNA TEMA (DEFAULT GOLD) --- */
+        :root {
+            --c-bg: #FAF9F6;       /* Cream */
+            --c-prim: #A47E5C;     /* Coklat Gold */
+            --c-dark: #4A4A4A;     /* Abu Gelap */
+            --c-acc: #D4AF37;      /* Emas Mengkilap */
+        }
+
+        body { background-color: var(--c-bg); color: var(--c-dark); overflow-x: hidden; transition: background-color 0.5s ease; }
         
         .photo-circle {
             width: 160px; height: 160px;
             border-radius: 50%;
-            border: 2px solid #A47E5C;
-            padding: 4px;
-            object-fit: cover;
+            border: 2px solid var(--c-prim);
+            padding: 4px; object-fit: cover;
             transition: transform 0.5s;
         }
         .photo-circle:hover { transform: scale(1.05); }
@@ -51,12 +58,11 @@
         .bottom-nav {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(200%);
             width: 90%; max-width: 350px;
-            background-color: #A47E5C; 
+            background-color: var(--c-prim); /* Ikut warna tema */
             border-radius: 50px;
             display: flex; justify-content: space-around; align-items: center;
-            padding: 12px 20px;
-            z-index: 100;
-            box-shadow: 0 10px 20px rgba(164, 126, 92, 0.4);
+            padding: 12px 20px; z-index: 100;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .bottom-nav.show { transform: translateX(-50%) translateY(0); }
@@ -71,18 +77,18 @@
 
     <audio id="bgm" loop><source src="" type="audio/mp3"></audio>
 
-    <section id="cover-screen" class="fixed inset-0 z-50 bg-theme_cream flex flex-col justify-center items-center px-6 text-center">
+    <section id="cover-screen" class="fixed inset-0 z-50 bg-t_bg flex flex-col justify-center items-center px-6 text-center">
         <div data-aos="fade-up" data-aos-duration="1500" class="relative z-10 w-full max-w-sm">
-            <p class="font-serif text-theme_brown tracking-[0.3em] text-xs uppercase mb-6">The Wedding of</p>
+            <p class="font-serif text-t_primary tracking-[0.3em] text-xs uppercase mb-6">The Wedding of</p>
             <div class="mb-8 relative mx-auto w-56 h-56">
-                <img id="coverBg" src="" class="w-full h-full rounded-full object-cover border border-theme_brown/30 shadow-lg p-1 bg-white">
+                <img id="coverBg" src="" class="w-full h-full rounded-full object-cover border border-t_primary/30 shadow-lg p-1 bg-white">
             </div>
-            <h1 class="font-script text-5xl md:text-6xl text-theme_brown mb-8 leading-tight" id="coverNames">...</h1>
-            <div class="bg-white border border-theme_brown/20 p-6 rounded-xl shadow-sm mb-8 max-w-xs mx-auto">
+            <h1 class="font-script text-5xl md:text-6xl text-t_primary mb-8 leading-tight" id="coverNames">...</h1>
+            <div class="bg-white border border-t_primary/20 p-6 rounded-xl shadow-sm mb-8 max-w-xs mx-auto">
                 <p class="font-sans text-[10px] text-gray-400 uppercase tracking-widest mb-2">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
-                <h3 class="font-serif text-xl font-bold text-theme_dark" id="guestNameDisplay">Tamu Undangan</h3>
+                <h3 class="font-serif text-xl font-bold text-t_dark" id="guestNameDisplay">Tamu Undangan</h3>
             </div>
-            <button onclick="openInvitation()" class="bg-theme_brown text-white px-8 py-3 rounded-full font-sans text-xs font-bold tracking-widest hover:bg-theme_dark transition shadow-lg flex items-center justify-center gap-2 mx-auto animate-bounce">
+            <button onclick="openInvitation()" class="bg-t_primary text-white px-8 py-3 rounded-full font-sans text-xs font-bold tracking-widest hover:bg-t_dark transition shadow-lg flex items-center justify-center gap-2 mx-auto animate-bounce">
                 <i class="fas fa-envelope-open"></i> BUKA UNDANGAN
             </button>
         </div>
@@ -92,10 +98,10 @@
         
         <section id="home" class="pt-20 pb-10 px-6 text-center">
             <div data-aos="fade-down">
-                <div class="text-3xl text-theme_brown mb-4 font-serif">ॐ</div>
-                <h2 class="font-script text-5xl text-theme_brown mb-4">Om Swastyastu</h2>
+                <div class="text-3xl text-t_primary mb-4 font-serif">ॐ</div>
+                <h2 class="font-script text-5xl text-t_primary mb-4">Om Swastyastu</h2>
                 <p class="font-serif text-xs text-gray-400 italic mb-8">"Mohon Doa Restu"</p>
-                <p class="font-sans text-sm text-theme_dark leading-relaxed px-4">
+                <p class="font-sans text-sm text-t_dark leading-relaxed px-4">
                     Atas Asung Kertha Wara Nugraha Ida Sang Hyang Widhi Wasa, kami bermaksud menyelenggarakan upacara Pawiwahan putra-putri kami:
                 </p>
             </div>
@@ -104,28 +110,28 @@
         <section id="couple" class="py-10 px-6 text-center">
             <div class="mb-12" data-aos="fade-up">
                 <img id="groomImg" src="" class="photo-circle mx-auto mb-4">
-                <h3 class="font-script text-4xl text-theme_brown mb-1" id="groomNickDisplay">Putra</h3>
-                <p class="font-serif text-lg font-bold text-theme_dark" id="groomNameDisplay">Nama Lengkap</p>
+                <h3 class="font-script text-4xl text-t_primary mb-1" id="groomNickDisplay">Putra</h3>
+                <p class="font-serif text-lg font-bold text-t_dark" id="groomNameDisplay">Nama Lengkap</p>
                 <p class="font-sans text-xs text-gray-500 mt-2">Putra dari Pasangan<br><span id="groomParents" class="font-bold">...</span></p>
             </div>
-            <div class="font-script text-3xl text-theme_brown/30 mb-12">&</div>
+            <div class="font-script text-3xl text-t_primary/30 mb-12">&</div>
             <div data-aos="fade-up">
                 <img id="brideImg" src="" class="photo-circle mx-auto mb-4">
-                <h3 class="font-script text-4xl text-theme_brown mb-1" id="brideNickDisplay">Putri</h3>
-                <p class="font-serif text-lg font-bold text-theme_dark" id="brideNameDisplay">Nama Lengkap</p>
+                <h3 class="font-script text-4xl text-t_primary mb-1" id="brideNickDisplay">Putri</h3>
+                <p class="font-serif text-lg font-bold text-t_dark" id="brideNameDisplay">Nama Lengkap</p>
                 <p class="font-sans text-xs text-gray-500 mt-2">Putri dari Pasangan<br><span id="brideParents" class="font-bold">...</span></p>
             </div>
         </section>
 
-        <section id="event" class="py-16 px-6 bg-theme_cream/50">
+        <section id="event" class="py-16 px-6 bg-t_bg/50">
             <div class="text-center" data-aos="zoom-in">
-                <p class="font-script text-4xl text-theme_brown mb-6">Pawiwahan</p>
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-theme_brown/10">
-                    <p class="font-serif text-xl font-bold text-theme_dark mb-1" id="dateDisplay">...</p>
+                <p class="font-script text-4xl text-t_primary mb-6">Pawiwahan</p>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-t_primary/10">
+                    <p class="font-serif text-xl font-bold text-t_dark mb-1" id="dateDisplay">...</p>
                     <p class="font-sans text-sm text-gray-500 mb-6">Pukul <span id="timeDisplay">...</span> WITA</p>
-                    <div class="h-px w-20 bg-theme_brown/20 mx-auto mb-6"></div>
-                    <p class="font-sans text-sm text-theme_dark px-2 mb-6 font-bold leading-relaxed" id="locationDisplay">...</p>
-                    <a id="btnMap" href="#" target="_blank" class="inline-flex items-center gap-2 bg-theme_brown text-white px-6 py-2 rounded-full text-xs font-bold hover:bg-theme_dark transition shadow-md">
+                    <div class="h-px w-20 bg-t_primary/20 mx-auto mb-6"></div>
+                    <p class="font-sans text-sm text-t_dark px-2 mb-6 font-bold leading-relaxed" id="locationDisplay">...</p>
+                    <a id="btnMap" href="#" target="_blank" class="inline-flex items-center gap-2 bg-t_primary text-white px-6 py-2 rounded-full text-xs font-bold hover:bg-t_dark transition shadow-md">
                         <i class="fas fa-map-marked-alt"></i> Google Maps
                     </a>
                 </div>
@@ -134,31 +140,30 @@
 
         <section id="gallerySection" class="py-16 px-4 hidden">
             <div class="text-center mb-8">
-                <h2 class="font-script text-4xl text-theme_brown">Our Gallery</h2>
+                <h2 class="font-script text-4xl text-t_primary">Our Gallery</h2>
             </div>
-            <div id="galleryGrid" class="grid grid-cols-2 gap-3">
-                </div>
+            <div id="galleryGrid" class="grid grid-cols-2 gap-3"></div>
         </section>
 
         <section class="py-16 px-6 text-center bg-white">
-            <h2 class="font-script text-3xl text-theme_brown mb-6">Tanda Kasih</h2>
-            <div class="bg-theme_cream p-8 rounded-2xl border border-theme_brown/20 max-w-xs mx-auto" data-aos="flip-up">
+            <h2 class="font-script text-3xl text-t_primary mb-6">Tanda Kasih</h2>
+            <div class="bg-t_bg p-8 rounded-2xl border border-t_primary/20 max-w-xs mx-auto" data-aos="flip-up">
                 <p class="font-serif text-lg font-bold text-gray-800 mb-1" id="bankNameDisplay">BANK</p>
-                <p class="font-mono text-2xl text-theme_brown tracking-widest mb-4" id="rekDisplay">0000</p>
+                <p class="font-mono text-2xl text-t_primary tracking-widest mb-4" id="rekDisplay">0000</p>
                 <p class="font-sans text-xs text-gray-500 mb-6 uppercase">a.n <span id="rekHolderDisplay" class="font-bold">...</span></p>
-                <button onclick="copyRek()" class="w-full bg-white border border-theme_brown text-theme_brown py-2 rounded-lg text-xs font-bold hover:bg-theme_brown hover:text-white transition">
+                <button onclick="copyRek()" class="w-full bg-white border border-t_primary text-t_primary py-2 rounded-lg text-xs font-bold hover:bg-t_primary hover:text-white transition">
                     Salin Nomor
                 </button>
             </div>
         </section>
 
-        <footer class="py-16 px-6 text-center bg-theme_dark text-white">
+        <footer class="py-16 px-6 text-center bg-t_dark text-white">
             <div class="max-w-xs mx-auto mb-8">
                 <p class="font-sans text-xs leading-relaxed opacity-80 italic">
                     "Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu kepada kedua mempelai. Atas kehadiran dan doa restunya, kami ucapkan terima kasih."
                 </p>
             </div>
-            <h2 class="font-serif text-xl mb-2 text-theme_brown">Om Shanti Shanti Shanti Om</h2>
+            <h2 class="font-serif text-xl mb-2 text-t_primary">Om Shanti Shanti Shanti Om</h2>
             <div class="h-px w-10 bg-white/20 mx-auto my-4"></div>
             <p class="text-[10px] opacity-50 uppercase tracking-widest">Undagi Digital Invitation</p>
         </footer>
@@ -181,6 +186,23 @@
 
         const bgm = document.getElementById('bgm');
         let isPlaying = false;
+
+        // --- PALET WARNA TEMA ---
+        const themeColors = {
+            'gold': { bg: '#FAF9F6', prim: '#A47E5C', dark: '#4A4A4A', acc: '#D4AF37' },
+            'silver': { bg: '#F3F4F6', prim: '#475569', dark: '#1E293B', acc: '#94A3B8' }, // Cool Gray & Slate
+            'sage': { bg: '#F2F9F4', prim: '#557C55', dark: '#2D442D', acc: '#A6CF98' },   // Mint & Forest
+            'maroon': { bg: '#FFF5F5', prim: '#800020', dark: '#4A0404', acc: '#C21807' }   // Blush & Burgundy
+        };
+
+        function applyTheme(themeName) {
+            const t = themeColors[themeName] || themeColors['gold']; // Default Gold
+            const root = document.documentElement;
+            root.style.setProperty('--c-bg', t.bg);
+            root.style.setProperty('--c-prim', t.prim);
+            root.style.setProperty('--c-dark', t.dark);
+            root.style.setProperty('--c-acc', t.acc);
+        }
 
         const musicLibrary = {
             'romance1.mp3': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
@@ -211,14 +233,10 @@
             Swal.fire({icon: 'success', title: 'Tersalin', timer: 1000, showConfirmButton: false, toast: true, position: 'top'});
         };
 
-        // Lightbox Feature
         window.viewPhoto = (url) => {
             Swal.fire({
-                imageUrl: url,
-                imageAlt: 'Gallery Photo',
-                showConfirmButton: false,
-                background: 'transparent',
-                backdrop: 'rgba(0,0,0,0.9)',
+                imageUrl: url, imageAlt: 'Gallery', showConfirmButton: false,
+                background: 'transparent', backdrop: 'rgba(0,0,0,0.9)',
                 customClass: { popup: 'bg-transparent shadow-none' }
             });
         };
@@ -250,6 +268,10 @@
                 if(docSnap.exists()) {
                     const data = docSnap.data();
                     const isOwner = (user && user.uid === targetUID);
+                    
+                    // === TERAPKAN TEMA ===
+                    applyTheme(data.theme || 'gold');
+                    
                     renderData(data, isOwner);
                 }
             } catch(e) { console.error(e); }
@@ -295,7 +317,6 @@
                 document.getElementById('navMusicIcon').style.display = 'none';
             }
 
-            // === LOGIC GALERI GRID 2 KOLOM (MUTLAK) ===
             const gallerySection = document.getElementById('gallerySection');
             const galleryGrid = document.getElementById('galleryGrid');
             const navGallery = document.getElementById('navGallery');
@@ -303,11 +324,10 @@
 
             if (showPremiumFeatures) {
                 gallerySection.classList.remove('hidden');
-                
                 const isPremium = (plan === 'premium');
                 const limit = (isOwner || isPremium) ? 8 : 5;
                 
-                // FORCE: KELAS INI MENGUNCI 2 KOLOM (BESAR)
+                // FORCE GRID 2 KOLOM
                 galleryGrid.className = "grid grid-cols-2 gap-3"; 
 
                 let html = "";
@@ -315,7 +335,6 @@
                 for(let i=0; i < galleryData.length; i++) {
                     if(count >= limit) break; 
                     if(galleryData[i]) { 
-                        // Aspect Ratio 3:4 (Potrait/Memanjang ke atas) agar foto jelas
                         html += `<div class="aspect-[3/4] rounded-xl overflow-hidden bg-gray-200 shadow-md cursor-pointer relative group">
                                     <img src="${galleryData[i]}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" onclick="viewPhoto('${galleryData[i]}')">
                                     <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition"></div>
@@ -323,7 +342,6 @@
                         count++;
                     }
                 }
-                
                 if(html === "") html = "<p class='text-center col-span-2 text-xs text-gray-400'>Belum ada foto galeri.</p>";
                 galleryGrid.innerHTML = html;
             } else {
