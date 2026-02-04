@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undagi - Solusi Pernikahan Terlengkap</title>
+    <title>Undagi - Wujudkan Pernikahan Impian Tanpa Ribet</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <script>
@@ -15,10 +15,11 @@
             theme: {
                 extend: {
                     colors: {
-                        gold: '#C5A059',
-                        dark: '#111827',
-                        cream: '#F9F8F6',
-                        paper: '#ffffff'
+                        gold: '#B8860B',      /* Dark Goldenrod */
+                        gold_light: '#F4E5BC',
+                        dark: '#1A1A1A',
+                        paper: '#FFFAF0',     /* Floral White */
+                        accent: '#8B4513'
                     },
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
@@ -29,246 +30,297 @@
         }
     </script>
     <style>
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #C5A059; border-radius: 4px; }
-        
-        /* Image Hover Zoom */
-        .zoom-img { transition: transform 0.7s ease; }
-        .group:hover .zoom-img { transform: scale(1.1); }
+        .text-gradient { background: linear-gradient(to right, #B8860B, #D4AF37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .floating { animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     </style>
 </head>
-<body class="bg-cream text-gray-800 antialiased">
+<body class="bg-paper text-dark antialiased overflow-x-hidden">
 
-    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 transition-all duration-300" id="navbar">
+    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 transition-all" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <div class="w-9 h-9 bg-gold rounded-br-xl rounded-tl-xl flex items-center justify-center text-white font-serif text-lg font-bold shadow-lg shadow-gold/30">U</div>
-                    <span class="font-serif text-2xl font-bold text-dark tracking-tight">UNDAGI</span>
+                <div class="flex items-center gap-2" onclick="window.scrollTo(0,0)">
+                    <span class="font-serif text-2xl font-bold text-dark tracking-tighter">UNDAGI<span class="text-gold">.</span></span>
                 </div>
-
-                <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-600">
-                    <a href="#services" class="hover:text-gold transition">Layanan & Vendor</a>
-                    <a href="#themes" class="hover:text-gold transition">Tema Undangan</a>
+                <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+                    <a href="#why" class="hover:text-gold transition">Kenapa Kami?</a>
+                    <a href="#invitation" class="hover:text-gold transition">Undangan</a>
+                    <a href="#vendor" class="hover:text-gold transition">Vendor</a>
                     <a href="#faq" class="hover:text-gold transition">FAQ</a>
                 </div>
-
                 <div class="flex items-center gap-3">
-                    <a href="login.html" class="hidden sm:block text-gray-600 font-bold text-sm hover:text-gold transition">Masuk</a>
-                    <a href="login.html" class="bg-dark text-white text-sm font-bold py-2.5 px-6 rounded-full shadow-lg hover:bg-gold transition transform hover:-translate-y-0.5">
-                        Buat Undangan
-                    </a>
+                    <a href="login.html" class="hidden sm:block text-gray-600 font-bold text-sm hover:text-gold">Login</a>
+                    <a href="login.html" class="bg-dark text-white text-sm font-bold py-2.5 px-6 rounded-full hover:bg-gold transition shadow-lg">Buat Undangan</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <header class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
-            
+    <header class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-4 overflow-hidden">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
             <div data-aos="fade-right" data-aos-duration="1000">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/10 text-gold text-xs font-bold uppercase tracking-wider mb-6">
-                    <span class="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
-                    Platform Pernikahan #1
-                </div>
-                <h1 class="font-serif text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-6 text-dark">
+                <div class="inline-block bg-gold_light text-amber-800 px-4 py-1 rounded-full text-xs font-bold mb-6 tracking-wide uppercase">✨ Solusi Pernikahan Modern</div>
+                <h1 class="font-serif text-5xl md:text-7xl font-bold leading-tight mb-6">
                     Pernikahan Impian, <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold to-yellow-600 italic">Dimulai Di Sini.</span>
+                    <span class="text-gradient italic">Tanpa Drama.</span>
                 </h1>
-                <p class="text-gray-500 text-lg mb-8 leading-relaxed max-w-lg">
-                    Buat undangan digital estetik instan dan temukan vendor terbaik (Foto, Dekor, Souvenir) dalam satu platform terpercaya.
+                <p class="text-gray-600 text-lg mb-8 leading-relaxed max-w-lg">
+                    Lupakan stres mengurus undangan cetak yang mahal dan ribet. Di <strong>Undagi</strong>, buat undangan digital estetik dalam 5 menit dan temukan vendor terbaik untuk hari bahagiamu.
                 </p>
+                
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="login.html" class="bg-gold text-white text-center font-bold py-4 px-8 rounded-full shadow-xl shadow-gold/30 hover:bg-dark transition flex items-center justify-center gap-2">
-                        <i class="fas fa-pen-fancy"></i> Buat Undangan
+                    <a href="login.html" class="bg-gold text-white text-center font-bold py-4 px-8 rounded-full shadow-xl hover:bg-dark transition flex items-center justify-center gap-2 group">
+                        Mulai Gratis Sekarang <i class="fas fa-arrow-right group-hover:translate-x-1 transition"></i>
                     </a>
-                    <a href="market.html" class="group bg-white border border-gray-200 text-gray-700 text-center font-bold py-4 px-8 rounded-full hover:border-gold hover:text-gold transition flex items-center justify-center gap-2">
-                        <i class="fas fa-shopping-bag group-hover:animate-bounce"></i> Lihat Vendor
+                    <a href="#vendor" class="bg-white border border-gray-200 text-gray-700 text-center font-bold py-4 px-8 rounded-full hover:border-gold hover:text-gold transition">
+                        Cari Vendor
                     </a>
                 </div>
-                
-                <div class="mt-10 flex items-center gap-4">
-                    <div class="flex -space-x-3">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64" class="w-10 h-10 rounded-full border-2 border-white object-cover">
-                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=64&h=64" class="w-10 h-10 rounded-full border-2 border-white object-cover">
-                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=64&h=64" class="w-10 h-10 rounded-full border-2 border-white object-cover">
-                    </div>
-                    <div class="text-sm">
-                        <p class="font-bold text-dark">1,200+ Pasangan</p>
-                        <p class="text-gray-400 text-xs">Telah bergabung bulan ini</p>
-                    </div>
+
+                <div class="mt-8 flex items-center gap-2 text-sm text-gray-500">
+                    <i class="fas fa-check-circle text-green-500"></i> 100% Gratis Fitur Dasar
+                    <span class="mx-2">•</span>
+                    <i class="fas fa-check-circle text-green-500"></i> Tanpa Kartu Kredit
                 </div>
             </div>
 
-            <div class="relative" data-aos="fade-left" data-aos-duration="1000">
-                <div class="absolute -top-10 -right-10 w-96 h-96 bg-gold/10 rounded-full blur-3xl"></div>
-                
+            <div class="relative" data-aos="fade-left" data-aos-duration="1200">
+                <div class="absolute -z-10 top-0 right-0 w-[500px] h-[500px] bg-gold/10 rounded-full blur-[100px]"></div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-4 translate-y-8">
-                        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80" class="rounded-2xl shadow-lg w-full h-64 object-cover hover:scale-105 transition duration-500 cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1511285560982-1356c11d4606?auto=format&fit=crop&w=600&q=80" class="rounded-2xl shadow-lg w-full h-48 object-cover hover:scale-105 transition duration-500 cursor-pointer">
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80" class="rounded-2xl shadow-2xl w-full h-80 object-cover translate-y-8">
                     <div class="space-y-4">
-                        <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=600&q=80" class="rounded-2xl shadow-lg w-full h-48 object-cover hover:scale-105 transition duration-500 cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1520854221256-17451cc330e7?auto=format&fit=crop&w=600&q=80" class="rounded-2xl shadow-lg w-full h-64 object-cover hover:scale-105 transition duration-500 cursor-pointer">
+                        <div class="bg-white p-4 rounded-xl shadow-lg floating">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600"><i class="fas fa-dollar-sign"></i></div>
+                                <div>
+                                    <p class="text-xs text-gray-400">Hemat Biaya</p>
+                                    <p class="font-bold text-sm">Hingga 70%</p>
+                                </div>
+                            </div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1511285560982-1356c11d4606?auto=format&fit=crop&w=600&q=80" class="rounded-2xl shadow-xl w-full h-48 object-cover">
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <section id="services" class="py-20 bg-white relative">
+    <section id="why" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-12" data-aos="fade-up">
-                <span class="text-gold font-bold text-xs uppercase tracking-widest">One Stop Solution</span>
-                <h2 class="font-serif text-4xl font-bold mt-2 mb-4 text-dark">Lengkapi Momen Bahagiamu</h2>
-                <p class="text-gray-500 max-w-2xl mx-auto">Kami bekerja sama dengan vendor-vendor terpercaya di Bali untuk memastikan hari spesial Anda berjalan sempurna.</p>
+            <div class="text-center max-w-3xl mx-auto mb-16" data-aos="fade-up">
+                <h2 class="font-serif text-3xl md:text-4xl font-bold mb-4">Kenapa Memilih Undagi?</h2>
+                <p class="text-gray-500">Kami paham, mengurus pernikahan itu melelahkan. Kami hadir untuk memangkas keribetan itu.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 h-auto md:h-[500px]">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="p-8 rounded-3xl bg-paper hover:bg-gold_light/30 transition duration-300 border border-transparent hover:border-gold/20" data-aos="fade-up" data-aos-delay="0">
+                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-2xl text-gold shadow-sm mb-6">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">5 Menit Jadi</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        Tidak perlu jago desain atau coding. Cukup isi data, upload foto, dan undangan digitalmu siap disebar.
+                    </p>
+                </div>
+                <div class="p-8 rounded-3xl bg-paper hover:bg-gold_light/30 transition duration-300 border border-transparent hover:border-gold/20" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-2xl text-gold shadow-sm mb-6">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Desain Premium</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        Tersedia tema eksklusif (Gold, Silver, Sage, Maroon) yang membuat undanganmu terlihat mahal dan berkelas.
+                    </p>
+                </div>
+                <div class="p-8 rounded-3xl bg-paper hover:bg-gold_light/30 transition duration-300 border border-transparent hover:border-gold/20" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-2xl text-gold shadow-sm mb-6">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-3">Ekosistem Vendor</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">
+                        Butuh souvenir atau fotografer? Temukan vendor terverifikasi langsung di platform kami. Aman & Terpercaya.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="invitation" class="py-20 bg-dark text-white overflow-hidden relative">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div data-aos="fade-right">
+                    <span class="text-gold font-bold tracking-widest text-xs uppercase">Fitur Undangan</span>
+                    <h2 class="font-serif text-4xl md:text-5xl font-bold mt-2 mb-6">Lebih Dari Sekadar <br>Sebar Link.</h2>
+                    <ul class="space-y-6">
+                        <li class="flex gap-4">
+                            <div class="w-10 h-10 rounded-full bg-gold/20 text-gold flex items-center justify-center shrink-0"><i class="fas fa-images"></i></div>
+                            <div>
+                                <h4 class="font-bold text-lg">Galeri Sinematik</h4>
+                                <p class="text-gray-400 text-sm">Pamerkan foto prewedding terbaikmu dengan tampilan grid modern yang memukau.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <div class="w-10 h-10 rounded-full bg-gold/20 text-gold flex items-center justify-center shrink-0"><i class="fas fa-music"></i></div>
+                            <div>
+                                <h4 class="font-bold text-lg">Backsound Romantis</h4>
+                                <p class="text-gray-400 text-sm">Bangun suasana haru dan bahagia saat tamu membuka undanganmu.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <div class="w-10 h-10 rounded-full bg-gold/20 text-gold flex items-center justify-center shrink-0"><i class="fas fa-gift"></i></div>
+                            <div>
+                                <h4 class="font-bold text-lg">Amplop Digital (Cashless)</h4>
+                                <p class="text-gray-400 text-sm">Terima kado pernikahan langsung ke rekening bank atau E-Wallet tanpa potongan.</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="mt-10">
+                        <a href="login.html" class="bg-gold text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-dark transition">Coba Demo Gratis</a>
+                    </div>
+                </div>
+
+                <div class="relative mx-auto" data-aos="fade-up">
+                    <div class="border-gray-700 bg-gray-700 border-[10px] rounded-[2.5rem] h-[550px] w-[280px] shadow-2xl overflow-hidden relative">
+                        <div class="absolute top-0 w-full h-full bg-white overflow-hidden">
+                            <iframe src="https://undanginaja.github.io/" class="w-full h-full border-none pointer-events-none opacity-80"></iframe>
+                            <img src="https://i.ibb.co/wzn2m0L/undagi-thumb.jpg" class="absolute inset-0 w-full h-full object-cover">
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-gold rounded-full blur-3xl opacity-30"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="vendor" class="py-24 bg-paper">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <span class="text-gold font-bold text-xs uppercase tracking-widest">Undagi Store</span>
+                <h2 class="font-serif text-4xl font-bold mt-2 mb-4 text-dark">Lengkapi Kebahagiaanmu</h2>
+                <p class="text-gray-500">Jangan biarkan momen sekali seumur hidup berlalu biasa saja. <br>Temukan vendor terbaik yang siap mewujudkan imajinasimu.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
-                <a href="market.html" class="md:col-span-2 md:row-span-2 group relative rounded-3xl overflow-hidden cursor-pointer shadow-md" data-aos="zoom-in" data-aos-delay="0">
-                    <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover zoom-img" alt="Prewedding Bali">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-8 flex flex-col justify-end">
-                        <span class="bg-gold text-white text-[10px] font-bold px-2 py-1 rounded w-fit mb-2">TERLARIS</span>
-                        <h3 class="text-white font-serif text-2xl font-bold">Foto & Video Prewedding</h3>
-                        <p class="text-gray-300 text-sm mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Abadikan momen romantis di lokasi eksotis Bali.</p>
+                <a href="market.html" class="group relative h-80 rounded-3xl overflow-hidden shadow-lg cursor-pointer" data-aos="zoom-in">
+                    <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-6 flex flex-col justify-end">
+                        <h3 class="text-white font-serif text-2xl font-bold">Souvenir Unik</h3>
+                        <p class="text-gray-300 text-sm mt-2 opacity-0 group-hover:opacity-100 transition translate-y-4 group-hover:translate-y-0">
+                            Berikan kenang-kenangan yang tak terlupakan bagi tamu undanganmu. Mulai Rp 2.000/pcs.
+                        </p>
                     </div>
                 </a>
 
-                <a href="market.html" class="md:col-span-2 group relative rounded-3xl overflow-hidden cursor-pointer shadow-md" data-aos="zoom-in" data-aos-delay="100">
-                    <img src="https://images.unsplash.com/photo-1478146059778-26028b07395a?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover zoom-img" alt="Dekorasi">
-                    <div class="absolute inset-0 bg-black/40 hover:bg-black/50 transition p-6 flex flex-col justify-center text-center">
-                        <h3 class="text-white font-serif text-xl font-bold">Dekorasi Rustic & Modern</h3>
-                        <button class="mt-4 text-white border border-white px-4 py-1 rounded-full text-xs hover:bg-white hover:text-dark transition w-fit mx-auto">Lihat Katalog</button>
+                <a href="market.html" class="md:col-span-2 group relative h-80 rounded-3xl overflow-hidden shadow-lg cursor-pointer" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <div class="absolute top-4 right-4 bg-gold text-white text-xs font-bold px-3 py-1 rounded-full">Best Seller</div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-8 flex flex-col justify-end">
+                        <h3 class="text-white font-serif text-3xl font-bold">Prewedding Cinematic</h3>
+                        <p class="text-gray-300 mt-2 opacity-0 group-hover:opacity-100 transition translate-y-4 group-hover:translate-y-0 max-w-lg">
+                            Abadikan kisah cintamu di lokasi eksotis Bali. Paket lengkap termasuk MUA, Gaun, dan Drone Video.
+                        </p>
                     </div>
                 </a>
 
-                <a href="market.html" class="group relative rounded-3xl overflow-hidden cursor-pointer shadow-md" data-aos="zoom-in" data-aos-delay="200">
-                    <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover zoom-img" alt="Souvenir">
-                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                        <h3 class="text-white font-bold">Souvenir</h3>
+                <a href="market.html" class="md:col-span-2 group relative h-80 rounded-3xl overflow-hidden shadow-lg cursor-pointer" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1519225421980-715cb0202128?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-8 flex flex-col justify-end">
+                        <h3 class="text-white font-serif text-3xl font-bold">Dekorasi Rustic & Modern</h3>
+                        <p class="text-gray-300 mt-2 opacity-0 group-hover:opacity-100 transition translate-y-4 group-hover:translate-y-0">
+                            Sulap venue pernikahanmu menjadi taman surga. Konsultasi gratis dengan desainer dekorasi kami.
+                        </p>
                     </div>
                 </a>
 
-                <a href="market.html" class="group relative rounded-3xl overflow-hidden cursor-pointer shadow-md" data-aos="zoom-in" data-aos-delay="300">
-                    <img src="https://images.unsplash.com/photo-1549417229-aa67d3263c09?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover zoom-img" alt="Seserahan">
-                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                        <h3 class="text-white font-bold">Seserahan</h3>
+                <a href="market.html" class="group relative h-80 rounded-3xl overflow-hidden shadow-lg cursor-pointer" data-aos="zoom-in" data-aos-delay="300">
+                    <img src="https://images.unsplash.com/photo-1549417229-aa67d3263c09?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-6 flex flex-col justify-end">
+                        <h3 class="text-white font-serif text-2xl font-bold">Box Seserahan</h3>
+                        <p class="text-gray-300 text-sm mt-2 opacity-0 group-hover:opacity-100 transition translate-y-4 group-hover:translate-y-0">
+                            Sewa box acrylic premium hias bunga. Tampil mewah tanpa harus beli mahal.
+                        </p>
                     </div>
                 </a>
             </div>
 
             <div class="text-center mt-12">
-                <a href="market.html" class="inline-flex items-center gap-2 text-dark font-bold hover:text-gold transition border-b-2 border-dark hover:border-gold pb-1">
-                    Jelajahi Semua Produk <i class="fas fa-arrow-right"></i>
+                <a href="market.html" class="inline-block bg-white border border-dark text-dark font-bold py-3 px-8 rounded-full hover:bg-dark hover:text-white transition">
+                    Lihat Semua Vendor
                 </a>
             </div>
         </div>
     </section>
 
-    <section id="themes" class="py-20 bg-cream border-t border-gray-200">
-        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-            <div data-aos="fade-right">
-                <span class="text-gold font-bold text-xs uppercase tracking-widest">Platform Digital</span>
-                <h2 class="font-serif text-4xl font-bold mt-2 mb-6 text-dark">Undangan Estetik, <br>Tanpa Ribet.</h2>
-                
-                <div class="space-y-6">
-                    <div class="flex gap-4">
-                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-gold shadow-sm"><i class="fas fa-swatchbook"></i></div>
-                        <div>
-                            <h4 class="font-bold text-dark">4 Tema Premium</h4>
-                            <p class="text-sm text-gray-500">Gold, Silver, Sage, Maroon. Ganti sesuka hati.</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-4">
-                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-gold shadow-sm"><i class="fas fa-images"></i></div>
-                        <div>
-                            <h4 class="font-bold text-dark">Galeri Sinematik</h4>
-                            <p class="text-sm text-gray-500">Grid 2 Kolom besar untuk menampilkan foto prewedding terbaik.</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-4">
-                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-gold shadow-sm"><i class="fas fa-gift"></i></div>
-                        <div>
-                            <h4 class="font-bold text-dark">Amplop Digital</h4>
-                            <p class="text-sm text-gray-500">Terima dana nikah langsung ke rekening Anda.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-8">
-                    <a href="login.html" class="bg-dark text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-gold transition">Coba Gratis Sekarang</a>
-                </div>
+    <section id="faq" class="py-20 bg-white border-t border-gray-100">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="font-serif text-3xl font-bold mb-4">Pertanyaan Populer</h2>
             </div>
             
-            <div class="relative" data-aos="fade-left">
-                <div class="relative z-10 mx-auto border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-xl overflow-hidden">
-                    <div class="h-[32px] w-[3px] bg-gray-800 absolute -left-[17px] top-[72px] rounded-l-lg"></div>
-                    <div class="h-[46px] w-[3px] bg-gray-800 absolute -left-[17px] top-[124px] rounded-l-lg"></div>
-                    <div class="h-[46px] w-[3px] bg-gray-800 absolute -left-[17px] top-[178px] rounded-l-lg"></div>
-                    <div class="h-[64px] w-[3px] bg-gray-800 absolute -right-[17px] top-[142px] rounded-r-lg"></div>
-                    <div class="rounded-[2rem] overflow-hidden w-[272px] h-[572px] bg-white dark:bg-gray-800">
-                        <iframe src="https://undanginaja.github.io/?uid=demo" class="w-full h-full border-0 pointer-events-none"></iframe>
-                        <img src="https://i.ibb.co/wzn2m0L/undagi-thumb.jpg" class="absolute inset-0 w-full h-full object-cover">
-                    </div>
+            <div class="space-y-4">
+                <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition">
+                    <h4 class="font-bold text-lg mb-2 flex items-center gap-2"><i class="fas fa-question-circle text-gold"></i> Apakah benar-benar gratis?</h4>
+                    <p class="text-gray-500 text-sm">Ya! Fitur dasar Undagi gratis selamanya. Anda bisa membuat undangan, mengisi data, dan menyebarkannya. Fitur Premium (Musik & Galeri Full) bersifat opsional.</p>
                 </div>
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] border border-gold/30 rounded-full animate-[spin_10s_linear_infinite]"></div>
+                <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition">
+                    <h4 class="font-bold text-lg mb-2 flex items-center gap-2"><i class="fas fa-edit text-gold"></i> Bisakah saya edit data setelah disebar?</h4>
+                    <p class="text-gray-500 text-sm">Tentu saja. Anda memiliki akses penuh ke Dashboard. Setiap perubahan (salah ketik nama, ganti jam acara) akan langsung terupdate di link undangan secara realtime.</p>
+                </div>
+                <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition">
+                    <h4 class="font-bold text-lg mb-2 flex items-center gap-2"><i class="fas fa-shopping-bag text-gold"></i> Bagaimana cara pesan Vendor?</h4>
+                    <p class="text-gray-500 text-sm">Kunjungi halaman Vendor, pilih paket yang Anda suka, dan klik tombol Pesan. Anda akan terhubung langsung dengan Admin kami via WhatsApp untuk konsultasi.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="py-20 bg-dark text-white text-center px-6">
-        <div class="max-w-2xl mx-auto" data-aos="fade-up">
-            <h2 class="font-serif text-3xl md:text-5xl font-bold mb-6">Siap untuk Hari Bahagiamu?</h2>
-            <p class="text-gray-400 mb-8 text-lg">Bergabunglah dengan ribuan pengantin yang telah mempercayakan momen mereka pada Undagi.</p>
-            <div class="flex justify-center gap-4">
-                <a href="login.html" class="bg-gold text-white font-bold py-4 px-10 rounded-full shadow-lg hover:bg-white hover:text-dark transition transform hover:scale-105">
-                    Buat Akun Gratis
-                </a>
-            </div>
+    <section class="py-20 bg-gold relative overflow-hidden text-center px-6">
+        <div class="absolute inset-0 bg-pattern opacity-10"></div>
+        <div class="relative z-10 max-w-2xl mx-auto">
+            <h2 class="font-serif text-4xl text-white font-bold mb-6">Jangan Tunda Kebahagiaanmu</h2>
+            <p class="text-white/80 text-lg mb-8">Waktu terus berjalan. Amankan vendor favoritmu dan buat undangan impian sekarang juga.</p>
+            <a href="login.html" class="bg-white text-gold font-bold py-4 px-10 rounded-full shadow-lg hover:bg-dark hover:text-white transition transform hover:scale-105 inline-block">
+                Buat Akun Gratis
+            </a>
         </div>
     </section>
 
-    <footer class="bg-white border-t border-gray-100 pt-16 pb-8">
+    <footer class="bg-dark text-white pt-16 pb-8">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="grid md:grid-cols-4 gap-12 mb-12">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
                 <div class="col-span-1 md:col-span-2">
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-8 h-8 bg-gold rounded text-white flex items-center justify-center font-bold">U</div>
-                        <span class="font-serif font-bold text-lg text-dark">UNDAGI</span>
-                    </div>
+                    <span class="font-serif text-2xl font-bold tracking-tight mb-4 block">UNDAGI.</span>
                     <p class="text-gray-400 text-sm leading-relaxed max-w-sm">
-                        Platform undangan pernikahan digital premium dan marketplace vendor terpercaya. Kami membantu mewujudkan pernikahan impian dengan teknologi dan sentuhan seni.
+                        Partner pernikahan digital terpercaya di Indonesia. Kami menggabungkan teknologi dan seni untuk menciptakan pengalaman pernikahan yang tak terlupakan.
                     </p>
                 </div>
                 <div>
-                    <h4 class="font-bold text-dark mb-4">Layanan</h4>
-                    <ul class="space-y-2 text-sm text-gray-500">
-                        <li><a href="market.html" class="hover:text-gold">Paket Prewedding</a></li>
-                        <li><a href="market.html" class="hover:text-gold">Dekorasi</a></li>
-                        <li><a href="market.html" class="hover:text-gold">Souvenir</a></li>
-                        <li><a href="market.html" class="hover:text-gold">Seserahan</a></li>
+                    <h4 class="font-bold mb-4 text-gold">Platform</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="login.html" class="hover:text-white">Buat Undangan</a></li>
+                        <li><a href="market.html" class="hover:text-white">Cari Vendor</a></li>
+                        <li><a href="login.html" class="hover:text-white">Login Member</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-bold text-dark mb-4">Bantuan</h4>
-                    <ul class="space-y-2 text-sm text-gray-500">
-                        <li><a href="#" class="hover:text-gold">FAQ</a></li>
-                        <li><a href="#" class="hover:text-gold">Hubungi Kami</a></li>
-                        <li><a href="#" class="hover:text-gold">Syarat & Ketentuan</a></li>
+                    <h4 class="font-bold mb-4 text-gold">Hubungi Kami</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><i class="fab fa-whatsapp mr-2"></i> +62 812 3456 7890</li>
+                        <li><i class="fas fa-envelope mr-2"></i> hello@undagi.com</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i> Denpasar, Bali</li>
                     </ul>
                 </div>
             </div>
-            
-            <div class="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-gray-400 text-xs">&copy; 2026 Undagi Platform. Made with <i class="fas fa-heart text-red-500"></i> in Bali.</p>
-                <div class="flex gap-4">
-                    <a href="#" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gold hover:text-white transition"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gold hover:text-white transition"><i class="fab fa-whatsapp"></i></a>
-                    <a href="#" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gold hover:text-white transition"><i class="fab fa-tiktok"></i></a>
+            <div class="border-t border-gray-800 pt-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; 2026 Undagi Platform. All rights reserved.</p>
+                <div class="flex gap-4 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-gold"><i class="fab fa-instagram text-lg"></i></a>
+                    <a href="#" class="hover:text-gold"><i class="fab fa-facebook text-lg"></i></a>
+                    <a href="#" class="hover:text-gold"><i class="fab fa-tiktok text-lg"></i></a>
                 </div>
             </div>
         </div>
@@ -276,17 +328,17 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ duration: 800, once: true });
-
-        // Sticky Navbar Effect
-        const navbar = document.getElementById('navbar');
+        AOS.init({ duration: 800, once: true, offset: 100 });
+        
+        // Navbar Effect
+        const nav = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 10) {
-                navbar.classList.add('shadow-sm', 'bg-white/95');
-                navbar.classList.remove('bg-white/80');
+            if (window.scrollY > 20) {
+                nav.classList.add('shadow-sm', 'bg-white/95');
+                nav.classList.remove('bg-white/90');
             } else {
-                navbar.classList.remove('shadow-sm', 'bg-white/95');
-                navbar.classList.add('bg-white/80');
+                nav.classList.remove('shadow-sm', 'bg-white/95');
+                nav.classList.add('bg-white/90');
             }
         });
     </script>
