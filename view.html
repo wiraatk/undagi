@@ -3,345 +3,472 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Wedding - Undangan Digital</title>
-    
-    <meta property="og:title" content="The Wedding Invitation">
-    <meta property="og:description" content="Tanpa mengurangi rasa hormat, kami mengundang Anda untuk hadir di acara bahagia kami.">
-    <meta property="og:image" content="https://i.ibb.co/wzn2m0L/undagi-thumb.jpg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:url" content="https://undanginaja.github.io/">
-    <meta property="og:type" content="website">
+    <title>The Wedding Invitation</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Great+Vibes&family=Nunito+Sans:wght@300;400;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        t_bg: 'var(--c-bg)',       
-                        t_primary: 'var(--c-prim)', 
-                        t_dark: 'var(--c-dark)',    
-                        t_accent: 'var(--c-acc)',   
-                    },
-                    fontFamily: {
-                        serif: ['"Cormorant Garamond"', 'serif'],
-                        script: ['"Great Vibes"', 'cursive'],
-                        sans: ['"Nunito Sans"', 'sans-serif'],
-                    },
-                    animation: {
-                        'spin-slow': 'spin 12s linear infinite',
-                    }
-                }
-            }
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Great+Vibes&family=Nunito+Sans:wght@300;400;700&family=Cinzel:wght@400;700&family=Dancing+Script&family=Playfair+Display:ital@0;1&family=Montserrat:wght@300;600&family=Satisfy&display=swap" rel="stylesheet">
 
     <style>
-        /* CSS VARIABLE TEMA */
-        :root {
-            --c-bg: #FAF9F6; --c-prim: #A47E5C; --c-dark: #4A4A4A; --c-acc: #D4AF37;
-        }
-        body { background-color: var(--c-bg); color: var(--c-dark); overflow-x: hidden; transition: background-color 0.5s ease; }
+        /* CONFIG CSS */
+        :root { --c-bg: #FAF9F6; --c-prim: #A47E5C; --c-dark: #4A4A4A; --c-acc: #D4AF37; }
+        body { background-color: var(--c-bg); color: var(--c-dark); overflow-x: hidden; }
         
-        .photo-circle {
-            width: 160px; height: 160px; border-radius: 50%;
-            border: 2px solid var(--c-prim); padding: 4px; object-fit: cover;
-            transition: transform 0.5s;
-        }
-        .photo-circle:hover { transform: scale(1.05); }
+        /* Utility Classes */
+        .font-great { font-family: 'Great Vibes', cursive; }
+        .font-cormorant { font-family: 'Cormorant Garamond', serif; }
+        .font-cinzel { font-family: 'Cinzel', serif; } /* Untuk Luxury/Bali */
+        .font-dancing { font-family: 'Dancing Script', cursive; } /* Untuk Rustic */
+        .font-playfair { font-family: 'Playfair Display', serif; } /* Untuk Modern */
+        .font-montserrat { font-family: 'Montserrat', sans-serif; } /* Untuk Minimalist */
+        .font-satisfy { font-family: 'Satisfy', cursive; } /* Untuk Beach */
 
-        .bottom-nav {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(200%);
-            width: 90%; max-width: 350px; background-color: var(--c-prim); border-radius: 50px;
-            display: flex; justify-content: space-around; align-items: center;
-            padding: 12px 20px; z-index: 100;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        /* Animations */
+        .spin-slow { animation: spin 10s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .fade-in { animation: fadeIn 1s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Custom Components */
+        .photo-circle { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; }
+        .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%); transition: 0.5s; z-index: 50; }
         .bottom-nav.show { transform: translateX(-50%) translateY(0); }
-        .nav-item { color: rgba(255,255,255,0.7); font-size: 18px; transition: 0.3s; }
-        .nav-item.active { color: white; transform: translateY(-3px); }
-
-        #cover-screen { transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1); }
-        #cover-screen.open { transform: translateY(-100%); }
     </style>
 </head>
 <body class="antialiased">
 
-    <audio id="bgm" loop><source src="" type="audio/mp3"></audio>
+    <audio id="bgm" loop></audio>
+    <div id="musicControl" class="fixed top-4 right-4 z-50 hidden">
+        <button onclick="toggleMusic()" class="w-10 h-10 bg-white/80 backdrop-blur rounded-full shadow-lg flex items-center justify-center border border-gray-200">
+            <i id="musicIcon" class="fas fa-compact-disc text-xl spin-slow"></i>
+        </button>
+    </div>
 
-    <section id="cover-screen" class="fixed inset-0 z-50 bg-t_bg flex flex-col justify-center items-center px-6 text-center">
-        <div data-aos="fade-up" data-aos-duration="1500" class="relative z-10 w-full max-w-sm">
-            <p class="font-serif text-t_primary tracking-[0.3em] text-xs uppercase mb-6">The Wedding of</p>
-            <div class="mb-8 relative mx-auto w-56 h-56">
-                <img id="coverBg" src="" class="w-full h-full rounded-full object-cover border border-t_primary/30 shadow-lg p-1 bg-white">
+    <section id="cover-screen" class="fixed inset-0 z-50 bg-white flex flex-col justify-center items-center px-6 text-center transition-transform duration-1000">
+        <div class="relative z-10" data-aos="fade-up">
+            <p class="tracking-[0.3em] text-xs uppercase mb-4">The Wedding of</p>
+            <h1 class="font-great text-5xl mb-6" id="coverNames">...</h1>
+            <div class="border p-4 rounded-lg inline-block mb-8">
+                <p class="text-[10px] uppercase tracking-widest text-gray-400">Kepada Yth:</p>
+                <h3 class="font-bold text-lg mt-1" id="guestNameDisplay">Tamu Undangan</h3>
             </div>
-            <h1 class="font-script text-5xl md:text-6xl text-t_primary mb-8 leading-tight" id="coverNames">...</h1>
-            <div class="bg-white border border-t_primary/20 p-6 rounded-xl shadow-sm mb-8 max-w-xs mx-auto">
-                <p class="font-sans text-[10px] text-gray-400 uppercase tracking-widest mb-2">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
-                <h3 class="font-serif text-xl font-bold text-t_dark" id="guestNameDisplay">Tamu Undangan</h3>
-            </div>
-            <button onclick="openInvitation()" class="bg-t_primary text-white px-8 py-3 rounded-full font-sans text-xs font-bold tracking-widest hover:bg-t_dark transition shadow-lg flex items-center justify-center gap-2 mx-auto animate-bounce">
-                <i class="fas fa-envelope-open"></i> BUKA UNDANGAN
+            <button onclick="openInvitation()" class="block mx-auto bg-black text-white px-8 py-3 rounded-full text-xs font-bold tracking-widest hover:bg-gray-800 transition animate-bounce">
+                BUKA UNDANGAN
             </button>
         </div>
     </section>
 
-    <main class="relative max-w-md mx-auto bg-white min-h-screen shadow-2xl pb-32 border-x border-gray-100">
-        
-        <section id="home" class="pt-20 pb-10 px-6 text-center">
-            <div data-aos="fade-down">
-                <div class="text-3xl text-t_primary mb-4 font-serif">ॐ</div>
-                <h2 class="font-script text-5xl text-t_primary mb-4">Om Swastyastu</h2>
-                <p class="font-serif text-xs text-gray-400 italic mb-8">"Mohon Doa Restu"</p>
-                <p class="font-sans text-sm text-t_dark leading-relaxed px-4">
-                    Atas Asung Kertha Wara Nugraha Ida Sang Hyang Widhi Wasa, kami bermaksud menyelenggarakan upacara Pawiwahan putra-putri kami:
-                </p>
-            </div>
-        </section>
+    <main id="app" class="opacity-0 transition-opacity duration-1000 min-h-screen">
+        </main>
 
-        <section id="couple" class="py-10 px-6 text-center">
-            <div class="mb-12" data-aos="fade-up">
-                <img id="groomImg" src="" class="photo-circle mx-auto mb-4">
-                <h3 class="font-script text-4xl text-t_primary mb-1" id="groomNickDisplay">Putra</h3>
-                <p class="font-serif text-lg font-bold text-t_dark" id="groomNameDisplay">Nama Lengkap</p>
-                <p class="font-sans text-xs text-gray-500 mt-2">Putra dari Pasangan<br><span id="groomParents" class="font-bold">...</span></p>
-            </div>
-            <div class="font-script text-3xl text-t_primary/30 mb-12">&</div>
-            <div data-aos="fade-up">
-                <img id="brideImg" src="" class="photo-circle mx-auto mb-4">
-                <h3 class="font-script text-4xl text-t_primary mb-1" id="brideNickDisplay">Putri</h3>
-                <p class="font-serif text-lg font-bold text-t_dark" id="brideNameDisplay">Nama Lengkap</p>
-                <p class="font-sans text-xs text-gray-500 mt-2">Putri dari Pasangan<br><span id="brideParents" class="font-bold">...</span></p>
-            </div>
-        </section>
-
-        <section id="event" class="py-16 px-6 bg-t_bg/50">
-            <div class="text-center" data-aos="zoom-in">
-                <p class="font-script text-4xl text-t_primary mb-6">Pawiwahan</p>
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-t_primary/10">
-                    <p class="font-serif text-xl font-bold text-t_dark mb-1" id="dateDisplay">...</p>
-                    <p class="font-sans text-sm text-gray-500 mb-6">Pukul <span id="timeDisplay">...</span> WITA</p>
-                    <div class="h-px w-20 bg-t_primary/20 mx-auto mb-6"></div>
-                    <p class="font-sans text-sm text-t_dark px-2 mb-6 font-bold leading-relaxed" id="locationDisplay">...</p>
-                    <a id="btnMap" href="#" target="_blank" class="inline-flex items-center gap-2 bg-t_primary text-white px-6 py-2 rounded-full text-xs font-bold hover:bg-t_dark transition shadow-md">
-                        <i class="fas fa-map-marked-alt"></i> Google Maps
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <section id="gallerySection" class="py-16 px-4 hidden">
-            <div class="text-center mb-8">
-                <h2 class="font-script text-4xl text-t_primary">Our Gallery</h2>
-            </div>
-            <div id="galleryGrid" class="grid grid-cols-2 gap-3">
-                </div>
-        </section>
-
-        <section class="py-16 px-6 text-center bg-white">
-            <h2 class="font-script text-3xl text-t_primary mb-6">Tanda Kasih</h2>
-            <div class="bg-t_bg p-8 rounded-2xl border border-t_primary/20 max-w-xs mx-auto" data-aos="flip-up">
-                <p class="font-serif text-lg font-bold text-gray-800 mb-1" id="bankNameDisplay">BANK</p>
-                <p class="font-mono text-2xl text-t_primary tracking-widest mb-4" id="rekDisplay">0000</p>
-                <p class="font-sans text-xs text-gray-500 mb-6 uppercase">a.n <span id="rekHolderDisplay" class="font-bold">...</span></p>
-                <button onclick="copyRek()" class="w-full bg-white border border-t_primary text-t_primary py-2 rounded-lg text-xs font-bold hover:bg-t_primary hover:text-white transition">
-                    Salin Nomor
-                </button>
-            </div>
-        </section>
-
-        <footer class="py-16 px-6 text-center bg-t_dark text-white">
-            <div class="max-w-xs mx-auto mb-8">
-                <p class="font-sans text-xs leading-relaxed opacity-80 italic">
-                    "Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu kepada kedua mempelai. Atas kehadiran dan doa restunya, kami ucapkan terima kasih."
-                </p>
-            </div>
-            <h2 class="font-serif text-xl mb-2 text-t_primary">Om Shanti Shanti Shanti Om</h2>
-            <div class="h-px w-10 bg-white/20 mx-auto my-4"></div>
-            <p class="text-[10px] opacity-50 uppercase tracking-widest">Undagi Digital Invitation</p>
-        </footer>
-
-    </main>
-
-    <nav class="bottom-nav">
-        <a href="#home" class="nav-item active"><i class="fas fa-home"></i></a>
-        <a href="#couple" class="nav-item"><i class="fas fa-user-friends"></i></a>
-        <a href="#gallerySection" class="nav-item" id="navGallery"><i class="fas fa-images"></i></a>
-        <a href="#event" class="nav-item"><i class="fas fa-map-marker-alt"></i></a>
-        <a href="javascript:void(0)" onclick="toggleMusic()" class="nav-item" id="navMusicIcon"><i class="fas fa-music"></i></a>
+    <nav class="bottom-nav bg-white/90 backdrop-blur-md px-6 py-3 rounded-full shadow-2xl border border-gray-200 flex gap-6 text-gray-400">
+        <a href="#home" class="hover:text-black transition"><i class="fas fa-home"></i></a>
+        <a href="#couple" class="hover:text-black transition"><i class="fas fa-user-friends"></i></a>
+        <a href="#event" class="hover:text-black transition"><i class="fas fa-calendar-alt"></i></a>
+        <a href="#gallery" class="hover:text-black transition"><i class="fas fa-images"></i></a>
+        <a href="#gift" class="hover:text-black transition"><i class="fas fa-gift"></i></a>
     </nav>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script type="module">
-        import { auth, db, doc, getDoc, onAuthStateChanged } from './firebase-config.js';
+        import { db, doc, getDoc } from './firebase-config.js'; // Pastikan path benar
 
-        AOS.init({ duration: 1000, once: true });
+        // --- INIT ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const uid = urlParams.get('uid'); 
+        const guest = urlParams.get('to') || "Tamu Undangan";
+        document.getElementById('guestNameDisplay').innerText = guest;
 
-        const bgm = document.getElementById('bgm');
-        let isPlaying = false;
+        if(uid) loadData(uid);
+        else console.log("No UID provided");
 
-        const themeColors = {
-            'gold': { bg: '#FAF9F6', prim: '#A47E5C', dark: '#4A4A4A', acc: '#D4AF37' },
-            'silver': { bg: '#F8FAFC', prim: '#64748B', dark: '#1E293B', acc: '#94A3B8' },
-            'sage': { bg: '#F4F7F5', prim: '#557C55', dark: '#2D442D', acc: '#A6CF98' },
-            'maroon': { bg: '#FFF5F5', prim: '#9F1239', dark: '#881337', acc: '#BE123C' }
-        };
-
-        function applyTheme(themeName) {
-            const t = themeColors[themeName] || themeColors['gold']; 
-            const root = document.documentElement;
-            root.style.setProperty('--c-bg', t.bg);
-            root.style.setProperty('--c-prim', t.prim);
-            root.style.setProperty('--c-dark', t.dark);
-            root.style.setProperty('--c-acc', t.acc);
+        async function loadData(id) {
+            try {
+                const docSnap = await getDoc(doc(db, "invitations", id));
+                if(docSnap.exists()) {
+                    const data = docSnap.data();
+                    setupInvitation(data);
+                }
+            } catch(e) { console.error(e); }
         }
 
-        const musicLibrary = {
-            'romance1.mp3': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-            'acoustic.mp3': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3', 
-            'wedding.mp3': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
+        function setupInvitation(data) {
+            // Setup Cover & Music
+            document.getElementById('coverNames').innerText = `${data.groomNick} & ${data.brideNick}`;
+            if(data.music) {
+                document.getElementById('bgm').src = data.music; 
+                document.getElementById('musicControl').classList.remove('hidden');
+            }
+
+            // RENDER TEMPLATE BERDASARKAN TEMA
+            const theme = data.theme || 'classic'; // Default
+            const app = document.getElementById('app');
+            
+            // Panggil fungsi render sesuai nama tema
+            if(templates[theme]) {
+                app.innerHTML = templates[theme](data);
+            } else {
+                app.innerHTML = templates['classic'](data); // Fallback
+            }
+
+            // Re-Init AOS setelah render HTML baru
+            setTimeout(() => AOS.init(), 500);
+        }
+
+        // --- HELPER COMPONENTS (Biar Gak Nulis Ulang) ---
+        const comp = {
+            gallery: (photos) => {
+                if(!photos || photos.length === 0) return '';
+                let imgs = photos.map(src => src ? `<img src="${src}" class="w-full h-40 object-cover rounded-lg hover:scale-105 transition duration-500 cursor-pointer" onclick="viewPhoto('${src}')">` : '').join('');
+                return `<section id="gallery" class="py-20 px-4"><h2 class="text-center text-3xl mb-8 font-great">Galeri</h2><div class="grid grid-cols-2 md:grid-cols-4 gap-2 max-w-4xl mx-auto">${imgs}</div></section>`;
+            },
+            bank: (d) => `
+                <section id="gift" class="py-20 px-6 text-center">
+                    <h2 class="text-3xl font-great mb-6">Wedding Gift</h2>
+                    <div class="bg-white p-8 rounded-xl shadow-lg inline-block border border-gray-100">
+                        <p class="font-bold text-lg mb-1">${d.bankName}</p>
+                        <p class="font-mono text-2xl tracking-widest mb-2" id="rek">${d.accountNumber}</p>
+                        <p class="text-xs text-gray-500 mb-4">a.n ${d.accountHolder}</p>
+                        <button onclick="copyRek()" class="bg-black text-white px-6 py-2 rounded text-xs">Salin</button>
+                    </div>
+                </section>
+            `,
+            footer: () => `<footer class="py-10 text-center text-xs opacity-50"><p>Undagi Platform</p></footer>`
         };
 
+        // --- 10 TEMPLATE DEFINITIONS ---
+        const templates = {
+            
+            // 1. CLASSIC GOLD (Elegan, Center)
+            'gold': (d) => `
+                <div class="bg-[#FAF9F6] text-[#4A4A4A] font-cormorant">
+                    <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center p-6">
+                        <p class="tracking-[0.2em] uppercase text-[#A47E5C] mb-4">The Wedding Of</p>
+                        <h1 class="text-6xl md:text-8xl font-bold mb-4 text-[#A47E5C]">${d.groomNick} & ${d.brideNick}</h1>
+                        <p class="italic text-xl">${d.eventDate}</p>
+                    </section>
+                    <section id="couple" class="py-20 text-center">
+                        <div class="flex flex-col md:flex-row justify-center items-center gap-10">
+                            <div data-aos="fade-right"><img src="${d.groomPhoto}" class="photo-circle border-4 border-[#A47E5C] mx-auto"><h3 class="text-3xl mt-4 font-bold">${d.groomName}</h3></div>
+                            <div class="text-4xl text-[#D4AF37]">&</div>
+                            <div data-aos="fade-left"><img src="${d.bridePhoto}" class="photo-circle border-4 border-[#A47E5C] mx-auto"><h3 class="text-3xl mt-4 font-bold">${d.brideName}</h3></div>
+                        </div>
+                    </section>
+                    <section id="event" class="py-20 bg-[#A47E5C] text-white text-center">
+                        <h2 class="text-4xl font-bold mb-8">Save The Date</h2>
+                        <p class="text-2xl">${d.eventTime} WITA</p>
+                        <p class="mt-4 max-w-md mx-auto">${d.eventLocation}</p>
+                        <a href="${d.mapsUrl}" class="inline-block mt-8 bg-white text-[#A47E5C] px-8 py-3 rounded-full font-bold">Google Maps</a>
+                    </section>
+                    ${comp.gallery(d.gallery)}
+                    ${comp.bank(d)}
+                    ${comp.footer()}
+                </div>
+            `,
+
+            // 2. MODERN SPLIT (Kiri Foto, Kanan Teks)
+            'modern': (d) => `
+                <div class="bg-white text-slate-800 font-playfair">
+                    <section id="home" class="min-h-screen flex flex-col md:flex-row">
+                        <div class="w-full md:w-1/2 h-[50vh] md:h-auto bg-cover bg-center" style="background-image: url('${d.coverPhoto}')"></div>
+                        <div class="w-full md:w-1/2 flex flex-col justify-center p-10 bg-slate-50">
+                            <h1 class="text-7xl font-bold leading-none mb-6">${d.groomNick}<br><span class="text-slate-400">&</span><br>${d.brideNick}</h1>
+                            <p class="text-xl font-sans tracking-widest uppercase">${d.eventDate}</p>
+                        </div>
+                    </section>
+                    <section id="couple" class="py-20 px-6 max-w-5xl mx-auto grid md:grid-cols-2 gap-10">
+                        <div class="flex items-center gap-4" data-aos="fade-up">
+                            <img src="${d.groomPhoto}" class="w-32 h-32 object-cover grayscale">
+                            <div><h3 class="text-2xl font-bold">${d.groomName}</h3><p class="text-sm text-gray-500">The Groom</p></div>
+                        </div>
+                        <div class="flex items-center gap-4 justify-end text-right" data-aos="fade-up">
+                            <div><h3 class="text-2xl font-bold">${d.brideName}</h3><p class="text-sm text-gray-500">The Bride</p></div>
+                            <img src="${d.bridePhoto}" class="w-32 h-32 object-cover grayscale">
+                        </div>
+                    </section>
+                    <section id="event" class="py-20 text-center bg-slate-900 text-white">
+                        <div class="border border-white/20 p-10 inline-block max-w-lg">
+                            <h2 class="text-3xl mb-4">Wedding Celebration</h2>
+                            <p class="font-sans mb-6">${d.eventLocation} • ${d.eventTime}</p>
+                            <a href="${d.mapsUrl}" class="border-b border-white pb-1">View Location</a>
+                        </div>
+                    </section>
+                    ${comp.gallery(d.gallery)}
+                    ${comp.bank(d)}
+                    ${comp.footer()}
+                </div>
+            `,
+
+            // 3. BALINESE (Traditional, Pattern)
+            'bali': (d) => `
+                <div class="bg-[#fffdf5] text-[#5c4033] font-cinzel bg-[url('https://www.transparenttextures.com/patterns/batik-2.png')]">
+                    <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center p-6 border-[20px] border-double border-[#d4af37]">
+                        <p class="text-3xl mb-4">ॐ</p>
+                        <h1 class="text-5xl font-bold mb-2">${d.groomNick} & ${d.brideNick}</h1>
+                        <p class="text-sm tracking-widest mt-4">PAWIWAHAN</p>
+                    </section>
+                    <section id="couple" class="py-20 text-center">
+                        <div class="max-w-2xl mx-auto space-y-10">
+                            <div data-aos="zoom-in"><img src="${d.groomPhoto}" class="w-40 h-40 mx-auto rounded-full border-4 border-[#d4af37] p-1"><h3 class="text-2xl mt-4">${d.groomName}</h3></div>
+                            <div data-aos="zoom-in"><img src="${d.bridePhoto}" class="w-40 h-40 mx-auto rounded-full border-4 border-[#d4af37] p-1"><h3 class="text-2xl mt-4">${d.brideName}</h3></div>
+                        </div>
+                    </section>
+                    <section id="event" class="py-20 px-6 text-center">
+                        <div class="bg-[#d4af37] text-white p-8 rounded-lg shadow-xl max-w-lg mx-auto">
+                            <h2 class="text-3xl mb-4">Om Swastyastu</h2>
+                            <p class="font-sans mb-4">${d.eventDate} | ${d.eventTime} WITA</p>
+                            <p class="font-sans text-sm">${d.eventLocation}</p>
+                        </div>
+                    </section>
+                    ${comp.gallery(d.gallery)}
+                    ${comp.bank(d)}
+                    ${comp.footer()}
+                </div>
+            `,
+
+            // 4. RUSTIC (Wood, Earthy, Handwriting)
+            'rustic': (d) => `
+                <div class="bg-[#F4F1EA] text-[#5D4037] font-dancing">
+                    <section id="home" class="min-h-screen flex justify-center items-center bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]">
+                        <div class="bg-white/80 p-12 text-center shadow-xl rotate-1">
+                            <h1 class="text-7xl mb-4">${d.groomNick} <br>&<br> ${d.brideNick}</h1>
+                            <p class="font-sans text-sm uppercase tracking-widest text-[#8D6E63]">${d.eventDate}</p>
+                        </div>
+                    </section>
+                    <section id="couple" class="py-20 text-center font-sans">
+                        <div class="flex flex-wrap justify-center gap-8">
+                            <div class="bg-white p-4 shadow rotate-2"><img src="${d.groomPhoto}" class="w-48 h-64 object-cover"> <p class="mt-2 font-bold">${d.groomName}</p></div>
+                            <div class="bg-white p-4 shadow -rotate-2"><img src="${d.bridePhoto}" class="w-48 h-64 object-cover"> <p class="mt-2 font-bold">${d.brideName}</p></div>
+                        </div>
+                    </section>
+                    <section id="event" class="py-20 text-center font-sans">
+                        <div class="border-y-2 border-[#5D4037] py-10 max-w-lg mx-auto">
+                            <h2 class="font-dancing text-5xl mb-4">Save The Date</h2>
+                            <p>${d.eventTime} • ${d.eventLocation}</p>
+                        </div>
+                    </section>
+                    ${comp.gallery(d.gallery)}
+                    ${comp.bank(d)}
+                    ${comp.footer()}
+                </div>
+            `,
+
+            // 5. LUXURY DARK (Premium, Gold on Black)
+            'luxury': (d) => `
+                <div class="bg-[#1a1a1a] text-[#D4AF37] font-cinzel">
+                    <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center p-6 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gray-800 to-black">
+                        <h1 class="text-5xl md:text-7xl font-bold mb-6 tracking-widest border-b-2 border-[#D4AF37] pb-4">${d.groomNick} & ${d.brideNick}</h1>
+                        <p class="text-sm tracking-[0.5em] text-white uppercase">The Royal Wedding</p>
+                    </section>
+                    <section id="couple" class="py-20 text-center">
+                        <div class="grid md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+                            <div class="border border-[#D4AF37] p-6"><h3 class="text-2xl text-white mb-2">${d.groomName}</h3><p class="text-xs text-gray-400">The Groom</p></div>
+                            <div class="border border-[#D4AF37] p-6"><h3 class="text-2xl text-white mb-2">${d.brideName}</h3><p class="text-xs text-gray-400">The Bride</p></div>
+                        </div>
+                    </section>
+                    <section id="event" class="py-20 text-center text-white">
+                        <div class="bg-[#D4AF37] text-black p-10 max-w-md mx-auto rounded-t-full">
+                            <h2 class="text-3xl font-bold mb-4">Event Details</h2>
+                            <p class="font-sans font-bold">${d.eventDate}</p>
+                            <p class="font-sans">${d.eventLocation}</p>
+                        </div>
+                    </section>
+                    ${comp.gallery(d.gallery)}
+                    ${comp.bank(d)}
+                    ${comp.footer()}
+                </div>
+            `,
+
+            // 6. FLORAL (Soft, Pink/Pastel)
+            'floral': (d) => `
+                <div class="bg-[#FFF0F5] text-[#8B4A62] font-playfair">
+                    <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center p-6 border-[16px] border-white relative">
+                        <div class="absolute top-0 left-0 text-6xl opacity-20">🌸</div>
+                        <div class="absolute bottom-0 right-0 text-6xl opacity-20">🌸</div>
+                        <h1 class="text-6xl md:text-8xl font-bold mb-4">${d.groomNick} <br>&<br> ${d.brideNick}</h1>
+                        <p class="text-xl italic">We are getting married</p>
+                    </section>
+                    <section id="couple" class="py-20 text-center">
+                        <div class="flex justify-center items-center gap-4">
+                            <img src="${d.groomPhoto}" class="w-32 h-32 rounded-full border-4 border-white shadow-md">
+                            <span class="text-4xl">&</span>
+                            <img src="${d.bridePhoto}" class="w-32 h-32 rounded-full border-4 border-white shadow-md">
+                        </div>
+                        <div class="mt-8 font-sans">
+                            <p class="font-bold text-xl">${d.groomName}</p>
+                            <p class="font-bold text-xl">${d.brideName}</p>
+                        </div>
+                    </section>
+                    <section id="event" class="py-20 bg-white text-center rounded-[3rem] mx-4 shadow-sm">
+                        <h2 class="text-4xl mb-6">The Day</h2>
+                        <p class="font-sans text-gray-500">${d.eventDate} <br> ${d.eventTime}</p>
+                        <p class="font-sans mt-4 font-bold">${d.eventLocation}</p>
+                    </section>
+                    ${comp.gallery(d.gallery)}
+                    ${comp.bank(d)}
+                    ${comp.footer()}
+                </div>
+            `,
+
+            // 7. BEACH (Blue, Relaxed)
+            'beach': (d) => `
+                <div class="bg-[#E0F7FA] text-[#006064] font-satisfy">
+                    <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center bg-gradient-to-b from-[#E0F7FA] to-[#B2EBF2]">
+                        <h1 class="text-6xl mb-2">${d.groomNick} & ${d.brideNick}</h1>
+                        <p class="font-sans text-sm tracking-widest uppercase">Ocean Love Story</p>
+                    </section>
+                    <section id="couple" class="py-20 text-center font-sans">
+                        <div class="max-w-3xl mx-auto grid md:grid-cols-2 gap-8 px-6">
+                            <div class="bg-white/50 p-6 rounded-2xl backdrop-blur"><h3 class="text-2xl font-satisfy mb-2">${d.groomName}</h3></div>
+                            <div class="bg-white/50 p-6 rounded-2xl backdrop-blur"><h3 class="text-2xl font-satisfy mb-2">${d.brideName}</h3></div>
+                        </div>
+                    </section>
+                    <section id="event" class="py-20 text-center">
+                        <div class="bg-white text-[#006064] p-10 rounded-full w-64 h-64 flex flex-col justify-center items-center mx-auto shadow-xl border-4 border-[#4DD0E1]">
+                            <p class="font-bold text-xl">${d.eventDate}</p>
+                            <p class="text-sm">${d.eventLocation}</p>
+                        </div>
+                    </section>
+                    ${comp.gallery(d.gallery)}
+                    ${comp.bank(d)}
+                    ${comp.footer()}
+                </div>
+            `,
+
+            // 8. MINIMALIST (Clean, Sans Serif, B&W)
+            'minimal': (d) => `
+                <div class="bg-white text-black font-montserrat">
+                    <section id="home" class="min-h-screen flex justify-center items-center px-6">
+                        <div class="text-left w-full max-w-4xl">
+                            <h1 class="text-6xl md:text-9xl font-bold tracking-tighter leading-none">${d.groomNick.toUpperCase()} <span class="text-gray-300">/</span><br>${d.brideNick.toUpperCase()}</h1>
+                            <p class="mt-4 text-sm font-bold bg-black text-white inline-block px-2">${d.eventDate}</p>
+                        </div>
+                    </section>
+                    <section id="couple" class="py-20 px-6">
+                        <div class="grid grid-cols-2 gap-4 max-w-4xl mx-auto">
+                            <img src="${d.groomPhoto}" class="w-full h-64 object-cover grayscale">
+                            <img src="${d.bridePhoto}" class="w-full h-64 object-cover grayscale">
+                            <p class="font-bold">${d.groomName}</p>
+                            <p class="font-bold text-right">${d.brideName}</p>
+                        </div>
+                    </section>
+                    <section id="event" class="py-20 px-6 bg-gray-50">
+                        <div class="max-w-2xl mx-auto border-l-4 border-black pl-6">
+                            <h2 class="text-4xl font-bold mb-4">Location</h2>
+                            <p class="text-gray-600">${d.eventLocation}</p>
+                            <p class="font-bold mt-2">${d.eventTime}</p>
+                            <a href="${d.mapsUrl}" class="underline text-sm mt-4 block">Get Directions</a>
+                        </div>
+                    </section>
+                    ${comp.gallery(d.gallery)}
+                    ${comp.bank(d)}
+                    ${comp.footer()}
+                </div>
+            `,
+
+            // 9. GRID (Instagram Style)
+            'grid': (d) => `
+                <div class="bg-gray-50 text-gray-800 font-sans">
+                    <section id="home" class="min-h-screen flex flex-col justify-center items-center bg-white m-4 border border-gray-200 shadow-sm">
+                        <div class="w-20 h-20 rounded-full border-2 border-pink-500 p-1 mb-4"><img src="${d.coverPhoto}" class="w-full h-full rounded-full object-cover"></div>
+                        <h1 class="font-bold text-2xl">${d.groomNick}_${d.brideNick}_wedding</h1>
+                        <button class="bg-blue-500 text-white px-6 py-1 rounded mt-4 font-bold text-sm">Follow Event</button>
+                    </section>
+                    <section id="couple" class="py-10 px-4">
+                        <div class="bg-white p-4 rounded shadow-sm mb-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
+                                <span class="font-bold text-sm">${d.groomName}</span>
+                            </div>
+                            <img src="${d.groomPhoto}" class="w-full aspect-square object-cover rounded">
+                        </div>
+                        <div class="bg-white p-4 rounded shadow-sm">
+                            <div class="flex items-center gap-2 mb-2">
+                                <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
+                                <span class="font-bold text-sm">${d.brideName}</span>
+                            </div>
+                            <img src="${d.bridePhoto}" class="w-full aspect-square object-cover rounded">
+                        </div>
+                    </section>
+                    <section id="event" class="py-10 px-4 text-center">
+                        <div class="bg-white p-6 shadow-sm">
+                            <h2 class="font-bold mb-2">Event Details</h2>
+                            <p class="text-sm text-gray-500">${d.eventDate} @ ${d.eventLocation}</p>
+                        </div>
+                    </section>
+                    ${comp.gallery(d.gallery)}
+                    ${comp.bank(d)}
+                    ${comp.footer()}
+                </div>
+            `,
+
+            // 10. CINEMATIC (Full Screen Image)
+            'cinematic': (d) => `
+                <div class="bg-black text-white font-montserrat">
+                    <section id="home" class="h-screen w-screen relative flex items-end pb-20 px-10">
+                        <img src="${d.coverPhoto}" class="absolute inset-0 w-full h-full object-cover opacity-50">
+                        <div class="relative z-10">
+                            <h1 class="text-6xl font-bold mb-2">${d.groomNick} & ${d.brideNick}</h1>
+                            <p class="text-xl tracking-widest border-l-4 border-white pl-4">THE BEGINNING OF FOREVER</p>
+                        </div>
+                    </section>
+                    <section id="couple" class="py-24 px-10 bg-zinc-900">
+                        <div class="flex flex-col md:flex-row gap-10 items-center">
+                            <img src="${d.groomPhoto}" class="w-full md:w-1/2 h-96 object-cover grayscale hover:grayscale-0 transition duration-700">
+                            <div class="text-center md:text-left">
+                                <h2 class="text-4xl font-bold mb-2">${d.groomName}</h2>
+                                <p class="text-gray-400">The Groom</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-col md:flex-row-reverse gap-10 items-center mt-10">
+                            <img src="${d.bridePhoto}" class="w-full md:w-1/2 h-96 object-cover grayscale hover:grayscale-0 transition duration-700">
+                            <div class="text-center md:text-right">
+                                <h2 class="text-4xl font-bold mb-2">${d.brideName}</h2>
+                                <p class="text-gray-400">The Bride</p>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="event" class="h-[50vh] flex justify-center items-center bg-fixed bg-cover bg-center relative" style="background-image: url('${d.coverPhoto}')">
+                        <div class="bg-black/70 p-10 text-center border border-white/20 backdrop-blur-sm">
+                            <h2 class="text-3xl font-bold mb-4 uppercase tracking-widest">The Wedding Day</h2>
+                            <p class="text-xl">${d.eventDate} • ${d.eventLocation}</p>
+                        </div>
+                    </section>
+                    ${comp.gallery(d.gallery)}
+                    ${comp.bank(d)}
+                    ${comp.footer()}
+                </div>
+            `
+        };
+
+        // --- GLOBAL FUNCTIONS (Actions) ---
         window.openInvitation = () => {
-            document.getElementById('cover-screen').classList.add('open');
-            setTimeout(() => { document.querySelector('.bottom-nav').classList.add('show'); }, 500);
-            if(bgm.src) {
-                bgm.play().then(() => {
-                    isPlaying = true;
-                    document.getElementById('navMusicIcon').classList.add('animate-spin');
-                }).catch(e => console.log("Audio autoplay blocked"));
-            }
+            document.getElementById('cover-screen').style.transform = 'translateY(-100%)';
+            document.getElementById('app').style.opacity = '1';
+            document.querySelector('.bottom-nav').classList.add('show');
+            const bgm = document.getElementById('bgm');
+            if(bgm.src) bgm.play().catch(e => console.log("Autoplay blocked"));
         };
 
         window.toggleMusic = () => {
-            const icon = document.getElementById('navMusicIcon');
-            if(isPlaying) { bgm.pause(); icon.classList.remove('animate-spin'); icon.style.opacity = "0.5"; }
-            else { bgm.play(); icon.classList.add('animate-spin'); icon.style.opacity = "1"; }
-            isPlaying = !isPlaying;
+            const bgm = document.getElementById('bgm');
+            const icon = document.getElementById('musicIcon');
+            if(bgm.paused) { bgm.play(); icon.classList.add('spin-slow'); icon.classList.replace('fa-play', 'fa-compact-disc'); }
+            else { bgm.pause(); icon.classList.remove('spin-slow'); icon.classList.replace('fa-compact-disc', 'fa-play'); }
+        };
+
+        window.viewPhoto = (src) => {
+            Swal.fire({ imageUrl: src, showConfirmButton: false, background: 'transparent', backdrop: 'rgba(0,0,0,0.9)' });
         };
 
         window.copyRek = () => {
-            navigator.clipboard.writeText(document.getElementById('rekDisplay').innerText);
-            Swal.fire({icon: 'success', title: 'Tersalin', timer: 1000, showConfirmButton: false, toast: true, position: 'top'});
+            const text = document.getElementById('rek').innerText;
+            navigator.clipboard.writeText(text);
+            Swal.fire({ icon: 'success', title: 'Tersalin', toast: true, position: 'bottom', timer: 1500, showConfirmButton: false });
         };
-
-        window.viewPhoto = (url) => {
-            Swal.fire({
-                imageUrl: url, imageAlt: 'Gallery', showConfirmButton: false,
-                background: 'transparent', backdrop: 'rgba(0,0,0,0.9)',
-                customClass: { popup: 'bg-transparent shadow-none' }
-            });
-        };
-
-        const sections = document.querySelectorAll('section');
-        const navLi = document.querySelectorAll('.nav-item');
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (pageYOffset >= sectionTop - 200) { current = section.getAttribute('id'); }
-            });
-            navLi.forEach(li => {
-                li.classList.remove('active');
-                if (li.getAttribute('href') && li.getAttribute('href').includes(current)) li.classList.add('active');
-            });
-        });
-
-        onAuthStateChanged(auth, async (user) => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const targetUID = urlParams.get('uid') || (user ? user.uid : null);
-            const guestName = urlParams.get('to');
-
-            if(guestName) document.getElementById('guestNameDisplay').innerText = decodeURIComponent(guestName);
-            if(!targetUID) return;
-
-            try {
-                const docSnap = await getDoc(doc(db, "invitations", targetUID));
-                if(docSnap.exists()) {
-                    const data = docSnap.data();
-                    const isOwner = (user && user.uid === targetUID);
-                    applyTheme(data.theme); 
-                    renderData(data, isOwner);
-                }
-            } catch(e) { console.error(e); }
-        });
-
-        function renderData(data, isOwner) {
-            document.getElementById('coverNames').innerText = `${data.groomNick || 'Pria'} & ${data.brideNick || 'Wanita'}`;
-            document.getElementById('groomNickDisplay').innerText = data.groomNick;
-            document.getElementById('brideNickDisplay').innerText = data.brideNick;
-            document.getElementById('groomNameDisplay').innerText = data.groomName;
-            document.getElementById('groomParents').innerText = `Bpk. ${data.groomFather} & Ibu ${data.groomMother}`;
-            document.getElementById('brideNameDisplay').innerText = data.brideName;
-            document.getElementById('brideParents').innerText = `Bpk. ${data.brideFather} & Ibu ${data.brideMother}`;
-
-            if(data.coverPhoto) document.getElementById('coverBg').src = data.coverPhoto;
-            if(data.groomPhoto) document.getElementById('groomImg').src = data.groomPhoto;
-            if(data.bridePhoto) document.getElementById('brideImg').src = data.bridePhoto;
-
-            if(data.eventDate) {
-                const dateObj = new Date(data.eventDate);
-                const opts = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-                document.getElementById('dateDisplay').innerText = dateObj.toLocaleDateString('id-ID', opts);
-            }
-            document.getElementById('timeDisplay').innerText = (data.eventTime || '00:00') + " WITA";
-            document.getElementById('locationDisplay').innerText = data.eventLocation;
-            if(data.mapsUrl) document.getElementById('btnMap').href = data.mapsUrl;
-            document.getElementById('bankNameDisplay').innerText = data.bankName;
-            document.getElementById('rekDisplay').innerText = data.accountNumber;
-            document.getElementById('rekHolderDisplay').innerText = data.accountHolder;
-
-            const plan = data.plan || 'free'; 
-            const showPremiumFeatures = (plan !== 'free') || isOwner;
-
-            if (showPremiumFeatures) {
-                if(data.music) {
-                    if(musicLibrary[data.music]) bgm.src = musicLibrary[data.music];
-                    else bgm.src = data.music;
-                } else {
-                    bgm.src = musicLibrary['romance1.mp3'];
-                }
-            } else {
-                bgm.src = ""; 
-                document.getElementById('navMusicIcon').style.display = 'none';
-            }
-
-            const gallerySection = document.getElementById('gallerySection');
-            const galleryGrid = document.getElementById('galleryGrid');
-            const galleryData = data.gallery || [];
-
-            if (showPremiumFeatures) {
-                gallerySection.classList.remove('hidden');
-                const isPremium = (plan === 'premium');
-                const limit = (isOwner || isPremium) ? 8 : 5;
-                
-                galleryGrid.className = "grid grid-cols-2 gap-3"; 
-
-                let html = "";
-                let count = 0;
-                for(let i=0; i < galleryData.length; i++) {
-                    if(count >= limit) break; 
-                    if(galleryData[i]) { 
-                        html += `<div class="aspect-[3/4] rounded-xl overflow-hidden bg-gray-200 shadow-md cursor-pointer relative group">
-                                    <img src="${galleryData[i]}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110" onclick="viewPhoto('${galleryData[i]}')">
-                                    <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition"></div>
-                                 </div>`;
-                        count++;
-                    }
-                }
-                if(html === "") html = "<p class='text-center col-span-2 text-xs text-gray-400'>Belum ada foto galeri.</p>";
-                galleryGrid.innerHTML = html;
-            } else {
-                gallerySection.style.display = 'none';
-            }
-        }
     </script>
 </body>
 </html>
