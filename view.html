@@ -1,25 +1,212 @@
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undangan Pawiwahan</title>
+    
+    <script>
+        window.onerror = function(msg, url, line, col, error) {
+            const box = document.getElementById('debug-console');
+            if(box) {
+                box.style.display = 'block';
+                box.innerHTML += `<div style="margin-bottom:10px; border-bottom:1px solid #ffcccc; padding-bottom:5px;">
+                    <strong>⛔ ERROR TERDETEKSI:</strong><br>${msg}<br>
+                    <small style="opacity:0.8">Baris: ${line} | File: ${url}</small>
+                </div>`;
+            }
+            return false;
+        };
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Lato:wght@300;400;700&family=Pinyon+Script&family=Noto+Serif+Balinese&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#C5A059',
+                        paper: '#FAFAF9',
+                        ink: '#44403C',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        script: ['"Pinyon Script"', 'cursive'],
+                        sans: ['"Lato"', 'sans-serif'],
+                        bali: ['"Noto Serif Balinese"', 'serif']
+                    },
+                    animation: {
+                        'spin-slow': 'spin 15s linear infinite',
+                        'pulse-slow': 'pulse 3s infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #FAFAF9; color: #44403C; overflow-x: hidden; }
+        
+        /* DEBUG BOX (Hanya muncul jika ada error) */
+        #debug-console {
+            display: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: auto; max-height: 50vh;
+            background: #990000; color: white; z-index: 999999;
+            padding: 20px; font-family: monospace; font-size: 12px;
+            overflow-y: scroll; border-bottom: 3px solid #ff0000;
+        }
+
+        /* --- STYLING UTAMA --- */
+        #envelope-layer {
+            position: fixed; inset: 0; z-index: 50;
+            background: linear-gradient(135deg, #d4af37 0%, #f3e5ab 50%, #b8860b 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        #envelope-layer.open { transform: translateY(100%); }
+        .wax-seal {
+            width: 80px; height: 80px; background: #8A6D3B; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 2px solid rgba(255,255,255,0.2);
+            color: white; font-size: 24px; margin-bottom: 20px; animation: pulse-slow;
+        }
+        .photo-circle {
+            width: 140px; height: 140px; border-radius: 50%; border: 3px solid #C5A059;
+            padding: 3px; background: white; object-fit: cover;
+        }
+        .bottom-nav {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(200%);
+            width: 90%; max-width: 350px; background-color: #A47E5C; border-radius: 50px;
+            display: flex; justify-content: space-around; align-items: center; padding: 12px 20px;
+            z-index: 100; transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .bottom-nav.show { transform: translateX(-50%) translateY(0); }
+        .nav-item { color: rgba(255,255,255,0.7); font-size: 18px; transition: 0.3s; }
+        .nav-item.active { color: white; transform: translateY(-3px); }
+    </style>
+</head>
+<body>
+
+    <div id="debug-console">
+        <h3 class="font-bold border-b border-white/20 pb-2 mb-2">⚠️ SYSTEM DIAGNOSTIC</h3>
+    </div>
+
+    <audio id="bgm" loop><source src="" type="audio/mp3"></audio>
+    <button id="musicBtn" onclick="toggleMusic()" class="fixed bottom-6 left-6 z-40 w-10 h-10 bg-gold text-white rounded-full flex items-center justify-center shadow-lg hidden animate-spin-slow">
+        <i class="fas fa-compact-disc"></i>
+    </button>
+
+    <section id="envelope-layer">
+        <div class="relative z-10 text-center w-full px-6">
+            <p class="font-serif text-white/80 tracking-[0.3em] text-sm uppercase mb-8">Undangan Pawiwahan</p>
+            <div class="bg-white/90 p-6 rounded shadow-xl max-w-xs mx-auto transform rotate-1 mb-8">
+                <div class="border border-gold p-4 text-center">
+                    <p class="font-sans text-[10px] text-gray-500 uppercase tracking-widest mb-2">Kepada Yth:</p>
+                    <h3 class="font-serif text-2xl font-bold text-ink" id="guestNameDisplay">Tamu Undangan</h3>
+                </div>
+            </div>
+            <button onclick="openEnvelope()" class="flex flex-col items-center gap-2 mx-auto group">
+                <div class="wax-seal group-hover:scale-110 transition"><span class="font-bali text-xl">ᬏᬁ</span></div>
+                <span class="text-white font-serif text-sm tracking-widest border-b border-white/50 pb-1">BUKA AMPLOP</span>
+            </button>
+        </div>
+    </section>
+
+    <main class="max-w-md mx-auto bg-white min-h-screen shadow-2xl pb-32 border-x border-gray-100">
+        <section id="home" class="pt-20 pb-10 px-6 text-center">
+            <div data-aos="fade-down">
+                <span class="text-4xl text-gold font-bali">ᬏᬁ</span>
+                <h1 class="font-serif text-4xl md:text-5xl text-gold mb-6 font-bold">Om Swastyastu</h1>
+                <p class="font-sans text-sm text-ink leading-relaxed px-4">Atas Asung Kertha Wara Nugraha Ida Sang Hyang Widhi Wasa, kami bermaksud menyelenggarakan upacara Pawiwahan:</p>
+            </div>
+        </section>
+
+        <section id="couple" class="py-10 px-6 text-center">
+            <div class="mb-12" data-aos="fade-up">
+                <img id="groomImg" src="" class="photo-circle mx-auto mb-4">
+                <h2 class="font-serif text-3xl text-ink font-bold" id="groomNameDisplay">...</h2>
+                <p class="font-sans text-xs text-gold uppercase tracking-widest">Mempelai Pria</p>
+                <p class="text-xs text-gray-500 mt-2">Putra dari Bpk. <span id="groomFather">...</span> & Ibu <span id="groomMother">...</span></p>
+            </div>
+            <div class="font-script text-5xl text-gold/40 mb-12">&</div>
+            <div data-aos="fade-up">
+                <img id="brideImg" src="" class="photo-circle mx-auto mb-4">
+                <h2 class="font-serif text-3xl text-ink font-bold" id="brideNameDisplay">...</h2>
+                <p class="font-sans text-xs text-gold uppercase tracking-widest">Mempelai Wanita</p>
+                <p class="text-xs text-gray-500 mt-2">Putri dari Bpk. <span id="brideFather">...</span> & Ibu <span id="brideMother">...</span></p>
+            </div>
+        </section>
+
+        <section id="event" class="py-16 px-6 bg-paper">
+            <div class="text-center" data-aos="zoom-in">
+                <h3 class="font-serif text-2xl text-ink mb-6 font-bold">Rangkaian Acara</h3>
+                <div class="bg-white p-6 border border-gold/20 rounded-xl">
+                    <p class="font-serif text-xl text-ink font-bold" id="dateDisplay">...</p>
+                    <p class="font-sans text-sm text-gray-500 mb-4" id="timeDisplay">...</p>
+                    <p class="font-sans text-sm text-ink font-bold px-4 leading-relaxed" id="locationDisplay">...</p>
+                    <a id="btnMap" href="#" target="_blank" class="mt-4 inline-block text-xs font-bold text-gold border-b border-gold pb-1">Buka Google Maps</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallerySection" class="py-16 px-4 hidden">
+            <h2 class="font-script text-4xl text-gold text-center mb-6">Our Gallery</h2>
+            <div id="galleryGrid" class="grid gap-2"></div>
+        </section>
+
+        <section class="py-16 px-6 text-center">
+            <div class="max-w-xs mx-auto border border-gold/30 p-6 rounded-lg bg-white shadow-sm">
+                <h3 class="font-serif text-lg text-ink mb-1">Tanda Kasih</h3>
+                <p class="font-bold text-ink" id="bankNameDisplay">BANK</p>
+                <p class="font-mono text-xl text-ink tracking-widest my-2 select-all bg-paper py-2" id="rekDisplay">0000</p>
+                <p class="font-sans text-xs text-gray-500 mb-4">a.n <span id="rekHolderDisplay">...</span></p>
+                <button onclick="copyRek()" class="w-full bg-gold hover:bg-ink text-white py-2 rounded text-xs font-bold transition">SALIN</button>
+            </div>
+        </section>
+
+        <footer class="py-16 px-6 text-center bg-ink text-white">
+            <p class="font-sans text-xs opacity-80 italic mb-4">"Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir."</p>
+            <h2 class="font-serif text-xl text-gold">Om Shanti Shanti Shanti Om</h2>
+        </footer>
+    </main>
+
+    <nav class="bottom-nav">
+        <a href="#home" class="nav-item active"><i class="fas fa-home"></i></a>
+        <a href="#couple" class="nav-item"><i class="fas fa-user-friends"></i></a>
+        <a href="#gallerySection" class="nav-item" id="navGallery"><i class="fas fa-images"></i></a>
+        <a href="#event" class="nav-item"><i class="fas fa-map-marker-alt"></i></a>
+        <a href="javascript:void(0)" onclick="toggleMusic()" class="nav-item" id="navMusicIcon"><i class="fas fa-music"></i></a>
+    </nav>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script type="module">
-        import { auth, db, doc, getDoc, onAuthStateChanged } from './firebase-config.js';
+        // JEBAKAN IMPORT - UNTUK CEK CONFIG
+        try {
+            var { auth, db, doc, getDoc, onAuthStateChanged } = await import('./firebase-config.js?v=' + Math.random());
+        } catch (e) {
+            document.getElementById('debug-console').style.display = 'block';
+            document.getElementById('debug-console').innerHTML += `<br><strong>FATAL ERROR:</strong> Gagal memuat firebase-config.js!<br>Pastikan file ada di GitHub.<br>Detail: ${e.message}`;
+            throw e;
+        }
 
         AOS.init({ duration: 1000, once: true });
 
-        // === LOGIC ===
         const bgm = document.getElementById('bgm');
         let isPlaying = false;
-
-        // Default Musik kalau user tidak upload
         const musicLibrary = {
             'romance1.mp3': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
             'acoustic.mp3': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3', 
             'wedding.mp3': 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
         };
 
-        window.openInvitation = () => {
-            document.getElementById('cover-screen').classList.add('open');
+        window.openEnvelope = () => {
+            document.getElementById('envelope-layer').classList.add('open');
             setTimeout(() => { document.querySelector('.bottom-nav').classList.add('show'); }, 500);
-            
-            // Cek apakah ada source musik sebelum play
             if(bgm.src) {
                 bgm.play().then(() => {
                     isPlaying = true;
@@ -40,7 +227,6 @@
             Swal.fire({icon: 'success', title: 'Tersalin', timer: 1000, showConfirmButton: false, toast: true, position: 'top'});
         };
 
-        // Scroll Spy
         const sections = document.querySelectorAll('section');
         const navLi = document.querySelectorAll('.nav-item');
         window.addEventListener('scroll', () => {
@@ -55,103 +241,96 @@
             });
         });
 
-        // === LOAD DATA (INTELLIGENT LOGIC) ===
+        // LOAD DATA
         onAuthStateChanged(auth, async (currentUser) => {
             const urlParams = new URLSearchParams(window.location.search);
-            // Ambil UID dari URL (prioritas) atau dari User Login (preview dashboard)
             const targetUID = urlParams.get('uid') || (currentUser ? currentUser.uid : null);
             const guestName = urlParams.get('to');
 
+            // DEBUG UID
+            if(!targetUID) {
+                document.getElementById('debug-console').style.display = 'block';
+                document.getElementById('debug-console').innerHTML += `<br><strong>WARNING:</strong> UID Kosong!<br>Pastikan link mengandung ?uid=...`;
+                return;
+            }
+
             if(guestName) document.getElementById('guestNameDisplay').innerText = decodeURIComponent(guestName);
-            if(!targetUID) return; // Kalau tidak ada UID sama sekali, stop.
 
             try {
                 const docSnap = await getDoc(doc(db, "invitations", targetUID));
                 if(docSnap.exists()) {
                     const data = docSnap.data();
-                    
-                    // CEK APAKAH YANG MELIHAT ADALAH PEMILIK (OWNER)?
-                    // Logic: Kalau user login & UID-nya sama dengan UID undangan = Owner.
                     const isOwner = (currentUser && currentUser.uid === targetUID);
-                    
                     renderData(data, isOwner);
+                } else {
+                    document.getElementById('debug-console').style.display = 'block';
+                    document.getElementById('debug-console').innerHTML += `<br><strong>DATA TIDAK DITEMUKAN:</strong> UID ${targetUID} tidak ada di database.`;
                 }
-            } catch(e) { console.error(e); }
+            } catch(e) { 
+                console.error(e);
+                throw e; // Biar ditangkap window.onerror
+            }
         });
 
         function renderData(data, isOwner) {
-            // Text & Images (Standard)
-            document.getElementById('coverNames').innerText = `${data.groomNick || 'Pria'} & ${data.brideNick || 'Wanita'}`;
-            document.getElementById('groomNickDisplay').innerText = data.groomNick;
-            document.getElementById('brideNickDisplay').innerText = data.brideNick;
-            document.getElementById('groomNameDisplay').innerText = data.groomName;
-            document.getElementById('groomParents').innerText = `Bpk. ${data.groomFather} & Ibu ${data.groomMother}`;
-            document.getElementById('brideNameDisplay').innerText = data.brideName;
-            document.getElementById('brideParents').innerText = `Bpk. ${data.brideFather} & Ibu ${data.brideMother}`;
+            document.getElementById('groomNickDisplay').innerText = data.groomNick || 'Putra'; // Fix error null
+            
+            document.getElementById('groomNameDisplay').innerText = data.groomName || 'Nama Pria';
+            document.getElementById('groomFather').innerText = data.groomFather || '...';
+            document.getElementById('groomMother').innerText = data.groomMother || '...';
+            
+            document.getElementById('brideNameDisplay').innerText = data.brideName || 'Nama Wanita';
+            document.getElementById('brideFather').innerText = data.brideFather || '...';
+            document.getElementById('brideMother').innerText = data.brideMother || '...';
 
-            if(data.coverPhoto) document.getElementById('coverBg').src = data.coverPhoto;
+            if(data.coverPhoto) { /* Cover dihandle CSS atau Custom */ }
             if(data.groomPhoto) document.getElementById('groomImg').src = data.groomPhoto;
             if(data.bridePhoto) document.getElementById('brideImg').src = data.bridePhoto;
 
-            // Event & Bank
             if(data.eventDate) {
                 const dateObj = new Date(data.eventDate);
                 const opts = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
                 document.getElementById('dateDisplay').innerText = dateObj.toLocaleDateString('id-ID', opts);
             }
-            document.getElementById('timeDisplay').innerText = (data.eventTime || '00:00');
-            document.getElementById('locationDisplay').innerText = data.eventLocation;
+            document.getElementById('timeDisplay').innerText = (data.eventTime || '00:00') + ' WITA';
+            document.getElementById('locationDisplay').innerText = data.eventLocation || 'Lokasi...';
             if(data.mapsUrl) document.getElementById('btnMap').href = data.mapsUrl;
-            document.getElementById('bankNameDisplay').innerText = data.bankName;
-            document.getElementById('rekDisplay').innerText = data.accountNumber;
-            document.getElementById('rekHolderDisplay').innerText = data.accountHolder;
+            document.getElementById('bankNameDisplay').innerText = data.bankName || 'BANK';
+            document.getElementById('rekDisplay').innerText = data.accountNumber || '0000';
+            document.getElementById('rekHolderDisplay').innerText = data.accountHolder || '...';
 
-            // === LOGIC FITUR PREMIUM (MUSIK & GALERI) ===
+            // PREMIUM LOGIC
             const plan = data.plan || 'free'; 
-            
-            // ATURAN: 
-            // 1. Jika Premium/Pro -> Tampilkan Semua
-            // 2. Jika Free TAPI Owner (Preview) -> Tampilkan Semua (Biar seneng)
-            // 3. Jika Free DAN Tamu (Public) -> Sembunyikan
-            
             const showPremiumFeatures = (plan !== 'free') || isOwner;
 
-            // --- 1. MUSIK ---
             if (showPremiumFeatures) {
                 if(data.music) {
-                    // Cek apakah musik link luar atau file upload sendiri
                     if(musicLibrary[data.music]) bgm.src = musicLibrary[data.music];
-                    else bgm.src = data.music; // Custom Upload URL
+                    else bgm.src = data.music;
                 } else {
-                    bgm.src = musicLibrary['romance1.mp3']; // Default
+                    bgm.src = musicLibrary['romance1.mp3'];
                 }
             } else {
-                // Kalo Free & Public = No Music
                 bgm.src = ""; 
-                document.getElementById('navMusicIcon').style.display = 'none'; // Sembunyikan tombol musik
+                document.getElementById('navMusicIcon').style.display = 'none';
             }
 
-            // --- 2. GALERI ---
+            // GALERI
             const gallerySection = document.getElementById('gallerySection');
             const galleryGrid = document.getElementById('galleryGrid');
             const navGallery = document.getElementById('navGallery');
             const demoImg = data.coverPhoto || 'https://placehold.co/400x600/A47E5C/ffffff?text=Undagi';
 
-            // Reset dulu
             gallerySection.style.display = 'none';
             navGallery.style.display = 'none';
 
             if (showPremiumFeatures) {
-                // Tampilkan Galeri (Simulasi jumlah foto berdasarkan plan bayangan)
                 gallerySection.style.display = 'block';
                 navGallery.style.display = 'block';
                 gallerySection.classList.remove('hidden');
 
-                // Jika Owner Free (Preview), kita kasih lihat seolah-olah Pro (5 Foto)
                 const displayCount = (plan === 'premium') ? 8 : 5;
-                
                 let html = "";
-                // Logic Grid Gallery
                 if(displayCount === 5) {
                      galleryGrid.className = "grid grid-cols-2 gap-2";
                      html = `
@@ -162,7 +341,6 @@
                         <div class="h-48 rounded-lg overflow-hidden bg-gray-200"><img src="${demoImg}" class="w-full h-full object-cover"></div>
                     `;
                 } else {
-                    // Premium 8 Foto
                     galleryGrid.className = "grid grid-cols-2 md:grid-cols-4 gap-2";
                     for(let i=0; i<8; i++) {
                         html += `<div class="h-40 rounded-lg overflow-hidden bg-gray-200 shadow-sm"><img src="${demoImg}" class="w-full h-full object-cover"></div>`;
@@ -171,13 +349,14 @@
                 galleryGrid.innerHTML = html;
             }
             
-            // ALERT KHUSUS OWNER (JIKA FREE)
             if(isOwner && plan === 'free') {
                 Swal.fire({
                     toast: true, position: 'top-end', showConfirmButton: false, timer: 3000,
                     icon: 'info', title: 'Mode Preview',
-                    text: 'Fitur Musik & Galeri terlihat karena Anda pemilik. Tamu tidak akan melihat ini sebelum Upgrade.'
+                    text: 'Fitur Premium terlihat karena Anda pemilik.'
                 });
             }
         }
     </script>
+</body>
+</html>
