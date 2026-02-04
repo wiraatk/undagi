@@ -3,84 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masuk - Undagi</title>
+    <title>Masuk / Daftar - Undagi Platform</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>body{font-family:'Montserrat',sans-serif}</style>
-</head>
-<body class="bg-slate-50 flex items-center justify-center min-h-screen p-4">
 
-    <div class="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden">
-        <div class="h-32 bg-gradient-to-r from-blue-600 to-blue-800 relative flex items-center justify-center">
-            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-30"></div>
-            <h1 class="text-3xl font-bold text-white relative z-10 tracking-widest">UNDAGI</h1>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#B8860B',      
+                        dark: '#1A1A1A',
+                        paper: '#FFFAF0',     
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-paper text-dark h-screen overflow-hidden flex items-center justify-center">
+
+    <a href="index.html" class="absolute top-6 left-6 z-50 flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-gold transition bg-white/80 backdrop-blur px-4 py-2 rounded-full shadow-sm border border-gray-200">
+        <i class="fas fa-arrow-left"></i> Kembali ke Beranda
+    </a>
+
+    <div class="w-full max-w-6xl h-full md:h-[85vh] bg-white md:rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col md:flex-row relative mx-0 md:mx-4 border border-gray-100">
+        
+        <div class="hidden md:block w-1/2 relative">
+            <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=800&q=80" class="absolute inset-0 w-full h-full object-cover">
+            <div class="absolute inset-0 bg-dark/40 flex flex-col justify-end p-12 text-white">
+                <div class="mb-4 w-12 h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center">
+                    <span class="font-serif font-bold text-xl">U</span>
+                </div>
+                <h2 class="font-serif text-4xl font-bold mb-4 leading-tight">Mulai Perjalanan<br>Barumu Disini.</h2>
+                <p class="text-white/90 text-lg font-light">Bergabung dengan 5.000+ pengantin yang telah mewujudkan pernikahan impian tanpa drama.</p>
+            </div>
         </div>
 
-        <div class="p-8">
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-800">Selamat Datang</h2>
-                <p class="text-sm text-gray-500 mt-2">Masuk atau Daftar dengan akun Google.</p>
+        <div class="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-20 py-10 relative bg-white">
+            
+            <div class="md:hidden text-center mb-8 mt-12">
+                <span class="font-serif text-3xl font-bold text-dark tracking-tighter">UNDAGI<span class="text-gold">.</span></span>
             </div>
 
-            <button id="btnLogin" class="w-full border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 px-4 rounded-xl shadow-sm transition transform hover:scale-105 flex items-center justify-center gap-3">
-                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-6 h-6">
-                <span id="btnText">Masuk dengan Google</span>
-            </button>
+            <div class="max-w-sm mx-auto w-full">
+                
+                <div class="flex bg-gray-100 p-1 rounded-full mb-8 relative">
+                    <div id="slider" class="w-1/2 h-full absolute bg-white rounded-full shadow-sm transition-all duration-300 top-0 left-0 m-0 border border-gray-200"></div>
+                    <button onclick="toggleForm('login')" class="w-1/2 py-2.5 text-sm font-bold text-center z-10 relative transition-colors duration-300 text-dark" id="tab-login">Masuk</button>
+                    <button onclick="toggleForm('register')" class="w-1/2 py-2.5 text-sm font-bold text-gray-500 text-center z-10 relative transition-colors duration-300" id="tab-register">Daftar</button>
+                </div>
 
-            <p class="text-xs text-center text-gray-400 mt-8">&copy; 2026 Undagi Platform.</p>
+                <div id="login-form" class="fade-in space-y-5">
+                    <div class="text-center mb-6">
+                        <h3 class="font-serif text-2xl font-bold text-dark">Selamat Datang</h3>
+                        <p class="text-gray-400 text-xs mt-1">Masuk untuk mengelola undanganmu</p>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Email</label>
+                        <input type="email" id="loginEmail" class="w-full mt-1 p-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:border-gold focus:ring-1 focus:ring-gold outline-none transition text-sm" placeholder="nama@email.com">
+                    </div>
+                    <div>
+                        <div class="flex justify-between">
+                            <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Password</label>
+                            <a href="#" class="text-[10px] text-gold font-bold hover:underline">Lupa Password?</a>
+                        </div>
+                        <input type="password" id="loginPass" class="w-full mt-1 p-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:border-gold focus:ring-1 focus:ring-gold outline-none transition text-sm" placeholder="••••••••">
+                    </div>
+                    <button onclick="handleLogin()" class="w-full bg-dark text-white font-bold py-3.5 rounded-xl hover:bg-gold transition shadow-lg flex justify-center gap-2 items-center group">
+                        <span>Masuk Sekarang</span> <i class="fas fa-arrow-right group-hover:translate-x-1 transition"></i>
+                    </button>
+                </div>
+
+                <div id="register-form" class="hidden fade-in space-y-5">
+                    <div class="text-center mb-6">
+                        <h3 class="font-serif text-2xl font-bold text-dark">Buat Akun Gratis</h3>
+                        <p class="text-gray-400 text-xs mt-1">Hanya butuh 30 detik, tanpa biaya</p>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Email</label>
+                        <input type="email" id="regEmail" class="w-full mt-1 p-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:border-gold outline-none transition text-sm" placeholder="nama@email.com">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Password</label>
+                        <input type="password" id="regPass" class="w-full mt-1 p-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:border-gold outline-none transition text-sm" placeholder="Minimal 6 karakter">
+                    </div>
+                    <button onclick="handleRegister()" class="w-full bg-gold text-white font-bold py-3.5 rounded-xl hover:bg-dark transition shadow-lg flex justify-center gap-2 items-center">
+                        <span>Daftar Akun</span> <i class="fas fa-user-plus"></i>
+                    </button>
+                    <p class="text-center text-[10px] text-gray-400 mt-4 leading-relaxed">
+                        Dengan mendaftar, Anda menyetujui <br><a href="#" class="underline hover:text-gold">Syarat & Ketentuan</a> Undagi.
+                    </p>
+                </div>
+
+            </div>
         </div>
     </div>
 
     <script type="module">
-        // Tambahkan "?v=3" untuk memaksa browser melupakan file lama
-        import { auth, provider, signInWithPopup, onAuthStateChanged } from './firebase-config.js?v=3';
+        import { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from './firebase-config.js';
 
-        const btn = document.getElementById('btnLogin');
-        const btnText = document.getElementById('btnText');
-
-        // Cek jika user sudah login
+        // 1. AUTO REDIRECT (Jika sudah login, langsung ke Dashboard)
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                window.location.href = "dashboard.html";
-            }
-        });
-
-        btn.addEventListener('click', async () => {
-            btn.disabled = true;
-            btn.classList.add('opacity-50');
-            btnText.innerText = "Menghubungkan...";
-            
-            try {
-                // Cek apakah provider terbaca
-                if (!provider) throw new Error("Config Error: Provider Google belum siap.");
-
-                const result = await signInWithPopup(auth, provider);
-                
+                // Tampilkan loading sebentar biar smooth
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: `Halo, ${result.user.displayName}`,
-                    timer: 1500,
-                    showConfirmButton: false
+                    title: 'Mengalihkan...',
+                    timer: 800,
+                    showConfirmButton: false,
+                    didOpen: () => { Swal.showLoading() }
                 }).then(() => {
                     window.location.href = "dashboard.html";
                 });
-
-            } catch (error) {
-                console.error(error);
-                btn.disabled = false;
-                btn.classList.remove('opacity-50');
-                btnText.innerText = "Masuk dengan Google";
-                
-                let msg = error.message;
-                if(error.code === 'auth/popup-closed-by-user') msg = "Login dibatalkan.";
-                if(error.code === 'auth/unauthorized-domain') msg = "Domain belum diizinkan di Firebase Console!";
-
-                Swal.fire({ icon: 'error', title: 'Gagal Masuk', text: msg });
             }
         });
+
+        // 2. TOGGLE FORM (Animasi Switch)
+        window.toggleForm = (mode) => {
+            const loginForm = document.getElementById('login-form');
+            const regForm = document.getElementById('register-form');
+            const slider = document.getElementById('slider');
+            const tabLogin = document.getElementById('tab-login');
+            const tabReg = document.getElementById('tab-register');
+
+            if(mode === 'register') {
+                loginForm.classList.add('hidden');
+                regForm.classList.remove('hidden');
+                slider.style.transform = 'translateX(100%)';
+                
+                tabReg.classList.remove('text-gray-500');
+                tabReg.classList.add('text-dark');
+                
+                tabLogin.classList.remove('text-dark');
+                tabLogin.classList.add('text-gray-500');
+            } else {
+                regForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                slider.style.transform = 'translateX(0)';
+                
+                tabLogin.classList.remove('text-gray-500');
+                tabLogin.classList.add('text-dark');
+                
+                tabReg.classList.remove('text-dark');
+                tabReg.classList.add('text-gray-500');
+            }
+        };
+
+        // 3. HANDLE LOGIN
+        window.handleLogin = async () => {
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPass').value;
+            
+            if(!email || !pass) {
+                Swal.fire({ icon: 'warning', title: 'Data Belum Lengkap', text: 'Mohon isi email dan password.', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+                return;
+            }
+
+            try {
+                const btn = event.currentTarget;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+                btn.disabled = true;
+
+                await signInWithEmailAndPassword(auth, email, pass);
+                // Redirect ditangani oleh onAuthStateChanged
+            } catch (e) {
+                let msg = "Terjadi kesalahan.";
+                if(e.code === 'auth/wrong-password') msg = "Password salah.";
+                if(e.code === 'auth/user-not-found') msg = "Akun tidak ditemukan.";
+                if(e.code === 'auth/invalid-email') msg = "Format email salah.";
+                
+                Swal.fire({ icon: 'error', title: 'Gagal Masuk', text: msg });
+                
+                // Reset tombol
+                const btn = document.querySelector('button[onclick="handleLogin()"]');
+                btn.innerHTML = '<span>Masuk Sekarang</span> <i class="fas fa-arrow-right"></i>';
+                btn.disabled = false;
+            }
+        };
+
+        // 4. HANDLE REGISTER
+        window.handleRegister = async () => {
+            const email = document.getElementById('regEmail').value;
+            const pass = document.getElementById('regPass').value;
+
+            if(!email || !pass) {
+                Swal.fire({ icon: 'warning', title: 'Data Belum Lengkap', text: 'Mohon isi email dan password.', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+                return;
+            }
+
+            if(pass.length < 6) {
+                Swal.fire({ icon: 'warning', title: 'Password Lemah', text: 'Minimal 6 karakter.', toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
+                return;
+            }
+
+            try {
+                const btn = event.currentTarget;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+                btn.disabled = true;
+
+                await createUserWithEmailAndPassword(auth, email, pass);
+                
+                Swal.fire({ 
+                    icon: 'success', 
+                    title: 'Akun Berhasil Dibuat!', 
+                    text: 'Silakan login dengan akun baru Anda.', 
+                    timer: 2000, 
+                    showConfirmButton: false 
+                });
+                
+                toggleForm('login'); // Pindah ke tab login
+                
+                // Reset tombol register
+                btn.innerHTML = '<span>Daftar Akun</span> <i class="fas fa-user-plus"></i>';
+                btn.disabled = false;
+
+            } catch (e) {
+                let msg = "Gagal mendaftar.";
+                if(e.code === 'auth/email-already-in-use') msg = "Email sudah terdaftar.";
+                
+                Swal.fire({ icon: 'error', title: 'Ups!', text: msg });
+                
+                const btn = document.querySelector('button[onclick="handleRegister()"]');
+                btn.innerHTML = '<span>Daftar Akun</span> <i class="fas fa-user-plus"></i>';
+                btn.disabled = false;
+            }
+        };
     </script>
 </body>
 </html>
