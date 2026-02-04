@@ -33,19 +33,25 @@
         .text-gradient { background: linear-gradient(to right, #B8860B, #D4AF37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .image-card { transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
         .image-card:hover { transform: scale(1.02); }
+        
+        /* Animasi Tab Tema */
+        .theme-content { display: none; animation: fadeIn 0.5s; }
+        .theme-content.active { display: grid; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="bg-paper text-dark antialiased overflow-x-hidden">
 
-    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all shadow-sm" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
+    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all shadow-sm h-20" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+            <div class="flex justify-between items-center h-full">
                 <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
                     <span class="font-serif text-2xl font-bold text-dark tracking-tighter">UNDAGI<span class="text-gold">.</span></span>
                 </div>
                 <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
-                    <a href="#layanan" class="hover:text-gold transition">Produk & Jasa</a>
-                    <a href="#pricing" class="hover:text-gold transition">Paket Undangan</a>
+                    <a href="#layanan" class="hover:text-gold transition">Layanan</a>
+                    <a href="#themes" class="hover:text-gold transition">Tema</a>
+                    <a href="#pricing" class="hover:text-gold transition">Harga</a>
                     <a href="#testimoni" class="hover:text-gold transition">Testimoni</a>
                 </div>
                 <div class="flex items-center gap-3">
@@ -56,13 +62,13 @@
         </div>
     </nav>
 
-    <header class="relative pt-28 pb-4 lg:pt-36 lg:pb-8 px-4 overflow-hidden">
+    <header class="relative pt-24 pb-12 lg:pt-32 lg:pb-16 px-4 overflow-hidden">
         <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 items-center">
             
             <div data-aos="fade-right" data-aos-duration="1000">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold/10 text-gold text-[10px] font-bold uppercase tracking-wider mb-4 border border-gold/20">
                     <span class="w-2 h-2 rounded-full bg-gold animate-pulse"></span>
-                    Platform Pernikahan #1 Bali
+                    Solusi Pernikahan #1 Bali
                 </div>
                 
                 <h1 class="font-serif text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-4">
@@ -106,73 +112,108 @@
         </div>
     </header>
 
-    <section class="py-8 bg-paper">
+    <section class="py-6 bg-paper">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-aos="zoom-in" data-aos-duration="1200">
-            <div class="relative rounded-[2rem] overflow-hidden shadow-2xl h-[300px] md:h-[500px] group border-4 border-white">
+            <div class="relative rounded-[2rem] overflow-hidden shadow-2xl h-[250px] md:h-[450px] group border-4 border-white">
                 <video class="w-full h-full object-cover" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1511285560982-1356c11d4606?auto=format&fit=crop&w=1200&q=80">
                     <source src="https://videos.pexels.com/video-files/3192004/3192004-uhd_2560_1440_25fps.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
                 </video>
-                
                 <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition duration-700"></div>
-
                 <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-                    <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mb-4 animate-bounce">
-                        <i class="fas fa-play text-white text-xl pl-1"></i>
+                    <div class="w-14 h-14 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mb-4 animate-bounce">
+                        <i class="fas fa-play text-white text-lg pl-1"></i>
                     </div>
-                    <h2 class="font-serif text-3xl md:text-5xl font-bold text-white drop-shadow-lg mb-2">Rasakan Keajaibannya</h2>
-                    <p class="text-white/90 text-sm md:text-lg max-w-lg drop-shadow-md">
-                        Setiap detail pernikahan Anda layak diabadikan dengan sempurna.
+                    <h2 class="font-serif text-2xl md:text-4xl font-bold text-white drop-shadow-lg mb-2">Rasakan Keajaibannya</h2>
+                    <p class="text-white/90 text-sm md:text-base max-w-lg drop-shadow-md">
+                        Abadikan setiap detik dengan sempurna bersama vendor terbaik kami.
                     </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="layanan" class="py-16 bg-white">
+    <section id="themes" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-12">
-                <span class="text-gold font-bold text-xs uppercase tracking-widest">Produk Digital</span>
-                <h2 class="font-serif text-3xl md:text-4xl font-bold mt-2">Undangan Web Premium</h2>
-                <p class="text-gray-500 mt-2 max-w-2xl mx-auto">Fitur tercanggih untuk momen bahagiamu. Edit sendiri, sebar tak terbatas.</p>
+            <div class="text-center mb-10">
+                <span class="text-gold font-bold text-xs uppercase tracking-widest">Fitur Unggulan</span>
+                <h2 class="font-serif text-3xl md:text-4xl font-bold mt-2">Pilih Nuansa Pernikahanmu</h2>
+                <p class="text-gray-500 mt-2">Coba klik tema di bawah ini untuk melihat pratinjau warna.</p>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="order-2 md:order-1" data-aos="fade-right">
-                    <img src="https://images.unsplash.com/photo-1628100234710-18e3c155d045?auto=format&fit=crop&w=800&q=80" class="rounded-3xl shadow-xl w-full h-[350px] object-cover image-card">
+            <div class="flex justify-center gap-4 mb-10 overflow-x-auto pb-2">
+                <button onclick="changeTab('gold')" class="tab-btn active bg-dark text-white px-6 py-2 rounded-full font-bold text-sm border border-dark hover:bg-gold hover:border-gold transition">Gold Luxury</button>
+                <button onclick="changeTab('silver')" class="tab-btn bg-white text-gray-600 px-6 py-2 rounded-full font-bold text-sm border border-gray-200 hover:border-gray-400 transition">Silver Minimal</button>
+                <button onclick="changeTab('sage')" class="tab-btn bg-white text-gray-600 px-6 py-2 rounded-full font-bold text-sm border border-gray-200 hover:border-gray-400 transition">Sage Nature</button>
+                <button onclick="changeTab('maroon')" class="tab-btn bg-white text-gray-600 px-6 py-2 rounded-full font-bold text-sm border border-gray-200 hover:border-gray-400 transition">Red Maroon</button>
+            </div>
+
+            <div class="max-w-5xl mx-auto bg-soft_gray rounded-3xl p-8 border border-gray-100 shadow-lg min-h-[300px]">
+                
+                <div id="gold" class="theme-content active grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="font-serif text-2xl font-bold text-dark mb-2">Gold Luxury</h3>
+                        <p class="text-sm text-gray-500 mb-6">Kombinasi warna Emas dan Cream yang menciptakan kesan bangsawan, hangat, dan abadi.</p>
+                        <div class="flex gap-3 mb-6">
+                            <div class="w-10 h-10 rounded-full bg-[#A47E5C] shadow-md" title="Gold"></div>
+                            <div class="w-10 h-10 rounded-full bg-[#FAF9F6] border border-gray-200" title="Cream"></div>
+                            <div class="w-10 h-10 rounded-full bg-[#D4AF37] shadow-md" title="Metallic"></div>
+                        </div>
+                        <a href="login.html" class="text-gold font-bold text-sm border-b border-gold pb-1">Gunakan Tema Ini &rarr;</a>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1520854221256-17451cc330e7?auto=format&fit=crop&w=600&q=80" class="rounded-2xl shadow-md w-full h-64 object-cover">
                 </div>
-                <div class="order-1 md:order-2 space-y-6" data-aos="fade-left">
-                    <div class="flex gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-gold/10 text-gold flex items-center justify-center shrink-0 text-xl"><i class="fas fa-palette"></i></div>
-                        <div>
-                            <h4 class="font-bold text-lg text-dark">4 Tema Eksklusif</h4>
-                            <p class="text-sm text-gray-500">Gold Luxury, Silver Minimal, Sage Nature, dan Red Maroon.</p>
+
+                <div id="silver" class="theme-content grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="font-serif text-2xl font-bold text-gray-800 mb-2">Silver Minimal</h3>
+                        <p class="text-sm text-gray-500 mb-6">Nuansa abu-abu sejuk dan putih bersih. Cocok untuk pernikahan modern indoor dan industrial.</p>
+                        <div class="flex gap-3 mb-6">
+                            <div class="w-10 h-10 rounded-full bg-[#64748B] shadow-md" title="Slate"></div>
+                            <div class="w-10 h-10 rounded-full bg-[#F8FAFC] border border-gray-200" title="White"></div>
+                            <div class="w-10 h-10 rounded-full bg-[#94A3B8] shadow-md" title="Silver"></div>
                         </div>
+                        <a href="login.html" class="text-gray-600 font-bold text-sm border-b border-gray-600 pb-1">Gunakan Tema Ini &rarr;</a>
                     </div>
-                    <div class="flex gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-gold/10 text-gold flex items-center justify-center shrink-0 text-xl"><i class="fas fa-music"></i></div>
-                        <div>
-                            <h4 class="font-bold text-lg text-dark">Galeri & Musik</h4>
-                            <p class="text-sm text-gray-500">Upload 8 foto prewedding HD & lagu romantis pilihanmu.</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-gold/10 text-gold flex items-center justify-center shrink-0 text-xl"><i class="fas fa-gift"></i></div>
-                        <div>
-                            <h4 class="font-bold text-lg text-dark">Smart Amplop</h4>
-                            <p class="text-sm text-gray-500">Terima kado via transfer bank/QRIS tanpa potongan admin.</p>
-                        </div>
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=600&q=80" class="rounded-2xl shadow-md w-full h-64 object-cover grayscale">
                 </div>
+
+                <div id="sage" class="theme-content grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="font-serif text-2xl font-bold text-[#2D442D] mb-2">Sage Nature</h3>
+                        <p class="text-sm text-gray-500 mb-6">Warna hijau lembut dan earth tone. Sempurna untuk pernikahan outdoor atau tema taman.</p>
+                        <div class="flex gap-3 mb-6">
+                            <div class="w-10 h-10 rounded-full bg-[#557C55] shadow-md" title="Sage Green"></div>
+                            <div class="w-10 h-10 rounded-full bg-[#F2F9F4] border border-gray-200" title="Mint White"></div>
+                            <div class="w-10 h-10 rounded-full bg-[#A6CF98] shadow-md" title="Light Green"></div>
+                        </div>
+                        <a href="login.html" class="text-[#557C55] font-bold text-sm border-b border-[#557C55] pb-1">Gunakan Tema Ini &rarr;</a>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1519225421980-715cb0202128?auto=format&fit=crop&w=600&q=80" class="rounded-2xl shadow-md w-full h-64 object-cover">
+                </div>
+
+                <div id="maroon" class="theme-content grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="font-serif text-2xl font-bold text-[#800020] mb-2">Red Maroon</h3>
+                        <p class="text-sm text-gray-500 mb-6">Berani, romantis, dan penuh gairah. Pilihan tepat untuk resepsi malam hari yang glamor.</p>
+                        <div class="flex gap-3 mb-6">
+                            <div class="w-10 h-10 rounded-full bg-[#800020] shadow-md" title="Maroon"></div>
+                            <div class="w-10 h-10 rounded-full bg-[#FFF5F5] border border-gray-200" title="Pink White"></div>
+                            <div class="w-10 h-10 rounded-full bg-[#C21807] shadow-md" title="Red"></div>
+                        </div>
+                        <a href="login.html" class="text-[#800020] font-bold text-sm border-b border-[#800020] pb-1">Gunakan Tema Ini &rarr;</a>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=600&q=80" class="rounded-2xl shadow-md w-full h-64 object-cover filter sepia-[.25] hue-rotate-[-30deg]">
+                </div>
+
             </div>
         </div>
     </section>
 
-    <section class="py-16 bg-soft_gray">
+    <section id="layanan" class="py-16 bg-soft_gray">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center mb-12">
                 <span class="text-gold font-bold text-xs uppercase tracking-widest">Undagi Store Bali</span>
-                <h2 class="font-serif text-3xl md:text-4xl font-bold mt-2">Lengkapi Momen Bahagiamu</h2>
+                <h2 class="font-serif text-3xl md:text-4xl font-bold mt-2">Vendor Pilihan</h2>
                 <p class="text-gray-500 mt-2">Harga transparan, vendor terverifikasi area Bali & Sekitarnya.</p>
             </div>
 
@@ -188,11 +229,6 @@
                     <div class="p-6">
                         <h3 class="font-serif text-xl font-bold mb-2">Foto & Video Prewedding</h3>
                         <p class="text-xs text-gray-500 mb-4 line-clamp-2">Paket hemat dengan hasil kualitas studio. Lokasi outdoor Bali (Pantai/Gunung).</p>
-                        <ul class="text-xs text-gray-600 space-y-2 mb-6">
-                            <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> Include MUA & Hairdo</li>
-                            <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> 50+ Edited Photos</li>
-                            <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> Video Teaser Instagram</li>
-                        </ul>
                         <a href="market.html" class="block text-center border border-dark rounded-full py-2 text-xs font-bold hover:bg-dark hover:text-white transition">Lihat Portofolio</a>
                     </div>
                 </div>
@@ -207,12 +243,7 @@
                     </div>
                     <div class="p-6">
                         <h3 class="font-serif text-xl font-bold mb-2">Dekorasi Pernikahan</h3>
-                        <p class="text-xs text-gray-500 mb-4 line-clamp-2">Dekorasi pelaminan estetik gaya Rustic/Modern Bali. Cocok untuk acara rumahan atau gedung.</p>
-                        <ul class="text-xs text-gray-600 space-y-2 mb-6">
-                            <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> Backdrop 6 Meter</li>
-                            <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> Fresh Flower (Bunga Hidup)</li>
-                            <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> Kursi Pengantin & Lighting</li>
-                        </ul>
+                        <p class="text-xs text-gray-500 mb-4 line-clamp-2">Dekorasi pelaminan estetik gaya Rustic/Modern Bali.</p>
                         <a href="market.html" class="block text-center border border-dark rounded-full py-2 text-xs font-bold hover:bg-dark hover:text-white transition">Cek Katalog Dekor</a>
                     </div>
                 </div>
@@ -228,11 +259,6 @@
                     <div class="p-6">
                         <h3 class="font-serif text-xl font-bold mb-2">Souvenir & Seserahan</h3>
                         <p class="text-xs text-gray-500 mb-4 line-clamp-2">Souvenir kerajinan tangan Bali unik & sewa kotak seserahan premium acrylic.</p>
-                        <ul class="text-xs text-gray-600 space-y-2 mb-6">
-                            <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> Custom Nama Mempelai</li>
-                            <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> Kemasan Plastik/Tile</li>
-                            <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> Sewa Box Hias (Mulai 50rb)</li>
-                        </ul>
                         <a href="market.html" class="block text-center border border-dark rounded-full py-2 text-xs font-bold hover:bg-dark hover:text-white transition">Lihat Pilihan</a>
                     </div>
                 </div>
@@ -252,11 +278,9 @@
                 <div class="border border-gray-200 p-8 rounded-3xl text-center hover:border-gold transition group">
                     <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Basic</h3>
                     <div class="text-4xl font-serif font-bold text-dark mb-4">Rp 0</div>
-                    <p class="text-xs text-gray-400 mb-6">Cocok untuk coba-coba</p>
                     <ul class="text-sm text-gray-500 space-y-3 mb-8 text-left">
                         <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> Undangan Web Dasar</li>
                         <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> Masa Aktif 3 Hari</li>
-                        <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> Max 3 Foto Galeri</li>
                         <li class="flex gap-2 text-gray-300"><i class="fas fa-times"></i> Tanpa Musik</li>
                     </ul>
                     <a href="login.html" class="block py-3 rounded-full border border-dark font-bold text-sm group-hover:bg-dark group-hover:text-white transition">Pilih Gratis</a>
@@ -266,11 +290,9 @@
                     <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-gold px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Terlaris</div>
                     <h3 class="text-sm font-bold text-gold uppercase tracking-wider mb-2">Paket Gold</h3>
                     <div class="text-5xl font-serif font-bold mb-4">49k</div>
-                    <p class="text-xs text-gray-400 mb-6">Sekali bayar selamanya</p>
                     <ul class="text-sm text-gray-300 space-y-3 mb-8 text-left">
                         <li class="flex gap-2"><i class="fas fa-check text-gold"></i> <strong>Aktif Selamanya</strong></li>
                         <li class="flex gap-2"><i class="fas fa-check text-gold"></i> Tema Gold & Silver</li>
-                        <li class="flex gap-2"><i class="fas fa-check text-gold"></i> Upload 5 Foto Galeri</li>
                         <li class="flex gap-2"><i class="fas fa-check text-gold"></i> Fitur Amplop Digital</li>
                     </ul>
                     <a href="login.html" class="block py-3 rounded-full bg-gold font-bold text-sm text-white hover:bg-white hover:text-dark transition">Ambil Gold</a>
@@ -279,13 +301,10 @@
                 <div class="border border-gray-200 p-8 rounded-3xl text-center hover:border-gold transition group">
                     <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Paket Premium</h3>
                     <div class="text-4xl font-serif font-bold text-dark mb-4">99k</div>
-                    <p class="text-xs text-gray-400 mb-6">Fitur terlengkap & prioritas</p>
                     <ul class="text-sm text-gray-500 space-y-3 mb-8 text-left">
                         <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> <strong>Semua Fitur Gold</strong></li>
                         <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> Unlock 4 Tema (Sage, Maroon)</li>
-                        <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> <strong>Max 8 Foto Galeri</strong></li>
-                        <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> Upload Musik Custom</li>
-                        <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> Prioritas Support WA</li>
+                        <li class="flex gap-2"><i class="fas fa-check text-green-500"></i> <strong>Upload Musik Custom</strong></li>
                     </ul>
                     <a href="login.html" class="block py-3 rounded-full border border-dark font-bold text-sm group-hover:bg-dark group-hover:text-white transition">Pilih Premium</a>
                 </div>
@@ -372,6 +391,25 @@
                 nav.classList.remove('shadow-sm', 'bg-white/95');
             }
         });
+
+        // Tab Logic for Themes
+        function changeTab(theme) {
+            // Remove active classes
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-dark', 'text-white', 'border-dark');
+                btn.classList.add('bg-white', 'text-gray-600', 'border-gray-200');
+            });
+            document.querySelectorAll('.theme-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Add active class to clicked button & content
+            const clickedBtn = event.target;
+            clickedBtn.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
+            clickedBtn.classList.add('bg-dark', 'text-white', 'border-dark');
+            
+            document.getElementById(theme).classList.add('active');
+        }
     </script>
 </body>
 </html>
