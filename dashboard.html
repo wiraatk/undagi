@@ -10,7 +10,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body{font-family:'Montserrat',sans-serif}
-        /* Hide scrollbar for cleaner look */
         ::-webkit-scrollbar { width: 0px; background: transparent; }
         .glass-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-top: 1px solid #e5e7eb; }
     </style>
@@ -37,30 +36,36 @@
 
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <h2 class="font-bold text-blue-600 mb-4 flex items-center gap-2"><i class="fas fa-paint-brush"></i> Tampilan</h2>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="text-xs font-bold text-slate-500">Tema Desain</label>
-                    <select id="theme" class="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm focus:border-blue-500 outline-none">
-                        <option value="gold">Gold Luxury</option>
-                        <option value="silver">Silver Minimal</option>
-                        <option value="sage">Sage Nature</option>
-                        <option value="maroon">Red Maroon</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="text-xs font-bold text-slate-500">Musik Latar</label>
-                    <select id="music" class="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm focus:border-blue-500 outline-none">
-                        <option value="romance1.mp3">Romantic Piano</option>
-                        <option value="acoustic.mp3">Sweet Acoustic</option>
-                        <option value="wedding.mp3">Wedding Classic</option>
-                    </select>
-                </div>
+            
+            <div class="mb-4">
+                <label class="text-xs font-bold text-slate-500">Tema Desain</label>
+                <select id="theme" class="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm focus:border-blue-500 outline-none">
+                    <option value="gold">Gold Luxury</option>
+                    <option value="silver">Silver Minimal</option>
+                    <option value="sage">Sage Nature</option>
+                    <option value="maroon">Red Maroon</option>
+                </select>
             </div>
-            <div class="mt-4">
+
+            <div class="mb-4">
+                <label class="text-xs font-bold text-slate-500 flex justify-between">
+                    Musik Latar (MP3)
+                    <span class="text-[10px] text-green-600 bg-green-50 px-2 rounded-full">Fitur Pro (Preview Only)</span>
+                </label>
+                <div class="flex gap-2 mt-1">
+                    <input type="text" id="music" placeholder="Link musik / Upload MP3..." class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-gray-500" readonly>
+                    <button onclick="handleFileUpload('music', 'audio')" class="bg-purple-100 text-purple-600 px-4 rounded-xl hover:bg-purple-200 transition flex items-center gap-2 font-bold text-xs whitespace-nowrap">
+                        <i class="fas fa-music"></i> Upload
+                    </button>
+                </div>
+                <p class="text-[10px] text-gray-400 mt-1">*Bebas upload untuk dicoba. Musik hanya akan bunyi di link publik jika akun Premium.</p>
+            </div>
+
+            <div>
                 <label class="text-xs font-bold text-slate-500">Foto Cover Utama</label>
                 <div class="flex gap-2 mt-1">
                     <input type="text" id="coverPhoto" placeholder="Link foto..." class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
-                    <button onclick="uploadImage('coverPhoto')" class="bg-slate-200 px-4 rounded-xl hover:bg-slate-300"><i class="fas fa-camera"></i></button>
+                    <button onclick="handleFileUpload('coverPhoto', 'image')" class="bg-slate-200 px-4 rounded-xl hover:bg-slate-300"><i class="fas fa-camera"></i></button>
                 </div>
             </div>
         </div>
@@ -76,11 +81,13 @@
                         <input type="text" id="groomNick" placeholder="Nama Panggilan" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
                         <div class="flex gap-1">
                             <input type="text" id="groomPhoto" placeholder="Link Foto" class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
-                            <button onclick="uploadImage('groomPhoto')" class="bg-slate-200 px-3 rounded-xl"><i class="fas fa-upload"></i></button>
+                            <button onclick="handleFileUpload('groomPhoto', 'image')" class="bg-slate-200 px-3 rounded-xl"><i class="fas fa-upload"></i></button>
                         </div>
                     </div>
-                    <input type="text" id="groomFather" placeholder="Nama Ayah" class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
-                    <input type="text" id="groomMother" placeholder="Nama Ibu" class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" id="groomFather" placeholder="Nama Ayah" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                        <input type="text" id="groomMother" placeholder="Nama Ibu" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                    </div>
                 </div>
             </div>
 
@@ -92,11 +99,13 @@
                         <input type="text" id="brideNick" placeholder="Nama Panggilan" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
                         <div class="flex gap-1">
                             <input type="text" id="bridePhoto" placeholder="Link Foto" class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
-                            <button onclick="uploadImage('bridePhoto')" class="bg-slate-200 px-3 rounded-xl"><i class="fas fa-upload"></i></button>
+                            <button onclick="handleFileUpload('bridePhoto', 'image')" class="bg-slate-200 px-3 rounded-xl"><i class="fas fa-upload"></i></button>
                         </div>
                     </div>
-                    <input type="text" id="brideFather" placeholder="Nama Ayah" class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
-                    <input type="text" id="brideMother" placeholder="Nama Ibu" class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" id="brideFather" placeholder="Nama Ayah" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                        <input type="text" id="brideMother" placeholder="Nama Ibu" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                    </div>
                 </div>
             </div>
         </div>
@@ -128,9 +137,9 @@
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <h2 class="font-bold text-blue-600 mb-4 flex items-center gap-2"><i class="fas fa-wallet"></i> Amplop Digital</h2>
             <div class="space-y-3">
-                <input type="text" id="bankName" placeholder="Nama Bank / E-Wallet (BCA/Dana)" class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                <input type="text" id="bankName" placeholder="Nama Bank (BCA/BRI/Dana)" class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
                 <div class="grid grid-cols-2 gap-3">
-                    <input type="number" id="accountNumber" placeholder="Nomor Rekening" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                    <input type="number" id="accountNumber" placeholder="No. Rekening" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
                     <input type="text" id="accountHolder" placeholder="Atas Nama" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
                 </div>
             </div>
@@ -143,11 +152,9 @@
             <button onclick="previewInvitation()" class="flex-1 bg-slate-100 text-slate-700 font-bold py-3 rounded-xl hover:bg-slate-200 transition flex items-center justify-center gap-2">
                 <i class="fas fa-eye"></i> <span class="hidden sm:inline">Preview</span>
             </button>
-            
             <button onclick="saveData()" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30">
                 <i class="fas fa-save"></i> Simpan
             </button>
-
             <a href="manage.html" class="flex-1 bg-green-500 text-white font-bold py-3 rounded-xl hover:bg-green-600 transition flex items-center justify-center gap-2 shadow-lg shadow-green-500/30">
                 <i class="fas fa-share-alt"></i> Bagikan
             </a>
@@ -156,14 +163,11 @@
 
     <script type="module">
         import { auth, db, doc, getDoc, setDoc, onAuthStateChanged, signOut } from './firebase-config.js';
-
-        // GANTI API KEY IMBBB KAMU DISINI
-        const IMGBB_API_KEY = "a0fad9109722b5123512328153099951"; 
+        import { uploadFile } from './cloudinary.js';
 
         let currentUser = null;
         let currentData = {};
 
-        // 1. CEK LOGIN & LOAD DATA
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
@@ -181,11 +185,11 @@
                     currentData = docSnap.data();
                     fillForm(currentData);
                     
-                    // Update Badge Paket
                     const plan = currentData.plan || 'free';
                     const badge = document.getElementById('planBadge');
-                    badge.innerText = plan.toUpperCase();
-                    if(plan === 'premium') {
+                    
+                    if(plan === 'premium' || plan === 'pro') {
+                        badge.innerText = plan.toUpperCase();
                         badge.className = "bg-yellow-500 text-black text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider";
                     }
                 }
@@ -194,7 +198,6 @@
             }
         }
 
-        // 2. MENGISI FORM
         function fillForm(data) {
             const fields = [
                 'theme', 'music', 'coverPhoto',
@@ -208,10 +211,8 @@
             });
         }
 
-        // 3. SIMPAN DATA
         window.saveData = async () => {
             if (!currentUser) return;
-            
             const btn = document.querySelector('button[onclick="saveData()"]');
             const originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
@@ -221,7 +222,6 @@
                 uid: currentUser.uid,
                 email: currentUser.email,
                 updatedAt: new Date(),
-                // Ambil semua value dari form
                 theme: document.getElementById('theme').value,
                 music: document.getElementById('music').value,
                 coverPhoto: document.getElementById('coverPhoto').value,
@@ -242,17 +242,16 @@
                 bankName: document.getElementById('bankName').value,
                 accountNumber: document.getElementById('accountNumber').value,
                 accountHolder: document.getElementById('accountHolder').value,
-                plan: currentData.plan || 'free' // Pertahankan plan lama
+                plan: currentData.plan || 'free'
             };
 
             try {
                 await setDoc(doc(db, "invitations", currentUser.uid), newData, { merge: true });
-                currentData = newData; // Update local state
-                
+                currentData = newData; 
                 Swal.fire({
                     icon: 'success', title: 'Tersimpan!',
-                    text: 'Data undangan berhasil diperbarui.',
-                    timer: 1500, showConfirmButton: false,
+                    text: 'Data aman. Coba klik Preview untuk melihat hasilnya.',
+                    timer: 2000, showConfirmButton: false,
                     toast: true, position: 'top-end'
                 });
             } catch (e) {
@@ -263,39 +262,37 @@
             }
         };
 
-        // 4. PREVIEW
         window.previewInvitation = () => {
             if (!currentUser) return;
             window.open(`view.html?uid=${currentUser.uid}`, '_blank');
         };
 
-        // 5. UPLOAD GAMBAR KE IMGBB
-        window.uploadImage = async (inputId) => {
+        window.handleFileUpload = async (inputId, type) => {
+            const acceptType = type === 'audio' ? 'audio/*' : 'image/*';
+            const titleText = type === 'audio' ? 'Pilih Musik (MP3)' : 'Pilih Foto';
+
             const { value: file } = await Swal.fire({
-                title: 'Pilih Foto',
+                title: titleText,
                 input: 'file',
-                inputAttributes: { 'accept': 'image/*', 'aria-label': 'Upload foto' }
+                inputAttributes: { 'accept': acceptType, 'aria-label': 'Upload file' }
             });
 
             if (file) {
-                Swal.fire({ title: 'Mengupload...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                Swal.fire({ title: 'Mengupload ke Cloud...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                 
-                const formData = new FormData();
-                formData.append('image', file);
+                const url = await uploadFile(file);
 
-                try {
-                    const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
-                    const data = await res.json();
-                    
-                    if (data.success) {
-                        document.getElementById(inputId).value = data.data.url;
-                        Swal.close();
-                        saveData(); // Auto save biar gak hilang
-                    } else {
-                        throw new Error('Gagal upload ke ImgBB');
-                    }
-                } catch (e) {
-                    Swal.fire('Error', 'Gagal upload foto.', 'error');
+                if (url) {
+                    document.getElementById(inputId).value = url;
+                    Swal.close();
+                    saveData();
+                    Swal.fire({
+                        icon: 'success', title: 'Berhasil!',
+                        text: 'File tersimpan di database.',
+                        timer: 1500, showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat upload.', 'error');
                 }
             }
         };
