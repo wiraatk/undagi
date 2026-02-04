@@ -1,168 +1,216 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undagi Store - Lengkapi Pernikahanmu</title>
+    <title>Undagi Store - Vendor Pernikahan Bali</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#B8860B',      
+                        gold_light: '#F4E5BC',
+                        dark: '#1A1A1A',
+                        paper: '#FFFAF0',     
+                        soft_gray: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body{font-family:'Montserrat',sans-serif}
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
-        .active-tab { background-color: #2563EB; color: white; border-color: #2563EB; }
-        .product-card:hover { transform: translateY(-5px); }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .filter-btn.active { background-color: #1A1A1A; color: white; border-color: #1A1A1A; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 pb-24">
+<body class="bg-paper text-dark antialiased">
 
-    <nav class="bg-white border-b border-slate-200 p-4 sticky top-0 z-30 shadow-sm">
-        <div class="max-w-3xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <a href="dashboard.html" class="text-slate-500 hover:text-blue-600"><i class="fas fa-arrow-left"></i></a>
-                <h1 class="font-bold text-lg">Undagi Store</h1>
-            </div>
-            <div class="flex gap-2">
-                <a href="https://wa.me/6281234567890" target="_blank" class="text-sm font-bold text-green-600 flex items-center gap-1">
-                    <i class="fab fa-whatsapp text-lg"></i> CS Support
+    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all shadow-sm h-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex justify-between items-center">
+            
+            <a href="index.html" class="flex items-center gap-2 group" title="Kembali ke Halaman Depan">
+                <span class="font-serif text-2xl font-bold text-dark tracking-tighter group-hover:text-gold transition">UNDAGI<span class="text-gold">.</span></span>
+                <span class="bg-gold/10 text-gold text-[10px] px-2 py-0.5 rounded-full font-bold tracking-widest uppercase border border-gold/20">Store</span>
+            </a>
+
+            <div class="flex items-center gap-4">
+                <a href="dashboard.html" class="hidden md:flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-dark transition">
+                    <i class="fas fa-columns"></i> Dashboard
+                </a>
+                
+                <div class="h-4 w-px bg-gray-300 hidden md:block"></div>
+
+                <a href="login.html" class="text-sm font-bold text-dark hover:text-gold transition">Masuk</a>
+                
+                <a href="https://wa.me/6281234567890" target="_blank" class="bg-green-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-green-700 transition shadow-lg hover:scale-110" title="Hubungi CS">
+                    <i class="fab fa-whatsapp text-xl"></i>
                 </a>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-3xl mx-auto p-4">
+    <header class="pt-32 pb-12 px-6 text-center bg-white border-b border-gray-100">
+        <div class="max-w-3xl mx-auto" data-aos="fade-down">
+            <h1 class="font-serif text-4xl md:text-5xl font-bold mb-4 text-dark">Katalog Vendor Bali</h1>
+            <p class="text-gray-500 max-w-lg mx-auto text-lg">Temukan vendor terverifikasi untuk menyempurnakan hari bahagiamu. Transparan, Aman, Berkualitas.</p>
+        </div>
+    </header>
 
-        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-6 text-white mb-6 relative overflow-hidden shadow-lg">
-            <div class="relative z-10">
-                <h2 class="font-bold text-xl mb-1">Paket Komplit Pernikahan</h2>
-                <p class="text-xs opacity-90 mb-4">Dapatkan diskon khusus untuk member Undagi Premium!</p>
-                <button class="bg-white text-blue-600 text-xs font-bold px-4 py-2 rounded-full shadow-md">Hubungi Admin</button>
+    <main class="max-w-7xl mx-auto px-6 py-12 min-h-screen">
+        
+        <div class="flex flex-wrap justify-center gap-3 mb-12 sticky top-24 z-30 py-2" data-aos="fade-up">
+            <div class="bg-white/80 backdrop-blur-md p-2 rounded-full shadow-sm border border-gray-200 flex flex-wrap justify-center gap-2">
+                <button onclick="filterProduct('all')" class="filter-btn active px-6 py-2 rounded-full text-xs font-bold transition">Semua</button>
+                <button onclick="filterProduct('foto')" class="filter-btn px-6 py-2 rounded-full text-xs font-bold text-gray-500 hover:bg-gray-100 transition">Foto & Video</button>
+                <button onclick="filterProduct('dekor')" class="filter-btn px-6 py-2 rounded-full text-xs font-bold text-gray-500 hover:bg-gray-100 transition">Dekorasi</button>
+                <button onclick="filterProduct('souvenir')" class="filter-btn px-6 py-2 rounded-full text-xs font-bold text-gray-500 hover:bg-gray-100 transition">Souvenir</button>
             </div>
-            <i class="fas fa-gift absolute -right-4 -bottom-4 text-9xl opacity-20"></i>
         </div>
 
-        <div class="flex gap-2 overflow-x-auto pb-4 mb-2 no-scrollbar">
-            <button onclick="filterCategory('all')" class="tab-btn active-tab whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 text-xs font-bold transition">Semua</button>
-            <button onclick="filterCategory('souvenir')" class="tab-btn whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white text-xs font-bold transition">Souvenir</button>
-            <button onclick="filterCategory('seserahan')" class="tab-btn whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white text-xs font-bold transition">Seserahan</button>
-            <button onclick="filterCategory('photo')" class="tab-btn whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white text-xs font-bold transition">Foto & Video</button>
-            <button onclick="filterCategory('dekor')" class="tab-btn whitespace-nowrap px-4 py-2 rounded-full border border-slate-200 bg-white text-xs font-bold transition">Dekorasi</button>
-        </div>
-
-        <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div id="productGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
             </div>
 
     </main>
 
+    <footer class="bg-dark text-white py-8 text-center text-xs border-t border-gray-800">
+        <div class="flex justify-center items-center gap-4 mb-4">
+            <a href="index.html" class="hover:text-gold transition">Beranda</a>
+            <span class="text-gray-600">•</span>
+            <a href="login.html" class="hover:text-gold transition">Buat Undangan</a>
+            <span class="text-gray-600">•</span>
+            <a href="#" class="hover:text-gold transition">Syarat & Ketentuan</a>
+        </div>
+        <p class="text-gray-500">&copy; 2026 Undagi Store. Bagian dari Ekosistem Undagi Platform.</p>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // === DATABASE PRODUK SEDERHANA (Bisa dipindah ke Firebase nanti) ===
+        AOS.init({ duration: 800, once: true });
+
+        // DATABASE PRODUK (HARGA BALI)
         const products = [
             {
                 id: 1,
-                name: "Souvenir Kipas Kayu Cendana",
-                category: "souvenir",
-                price: "Rp 5.000/pcs",
-                image: "https://down-id.img.susercontent.com/file/id-11134207-7r98o-lsmr0v9v5j3fca",
-                desc: "Minimal order 100 pcs. Free sablon nama."
+                name: "Prewedding Bali (Basic)",
+                category: "foto",
+                price: "Rp 2.900.000",
+                image: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=600&q=80",
+                desc: "Include MUA, Hairdo, 1 Lokasi Outdoor, 50 Edited Photos. Hemat & Berkualitas.",
+                tag: "Best Seller"
             },
             {
                 id: 2,
-                name: "Box Seserahan Acrylic Premium",
-                category: "seserahan",
-                price: "Rp 1.500.000",
-                image: "https://down-id.img.susercontent.com/file/sg-11134201-22120-0y5q3q3q3zkv5e",
-                desc: "Set isi 4 box. Hiasan bunga rustic. Sistem sewa/beli."
+                name: "Dekorasi Rustic 6m",
+                category: "dekor",
+                price: "Rp 4.500.000",
+                image: "https://images.unsplash.com/photo-1519225421980-715cb0202128?auto=format&fit=crop&w=600&q=80",
+                desc: "Backdrop kayu/kain, Fresh Flower, Kursi Pengantin, Lighting Standar.",
+                tag: "Popular"
             },
             {
                 id: 3,
-                name: "Paket Prewedding Outdoor Bali",
-                category: "photo",
-                price: "Rp 3.500.000",
-                image: "https://wisatabali.co.id/wp-content/uploads/2019/07/Paket-Prewedding-Bali-Murah.jpg",
-                desc: "Include MUA, 2 Lokasi, 30 Edited Photos, 1 Menit Teaser."
+                name: "Souvenir Kipas Bali (100pcs)",
+                category: "souvenir",
+                price: "Rp 250.000",
+                image: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=600&q=80",
+                desc: "Harga satuan Rp 2.500. Bahan kain & bambu. Free sablon nama & kemasan.",
+                tag: "Grosir"
             },
             {
                 id: 4,
-                name: "Dekorasi Pelaminan Rustic 6m",
-                category: "dekor",
-                price: "Rp 8.000.000",
-                image: "https://kireinawedding.com/wp-content/uploads/2021/06/dekorasi-pernikahan-rustic-surabaya-sidoarjo.jpg",
-                desc: "Fresh flower, lighting, karpet jalan, kursi pengantin."
+                name: "Video Cinematic Drone 4K",
+                category: "foto",
+                price: "Rp 3.500.000",
+                image: "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=600&q=80",
+                desc: "Dokumentasi udara + darat. 1 menit Teaser IG + 5 menit Full Video Highlight.",
+                tag: ""
             },
             {
                 id: 5,
-                name: "Undangan Fisik Hardcover",
+                name: "Sewa Box Seserahan (4 Box)",
                 category: "souvenir",
-                price: "Rp 8.000/pcs",
-                image: "https://ecs7.tokopedia.net/img/cache/700/product-1/2020/2/18/7238265/7238265_388b3b3b-8b3b-4b3b-8b3b-3b3b3b3b3b3b_700_700.jpg",
-                desc: "Desain custom, hotprint emas, amplop tebal."
+                price: "Rp 200.000",
+                image: "https://images.unsplash.com/photo-1549417229-aa67d3263c09?auto=format&fit=crop&w=600&q=80",
+                desc: "Sewa 4 kotak acrylic premium hias bunga artificial. Tampilan mewah.",
+                tag: "Sewa"
             },
             {
                 id: 6,
-                name: "Video Dokumentasi Hari H",
-                category: "photo",
-                price: "Rp 2.000.000",
-                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_K_K_K_K_K_K_K_K_K_K&s",
-                desc: "Cinematic video 3-5 menit. Drone included."
+                name: "Dekorasi Akad Minimalis",
+                category: "dekor",
+                price: "Rp 1.500.000",
+                image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=600&q=80",
+                desc: "Backdrop kain putih, bunga meja, 6 kursi tiffany, karpet permadani.",
+                tag: "Hemat"
             }
         ];
 
         const grid = document.getElementById('productGrid');
-        const buttons = document.querySelectorAll('.tab-btn');
+        const btns = document.querySelectorAll('.filter-btn');
 
-        // Render Awal
         renderProducts(products);
 
-        // Fungsi Render
         function renderProducts(data) {
             grid.innerHTML = "";
-            data.forEach(item => {
+            data.forEach((item, index) => {
+                const delay = index * 100; 
                 grid.innerHTML += `
-                    <div class="product-card bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden transition duration-300">
-                        <div class="h-32 bg-gray-200 overflow-hidden relative">
-                            <img src="${item.image}" class="w-full h-full object-cover">
-                            <span class="absolute top-2 right-2 bg-white/90 px-2 py-1 text-[10px] font-bold rounded text-slate-600 uppercase">${item.category}</span>
-                        </div>
-                        <div class="p-4">
-                            <h3 class="font-bold text-sm text-slate-800 line-clamp-2 leading-tight mb-1">${item.name}</h3>
-                            <p class="text-xs text-slate-400 mb-3 line-clamp-2">${item.desc}</p>
-                            <div class="flex items-center justify-between">
-                                <span class="text-blue-600 font-bold text-sm">${item.price}</span>
+                    <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 card-hover transition duration-300 flex flex-col h-full group" data-aos="fade-up" data-aos-delay="${delay}">
+                        <div class="h-64 relative overflow-hidden">
+                            <img src="${item.image}" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                            ${item.tag ? `<span class="absolute top-3 left-3 bg-gold text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">${item.tag}</span>` : ''}
+                            
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                <button onclick="orderViaWA('${item.name}', '${item.price}')" class="bg-white text-dark font-bold px-6 py-2 rounded-full hover:bg-gold hover:text-white transition transform translate-y-4 group-hover:translate-y-0 duration-300">
+                                    <i class="fab fa-whatsapp"></i> Tanya Admin
+                                </button>
                             </div>
-                            <button onclick="orderViaWA('${item.name}')" class="w-full mt-3 bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-2 transition">
-                                <i class="fab fa-whatsapp"></i> Pesan
-                            </button>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="font-serif text-lg font-bold text-dark leading-tight mb-2">${item.name}</h3>
+                            <p class="text-xs text-gray-500 mb-4 line-clamp-2 flex-grow">${item.desc}</p>
+                            <div class="pt-4 border-t border-gray-100 mt-auto flex justify-between items-center">
+                                <div>
+                                    <p class="text-[10px] text-gray-400 uppercase font-bold">Harga</p>
+                                    <p class="text-gold font-bold text-lg">${item.price}</p>
+                                </div>
+                                <button onclick="orderViaWA('${item.name}', '${item.price}')" class="bg-dark text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-gold transition shadow-md">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 `;
             });
         }
 
-        // Fungsi Filter
-        window.filterCategory = (cat) => {
-            // Update tombol active
-            buttons.forEach(btn => {
-                btn.classList.remove('active-tab', 'bg-blue-600', 'text-white');
-                btn.classList.add('bg-white', 'text-slate-800');
+        window.filterProduct = (cat) => {
+            btns.forEach(btn => {
+                btn.classList.remove('active', 'bg-dark', 'text-white');
+                btn.classList.add('text-gray-500', 'hover:bg-gray-100');
             });
-            event.target.classList.remove('bg-white', 'text-slate-800');
-            event.target.classList.add('active-tab');
+            event.target.classList.remove('text-gray-500', 'hover:bg-gray-100');
+            event.target.classList.add('active', 'bg-dark', 'text-white');
 
-            // Filter Data
-            if(cat === 'all') {
-                renderProducts(products);
-            } else {
-                const filtered = products.filter(p => p.category === cat);
-                renderProducts(filtered);
-            }
+            if(cat === 'all') renderProducts(products);
+            else renderProducts(products.filter(p => p.category === cat));
         };
 
-        // Fungsi Order WA
-        window.orderViaWA = (productName) => {
-            const phone = "6281234567890"; // GANTI DENGAN NOMOR WA KAMU
-            const text = `Halo Admin Undagi, saya tertarik dengan produk *${productName}*. Bisa minta info lebih lanjut?`;
-            const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-            window.open(url, '_blank');
+        window.orderViaWA = (name, price) => {
+            const phone = "6281234567890";
+            const text = `Halo Admin Undagi, saya tertarik dengan produk:\n\n*${name}*\nHarga: ${price}\n\nMohon info ketersediaan.`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
         };
     </script>
 </body>
