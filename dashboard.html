@@ -4,22 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Pengantin - Undagi</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#B8860B',      
+                        gold_light: '#F4E5BC',
+                        dark: '#1A1A1A',
+                        paper: '#FFFAF0',     
+                        soft_gray: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body{font-family:'Montserrat',sans-serif}
+        /* Hilangkan Scrollbar tapi tetap bisa scroll */
         ::-webkit-scrollbar { width: 0px; background: transparent; }
         .glass-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-top: 1px solid #e5e7eb; }
         
-        /* Style Kotak Galeri */
         .gallery-slot {
-            aspect-ratio: 1; border: 2px dashed #cbd5e1; border-radius: 0.75rem;
+            aspect-ratio: 1; border: 2px dashed #B8860B; border-radius: 1rem;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; overflow: hidden; position: relative; background-color: #f8fafc; transition: all 0.3s;
+            cursor: pointer; overflow: hidden; position: relative; background-color: #FFFAF0; transition: all 0.3s;
         }
-        .gallery-slot:hover { border-color: #3b82f6; background-color: #eff6ff; }
+        .gallery-slot:hover { background-color: #F4E5BC; border-color: #8B6508; }
         .gallery-slot img { width: 100%; height: 100%; object-fit: cover; }
         .gallery-slot .overlay {
             position: absolute; inset: 0; background: rgba(0,0,0,0.5);
@@ -28,45 +48,60 @@
         .gallery-slot:hover .overlay { opacity: 1; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 pb-28">
+<body class="bg-paper text-dark pb-32">
 
-    <nav class="bg-slate-900 text-white p-4 sticky top-0 z-30 shadow-md">
-        <div class="max-w-3xl mx-auto flex justify-between items-center">
+    <nav class="bg-white/95 backdrop-blur-md sticky top-0 z-30 shadow-sm border-b border-gray-100">
+        <div class="max-w-3xl mx-auto px-4 h-16 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white">U</div>
-                <div>
-                    <h1 class="font-bold text-sm">Dashboard</h1>
-                    <p class="text-[10px] text-slate-400" id="userEmail">Memuat...</p>
+                <div class="w-9 h-9 bg-dark rounded-full flex items-center justify-center text-white font-serif font-bold">U</div>
+                <div class="leading-tight">
+                    <h1 class="font-serif font-bold text-dark">Dashboard</h1>
+                    <p class="text-[10px] text-gray-500 font-sans truncate max-w-[150px]" id="userEmail">Memuat...</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-2">
-                <span id="planBadge" class="hidden sm:inline-block bg-gray-700 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider mr-1">FREE</span>
+                <span id="planBadge" class="hidden sm:inline-block bg-gray-100 text-gray-500 border border-gray-200 text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-wider mr-1">FREE</span>
                 
-                <a href="market.html" class="w-8 h-8 flex items-center justify-center rounded-full bg-purple-100 hover:bg-purple-200 text-purple-600 transition relative" title="Undagi Store">
-                    <i class="fas fa-shopping-bag"></i>
-                    <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full animate-ping"></span> 
+                <a href="market.html" class="w-9 h-9 flex items-center justify-center rounded-full bg-gold/10 text-gold hover:bg-gold hover:text-white transition relative" title="Vendor Store">
+                    <i class="fas fa-store"></i>
+                    <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full animate-pulse"></span> 
                 </a>
 
-                <a href="index.html" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="Ke Halaman Utama">
+                <a href="index.html" class="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-dark hover:text-white transition" title="Ke Halaman Depan">
                     <i class="fas fa-home"></i>
                 </a>
 
-                <button onclick="logout()" class="w-8 h-8 flex items-center justify-center rounded-full bg-red-900/50 hover:bg-red-600 text-red-200 hover:text-white transition" title="Keluar Akun">
+                <button onclick="logout()" class="w-9 h-9 flex items-center justify-center rounded-full bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition" title="Keluar">
                     <i class="fas fa-power-off"></i>
                 </button>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-3xl mx-auto p-6 space-y-6">
+    <main class="max-w-3xl mx-auto p-4 space-y-6">
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <h2 class="font-bold text-blue-600 mb-4 flex items-center gap-2"><i class="fas fa-paint-brush"></i> Tampilan</h2>
+        <div class="bg-dark rounded-2xl p-5 relative overflow-hidden shadow-lg group">
+            <div class="absolute right-0 top-0 w-32 h-32 bg-gold opacity-20 rounded-full blur-2xl transform translate-x-10 -translate-y-10"></div>
+            <div class="relative z-10 flex justify-between items-center">
+                <div>
+                    <h3 class="text-gold font-serif font-bold text-lg mb-1">Butuh Fotografer?</h3>
+                    <p class="text-gray-400 text-xs max-w-[200px]">Cek katalog vendor Bali. Harga mulai 2.9 Juta.</p>
+                </div>
+                <a href="market.html" class="bg-gold text-white px-4 py-2 rounded-full text-xs font-bold hover:bg-white hover:text-dark transition shadow-md">
+                    Lihat Store &rarr;
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gold/10">
+            <h2 class="font-serif font-bold text-xl text-dark mb-4 flex items-center gap-2">
+                <i class="fas fa-palette text-gold"></i> Tampilan Undangan
+            </h2>
             
-            <div class="mb-4">
-                <label class="text-xs font-bold text-slate-500">Tema Desain</label>
-                <select id="theme" class="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm focus:border-blue-500 outline-none">
+            <div class="mb-5">
+                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Pilih Tema</label>
+                <select id="theme" class="w-full mt-2 p-3 bg-paper rounded-xl border border-gray-200 text-sm font-medium focus:border-gold outline-none">
                     <option value="gold">Gold Luxury (Default)</option>
                     <option value="silver">Silver Minimal</option>
                     <option value="sage">Sage Nature</option>
@@ -75,117 +110,124 @@
             </div>
 
             <div>
-                <label class="text-xs font-bold text-slate-500">Foto Cover Utama</label>
-                <div class="flex gap-2 mt-1">
-                    <input type="text" id="coverPhoto" placeholder="Link foto..." class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
-                    <button onclick="handleFileUpload('coverPhoto', 'image')" class="bg-slate-200 px-4 rounded-xl hover:bg-slate-300"><i class="fas fa-camera"></i></button>
+                <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Foto Cover Utama</label>
+                <div class="flex gap-2 mt-2">
+                    <input type="text" id="coverPhoto" placeholder="Link foto atau upload..." class="w-full p-3 bg-paper rounded-xl border border-gray-200 text-xs" readonly>
+                    <button onclick="handleFileUpload('coverPhoto', 'image')" class="bg-dark text-white px-4 rounded-xl hover:bg-gold transition"><i class="fas fa-camera"></i></button>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <h2 class="font-bold text-blue-600 mb-4 flex items-center gap-2"><i class="fas fa-user-friends"></i> Mempelai</h2>
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gold/10">
+            <h2 class="font-serif font-bold text-xl text-dark mb-4 flex items-center gap-2">
+                <i class="fas fa-user-friends text-gold"></i> Data Mempelai
+            </h2>
             
-            <div class="mb-6 pb-6 border-b border-dashed border-slate-200">
-                <p class="text-xs font-bold text-slate-400 uppercase mb-2">Mempelai Pria</p>
+            <div class="mb-6 pb-6 border-b border-dashed border-gray-200">
+                <span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-[10px] font-bold uppercase mb-3 inline-block">Mempelai Pria</span>
                 <div class="space-y-3">
-                    <input type="text" id="groomName" placeholder="Nama Lengkap Pria" class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                    <input type="text" id="groomName" placeholder="Nama Lengkap Pria" class="w-full p-3 bg-paper rounded-xl border border-gray-200 text-sm focus:border-gold outline-none">
                     <div class="grid grid-cols-2 gap-3">
-                        <input type="text" id="groomNick" placeholder="Nama Panggilan" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                        <input type="text" id="groomNick" placeholder="Nama Panggilan" class="p-3 bg-paper rounded-xl border border-gray-200 text-sm focus:border-gold outline-none">
                         <div class="flex gap-1">
-                            <input type="text" id="groomPhoto" placeholder="Link Foto" class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
-                            <button onclick="handleFileUpload('groomPhoto', 'image')" class="bg-slate-200 px-3 rounded-xl"><i class="fas fa-upload"></i></button>
+                            <input type="text" id="groomPhoto" placeholder="Link Foto" class="w-full p-3 bg-paper rounded-xl border border-gray-200 text-xs" readonly>
+                            <button onclick="handleFileUpload('groomPhoto', 'image')" class="bg-gray-200 px-3 rounded-xl hover:bg-gray-300"><i class="fas fa-upload"></i></button>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
-                        <input type="text" id="groomFather" placeholder="Nama Ayah" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
-                        <input type="text" id="groomMother" placeholder="Nama Ibu" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                        <input type="text" id="groomFather" placeholder="Nama Ayah" class="p-3 bg-paper rounded-xl border border-gray-200 text-sm focus:border-gold outline-none">
+                        <input type="text" id="groomMother" placeholder="Nama Ibu" class="p-3 bg-paper rounded-xl border border-gray-200 text-sm focus:border-gold outline-none">
                     </div>
                 </div>
             </div>
 
             <div>
-                <p class="text-xs font-bold text-slate-400 uppercase mb-2">Mempelai Wanita</p>
+                <span class="bg-pink-50 text-pink-600 px-2 py-1 rounded text-[10px] font-bold uppercase mb-3 inline-block">Mempelai Wanita</span>
                 <div class="space-y-3">
-                    <input type="text" id="brideName" placeholder="Nama Lengkap Wanita" class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                    <input type="text" id="brideName" placeholder="Nama Lengkap Wanita" class="w-full p-3 bg-paper rounded-xl border border-gray-200 text-sm focus:border-gold outline-none">
                     <div class="grid grid-cols-2 gap-3">
-                        <input type="text" id="brideNick" placeholder="Nama Panggilan" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                        <input type="text" id="brideNick" placeholder="Nama Panggilan" class="p-3 bg-paper rounded-xl border border-gray-200 text-sm focus:border-gold outline-none">
                         <div class="flex gap-1">
-                            <input type="text" id="bridePhoto" placeholder="Link Foto" class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
-                            <button onclick="handleFileUpload('bridePhoto', 'image')" class="bg-slate-200 px-3 rounded-xl"><i class="fas fa-upload"></i></button>
+                            <input type="text" id="bridePhoto" placeholder="Link Foto" class="w-full p-3 bg-paper rounded-xl border border-gray-200 text-xs" readonly>
+                            <button onclick="handleFileUpload('bridePhoto', 'image')" class="bg-gray-200 px-3 rounded-xl hover:bg-gray-300"><i class="fas fa-upload"></i></button>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
-                        <input type="text" id="brideFather" placeholder="Nama Ayah" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
-                        <input type="text" id="brideMother" placeholder="Nama Ibu" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                        <input type="text" id="brideFather" placeholder="Nama Ayah" class="p-3 bg-paper rounded-xl border border-gray-200 text-sm focus:border-gold outline-none">
+                        <input type="text" id="brideMother" placeholder="Nama Ibu" class="p-3 bg-paper rounded-xl border border-gray-200 text-sm focus:border-gold outline-none">
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <h2 class="font-bold text-blue-600 mb-4 flex items-center gap-2"><i class="fas fa-calendar-alt"></i> Acara</h2>
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gold/10">
+            <h2 class="font-serif font-bold text-xl text-dark mb-4 flex items-center gap-2">
+                <i class="fas fa-calendar-alt text-gold"></i> Waktu & Lokasi
+            </h2>
             <div class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-xs font-bold text-slate-500">Tanggal</label>
-                        <input type="date" id="eventDate" class="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase">Tanggal</label>
+                        <input type="date" id="eventDate" class="w-full mt-1 p-3 bg-paper rounded-xl border border-gray-200 text-sm focus:border-gold outline-none">
                     </div>
                     <div>
-                        <label class="text-xs font-bold text-slate-500">Jam (WITA)</label>
-                        <input type="time" id="eventTime" class="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                        <label class="text-[10px] font-bold text-gray-400 uppercase">Jam (WITA)</label>
+                        <input type="time" id="eventTime" class="w-full mt-1 p-3 bg-paper rounded-xl border border-gray-200 text-sm focus:border-gold outline-none">
                     </div>
                 </div>
                 <div>
-                    <label class="text-xs font-bold text-slate-500">Lokasi / Nama Gedung</label>
-                    <textarea id="eventLocation" rows="2" class="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm"></textarea>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase">Lokasi / Nama Gedung</label>
+                    <textarea id="eventLocation" rows="2" class="w-full mt-1 p-3 bg-paper rounded-xl border border-gray-200 text-sm focus:border-gold outline-none"></textarea>
                 </div>
                 <div>
-                    <label class="text-xs font-bold text-slate-500">Link Google Maps</label>
-                    <input type="text" id="mapsUrl" placeholder="https://maps.google.com/..." class="w-full mt-1 p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase">Link Google Maps</label>
+                    <input type="text" id="mapsUrl" placeholder="https://goo.gl/maps/..." class="w-full mt-1 p-3 bg-paper rounded-xl border border-gray-200 text-sm focus:border-gold outline-none">
                 </div>
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <h2 class="font-bold text-blue-600 mb-4 flex items-center gap-2"><i class="fas fa-wallet"></i> Amplop Digital</h2>
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gold/10">
+            <h2 class="font-serif font-bold text-xl text-dark mb-4 flex items-center gap-2">
+                <i class="fas fa-wallet text-gold"></i> Amplop Digital
+            </h2>
             <div class="space-y-3">
-                <input type="text" id="bankName" placeholder="Nama Bank (BCA/BRI/Dana)" class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                <input type="text" id="bankName" placeholder="Nama Bank (BCA/BRI/Dana)" class="w-full p-3 bg-paper rounded-xl border border-gray-200 text-sm focus:border-gold outline-none">
                 <div class="grid grid-cols-2 gap-3">
-                    <input type="number" id="accountNumber" placeholder="No. Rekening" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
-                    <input type="text" id="accountHolder" placeholder="Atas Nama" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                    <input type="number" id="accountNumber" placeholder="No. Rekening" class="p-3 bg-paper rounded-xl border border-gray-200 text-sm focus:border-gold outline-none">
+                    <input type="text" id="accountHolder" placeholder="Atas Nama" class="p-3 bg-paper rounded-xl border border-gray-200 text-sm focus:border-gold outline-none">
                 </div>
             </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <h2 class="font-bold text-blue-600 mb-4 flex items-center gap-2"><i class="fas fa-images"></i> Galeri & Musik</h2>
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gold/10">
+            <h2 class="font-serif font-bold text-xl text-dark mb-4 flex items-center gap-2">
+                <i class="fas fa-images text-gold"></i> Galeri & Musik
+            </h2>
             
             <div class="mb-6">
-                <label class="text-xs font-bold text-slate-500 mb-2 block flex justify-between">
-                    Galeri Foto (Maks 8)
-                    <span class="text-[10px] bg-green-100 text-green-700 px-2 rounded-full">Semua Paket</span>
+                <label class="text-xs font-bold text-gray-500 mb-3 block flex justify-between items-center">
+                    Galeri Foto Prewedding
+                    <span class="text-[10px] bg-gold/10 text-gold px-2 py-0.5 rounded border border-gold/20">Max 8 Foto</span>
                 </label>
                 
                 <div class="grid grid-cols-4 gap-2" id="galleryContainer">
                     </div>
-                <p class="text-[10px] text-gray-400 mt-2">*Klik kotak untuk upload/ganti foto.</p>
+                <p class="text-[10px] text-gray-400 mt-2">*Klik kotak untuk upload foto.</p>
             </div>
 
-            <hr class="border-dashed border-slate-200 my-6">
+            <hr class="border-dashed border-gray-200 my-6">
 
             <div>
-                <label class="text-xs font-bold text-slate-500 flex justify-between">
+                <label class="text-xs font-bold text-gray-500 flex justify-between items-center mb-2">
                     Musik Latar (MP3)
-                    <span class="text-[10px] text-blue-600 bg-blue-50 px-2 rounded-full">Upload Bebas</span>
+                    <span class="text-[10px] bg-dark text-white px-2 py-0.5 rounded">Auto Play</span>
                 </label>
-                <div class="flex gap-2 mt-1">
-                    <input type="text" id="music" placeholder="Link musik / Upload MP3..." class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-gray-500" readonly>
-                    <button onclick="handleFileUpload('music', 'audio')" class="bg-purple-100 text-purple-600 px-4 rounded-xl hover:bg-purple-200 transition flex items-center gap-2 font-bold text-xs whitespace-nowrap">
+                <div class="flex gap-2">
+                    <input type="text" id="music" placeholder="Link musik / Upload MP3..." class="w-full p-3 bg-paper rounded-xl border border-gray-200 text-xs text-gray-500" readonly>
+                    <button onclick="handleFileUpload('music', 'audio')" class="bg-gold/10 text-gold border border-gold px-4 rounded-xl hover:bg-gold hover:text-white transition flex items-center gap-2 font-bold text-xs whitespace-nowrap">
                         <i class="fas fa-music"></i> Upload
                     </button>
                 </div>
-                <p class="text-[10px] text-gray-400 mt-1">*Musik akan otomatis diputar saat undangan dibuka.</p>
             </div>
         </div>
 
@@ -193,13 +235,13 @@
 
     <div class="fixed bottom-0 w-full glass-nav p-4 z-40">
         <div class="max-w-3xl mx-auto flex gap-3">
-            <button onclick="previewInvitation()" class="flex-1 bg-slate-100 text-slate-700 font-bold py-3 rounded-xl hover:bg-slate-200 transition flex items-center justify-center gap-2">
+            <button onclick="previewInvitation()" class="flex-1 bg-white border border-gray-200 text-dark font-bold py-3.5 rounded-full hover:bg-gray-50 transition flex items-center justify-center gap-2">
                 <i class="fas fa-eye"></i> <span class="hidden sm:inline">Preview</span>
             </button>
-            <button onclick="saveData()" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30">
+            <button onclick="saveData()" class="flex-1 bg-gold text-white font-bold py-3.5 rounded-full hover:bg-yellow-600 transition flex items-center justify-center gap-2 shadow-lg shadow-gold/30">
                 <i class="fas fa-save"></i> Simpan
             </button>
-            <a href="manage.html" class="flex-1 bg-green-500 text-white font-bold py-3 rounded-xl hover:bg-green-600 transition flex items-center justify-center gap-2 shadow-lg shadow-green-500/30">
+            <a href="manage.html" class="flex-1 bg-dark text-white font-bold py-3.5 rounded-full hover:bg-gray-800 transition flex items-center justify-center gap-2 shadow-lg">
                 <i class="fas fa-share-alt"></i> Bagikan
             </a>
         </div>
@@ -224,21 +266,19 @@
             }
         });
 
-        // 2. LOAD DATA (SMART FILL)
+        // 2. LOAD DATA
         async function loadData(uid) {
             try {
                 const docSnap = await getDoc(doc(db, "invitations", uid));
                 if (docSnap.exists()) {
                     currentData = docSnap.data();
                     
-                    // Helper untuk ambil data (support data lama dan baru)
                     const getVal = (field, oldField) => {
                         return currentData[field] || (currentData[oldField.split('.')[0]] ? currentData[oldField.split('.')[0]][oldField.split('.')[1]] : '') || '';
                     };
 
                     fillForm(currentData, getVal);
 
-                    // Load Gallery (Merge jika ada data)
                     if (currentData.gallery && Array.isArray(currentData.gallery)) {
                         galleryData = currentData.gallery.concat(Array(8).fill("")).slice(0, 8);
                     }
@@ -249,10 +289,10 @@
                     const badge = document.getElementById('planBadge');
                     if(plan === 'premium') {
                         badge.innerText = "PREMIUM";
-                        badge.className = "bg-yellow-500 text-black text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider mr-1";
+                        badge.className = "hidden sm:inline-block bg-gold text-white text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-wider mr-1 shadow-sm";
                     }
                 } else {
-                    renderGalleryGrid(); // User baru, render galeri kosong
+                    renderGalleryGrid(); 
                 }
             } catch (e) {
                 console.error("Error load:", e);
@@ -304,13 +344,13 @@
                         </div>
                     `;
                 } else {
-                    div.innerHTML = `<i class="fas fa-plus text-slate-300 text-xl"></i>`;
+                    div.innerHTML = `<i class="fas fa-plus text-gold/50 text-xl"></i>`;
                 }
                 container.appendChild(div);
             });
         }
 
-        // 5. LOGIC UPLOAD
+        // 5. UPLOAD & DELETE
         window.uploadGallery = async (index) => {
             const { value: file } = await Swal.fire({
                 title: `Foto Galeri ${index + 1}`, input: 'file', inputAttributes: { 'accept': 'image/*' }
@@ -319,13 +359,13 @@
                 Swal.fire({ title: 'Mengupload...', didOpen: () => Swal.showLoading() });
                 const url = await uploadFile(file);
                 if (url) {
-                    galleryData[index] = url; renderGalleryGrid(); Swal.close(); saveData();
+                    galleryData[index] = url; renderGalleryGrid(); Swal.close(); saveData(true);
                 }
             }
         };
 
         window.deleteGallery = (index) => {
-            galleryData[index] = ""; renderGalleryGrid(); saveData();
+            galleryData[index] = ""; renderGalleryGrid(); saveData(true);
         };
 
         window.handleFileUpload = async (inputId, type) => {
@@ -337,18 +377,21 @@
                 Swal.fire({ title: 'Mengupload...', didOpen: () => Swal.showLoading() });
                 const url = await uploadFile(file);
                 if (url) {
-                    document.getElementById(inputId).value = url; Swal.close(); saveData(); 
+                    document.getElementById(inputId).value = url; Swal.close(); saveData(true); 
                 }
             }
         };
 
         // 6. SIMPAN DATA
-        window.saveData = async () => {
+        window.saveData = async (silent = false) => {
             if (!currentUser) return;
             const btn = document.querySelector('button[onclick="saveData()"]');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
-            btn.disabled = true;
+            
+            if(!silent) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+                btn.disabled = true;
+            }
 
             const newData = {
                 uid: currentUser.uid,
@@ -381,18 +424,22 @@
             try {
                 await setDoc(doc(db, "invitations", currentUser.uid), newData, { merge: true });
                 currentData = newData; 
-                Swal.fire({
-                    icon: 'success', title: 'Tersimpan!', timer: 1500, showConfirmButton: false, toast: true, position: 'top-end'
-                });
+                if(!silent) {
+                    Swal.fire({
+                        icon: 'success', title: 'Tersimpan!', timer: 1500, showConfirmButton: false, toast: true, position: 'top-end'
+                    });
+                }
             } catch (e) {
                 Swal.fire('Error', e.message, 'error');
             } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
+                if(!silent) {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
             }
         };
 
-        // 7. NAVIGASI
+        // 7. ACTION BUTTONS
         window.previewInvitation = () => {
             if (!currentUser) return;
             Swal.fire({ title: 'Menyiapkan Preview...', timer: 1000, didOpen: () => { Swal.showLoading() } })
@@ -400,7 +447,7 @@
         };
 
         window.logout = () => {
-            Swal.fire({ title: 'Keluar?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya' })
+            Swal.fire({ title: 'Keluar?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya', confirmButtonColor: '#1A1A1A' })
             .then((result) => { if (result.isConfirmed) signOut(auth).then(() => window.location.href = "index.html"); });
         };
     </script>
