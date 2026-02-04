@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Wedding</title>
+    <title>The Wedding - Undangan Digital</title>
+    
+    <meta property="og:title" content="The Wedding Invitation">
+    <meta property="og:description" content="Tanpa mengurangi rasa hormat, kami mengundang Anda untuk hadir di acara bahagia kami.">
+    <meta property="og:image" content="https://i.ibb.co/wzn2m0L/undagi-thumb.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://undanginaja.github.io/">
+    <meta property="og:type" content="website">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -16,11 +24,10 @@
             theme: {
                 extend: {
                     colors: {
-                        // Warna ini dinamis, berubah sesuai pilihan tema
-                        t_bg: 'var(--c-bg)',       /* Background */
-                        t_primary: 'var(--c-prim)', /* Teks Judul/Emas/Coklat */
-                        t_text: 'var(--c-text)',    /* Teks Bacaan Biasa */
-                        t_accent: 'var(--c-acc)',   /* Tombol & Garis */
+                        t_bg: 'var(--c-bg)',       
+                        t_primary: 'var(--c-prim)', 
+                        t_dark: 'var(--c-dark)',    
+                        t_accent: 'var(--c-acc)',   
                     },
                     fontFamily: {
                         serif: ['"Cormorant Garamond"', 'serif'],
@@ -36,30 +43,22 @@
     </script>
 
     <style>
-        /* --- DEFAULT THEME (GOLD) --- */
+        /* CSS VARIABLE TEMA */
         :root {
-            --c-bg: #FAF9F6;
-            --c-prim: #A47E5C; 
-            --c-text: #4A4A4A;
-            --c-acc: #D4AF37;
+            --c-bg: #FAF9F6; --c-prim: #A47E5C; --c-dark: #4A4A4A; --c-acc: #D4AF37;
         }
-
-        body { background-color: var(--c-bg); color: var(--c-text); overflow-x: hidden; transition: all 0.5s ease; }
+        body { background-color: var(--c-bg); color: var(--c-dark); overflow-x: hidden; transition: background-color 0.5s ease; }
         
         .photo-circle {
-            width: 160px; height: 160px;
-            border-radius: 50%;
-            border: 2px solid var(--c-prim); /* Ikut Warna Tema */
-            padding: 4px; object-fit: cover;
+            width: 160px; height: 160px; border-radius: 50%;
+            border: 2px solid var(--c-prim); padding: 4px; object-fit: cover;
             transition: transform 0.5s;
         }
         .photo-circle:hover { transform: scale(1.05); }
 
         .bottom-nav {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(200%);
-            width: 90%; max-width: 350px;
-            background-color: var(--c-prim); /* Ikut Warna Tema */
-            border-radius: 50px;
+            width: 90%; max-width: 350px; background-color: var(--c-prim); border-radius: 50px;
             display: flex; justify-content: space-around; align-items: center;
             padding: 12px 20px; z-index: 100;
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
@@ -86,9 +85,9 @@
             <h1 class="font-script text-5xl md:text-6xl text-t_primary mb-8 leading-tight" id="coverNames">...</h1>
             <div class="bg-white border border-t_primary/20 p-6 rounded-xl shadow-sm mb-8 max-w-xs mx-auto">
                 <p class="font-sans text-[10px] text-gray-400 uppercase tracking-widest mb-2">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
-                <h3 class="font-serif text-xl font-bold text-t_text" id="guestNameDisplay">Tamu Undangan</h3>
+                <h3 class="font-serif text-xl font-bold text-t_dark" id="guestNameDisplay">Tamu Undangan</h3>
             </div>
-            <button onclick="openInvitation()" class="bg-t_primary text-white px-8 py-3 rounded-full font-sans text-xs font-bold tracking-widest hover:bg-t_text transition shadow-lg flex items-center justify-center gap-2 mx-auto animate-bounce">
+            <button onclick="openInvitation()" class="bg-t_primary text-white px-8 py-3 rounded-full font-sans text-xs font-bold tracking-widest hover:bg-t_dark transition shadow-lg flex items-center justify-center gap-2 mx-auto animate-bounce">
                 <i class="fas fa-envelope-open"></i> BUKA UNDANGAN
             </button>
         </div>
@@ -101,7 +100,7 @@
                 <div class="text-3xl text-t_primary mb-4 font-serif">ॐ</div>
                 <h2 class="font-script text-5xl text-t_primary mb-4">Om Swastyastu</h2>
                 <p class="font-serif text-xs text-gray-400 italic mb-8">"Mohon Doa Restu"</p>
-                <p class="font-sans text-sm text-t_text leading-relaxed px-4">
+                <p class="font-sans text-sm text-t_dark leading-relaxed px-4">
                     Atas Asung Kertha Wara Nugraha Ida Sang Hyang Widhi Wasa, kami bermaksud menyelenggarakan upacara Pawiwahan putra-putri kami:
                 </p>
             </div>
@@ -111,14 +110,14 @@
             <div class="mb-12" data-aos="fade-up">
                 <img id="groomImg" src="" class="photo-circle mx-auto mb-4">
                 <h3 class="font-script text-4xl text-t_primary mb-1" id="groomNickDisplay">Putra</h3>
-                <p class="font-serif text-lg font-bold text-t_text" id="groomNameDisplay">Nama Lengkap</p>
+                <p class="font-serif text-lg font-bold text-t_dark" id="groomNameDisplay">Nama Lengkap</p>
                 <p class="font-sans text-xs text-gray-500 mt-2">Putra dari Pasangan<br><span id="groomParents" class="font-bold">...</span></p>
             </div>
             <div class="font-script text-3xl text-t_primary/30 mb-12">&</div>
             <div data-aos="fade-up">
                 <img id="brideImg" src="" class="photo-circle mx-auto mb-4">
                 <h3 class="font-script text-4xl text-t_primary mb-1" id="brideNickDisplay">Putri</h3>
-                <p class="font-serif text-lg font-bold text-t_text" id="brideNameDisplay">Nama Lengkap</p>
+                <p class="font-serif text-lg font-bold text-t_dark" id="brideNameDisplay">Nama Lengkap</p>
                 <p class="font-sans text-xs text-gray-500 mt-2">Putri dari Pasangan<br><span id="brideParents" class="font-bold">...</span></p>
             </div>
         </section>
@@ -127,11 +126,11 @@
             <div class="text-center" data-aos="zoom-in">
                 <p class="font-script text-4xl text-t_primary mb-6">Pawiwahan</p>
                 <div class="bg-white p-8 rounded-2xl shadow-sm border border-t_primary/10">
-                    <p class="font-serif text-xl font-bold text-t_text mb-1" id="dateDisplay">...</p>
+                    <p class="font-serif text-xl font-bold text-t_dark mb-1" id="dateDisplay">...</p>
                     <p class="font-sans text-sm text-gray-500 mb-6">Pukul <span id="timeDisplay">...</span> WITA</p>
                     <div class="h-px w-20 bg-t_primary/20 mx-auto mb-6"></div>
-                    <p class="font-sans text-sm text-t_text px-2 mb-6 font-bold leading-relaxed" id="locationDisplay">...</p>
-                    <a id="btnMap" href="#" target="_blank" class="inline-flex items-center gap-2 bg-t_primary text-white px-6 py-2 rounded-full text-xs font-bold hover:bg-t_text transition shadow-md">
+                    <p class="font-sans text-sm text-t_dark px-2 mb-6 font-bold leading-relaxed" id="locationDisplay">...</p>
+                    <a id="btnMap" href="#" target="_blank" class="inline-flex items-center gap-2 bg-t_primary text-white px-6 py-2 rounded-full text-xs font-bold hover:bg-t_dark transition shadow-md">
                         <i class="fas fa-map-marked-alt"></i> Google Maps
                     </a>
                 </div>
@@ -158,7 +157,7 @@
             </div>
         </section>
 
-        <footer class="py-16 px-6 text-center bg-t_text text-white">
+        <footer class="py-16 px-6 text-center bg-t_dark text-white">
             <div class="max-w-xs mx-auto mb-8">
                 <p class="font-sans text-xs leading-relaxed opacity-80 italic">
                     "Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu kepada kedua mempelai. Atas kehadiran dan doa restunya, kami ucapkan terima kasih."
@@ -188,45 +187,20 @@
         const bgm = document.getElementById('bgm');
         let isPlaying = false;
 
-        // === 1. DEFINISI TEMA LENGKAP ===
-        const themes = {
-            'gold': { 
-                bg: '#FAF9F6',      // Cream
-                prim: '#A47E5C',    // Coklat Gold (Tulisan Indah)
-                text: '#4A4A4A',    // Abu Tua (Bacaan)
-                acc: '#D4AF37'      // Emas (Aksen)
-            },
-            'silver': { 
-                bg: '#F8FAFC',      // Putih Kebiruan
-                prim: '#64748B',    // Slate Blue (Tulisan Indah)
-                text: '#334155',    // Slate Dark (Bacaan)
-                acc: '#94A3B8'      // Silver (Aksen)
-            },
-            'sage': { 
-                bg: '#F4F7F5',      // Hijau Sangat Muda
-                prim: '#557C55',    // Hijau Sage (Tulisan Indah)
-                text: '#2F4F4F',    // Dark Slate Gray (Bacaan)
-                acc: '#8FBC8F'      // Sea Green (Aksen)
-            },
-            'maroon': { 
-                bg: '#FFF5F5',      // Pink Sangat Muda
-                prim: '#9F1239',    // Merah Marun (Tulisan Indah)
-                text: '#881337',    // Merah Tua (Bacaan)
-                acc: '#BE123C'      // Rose (Aksen)
-            }
+        const themeColors = {
+            'gold': { bg: '#FAF9F6', prim: '#A47E5C', dark: '#4A4A4A', acc: '#D4AF37' },
+            'silver': { bg: '#F8FAFC', prim: '#64748B', dark: '#1E293B', acc: '#94A3B8' },
+            'sage': { bg: '#F4F7F5', prim: '#557C55', dark: '#2D442D', acc: '#A6CF98' },
+            'maroon': { bg: '#FFF5F5', prim: '#9F1239', dark: '#881337', acc: '#BE123C' }
         };
 
-        // === 2. FUNGSI GANTI BAJU ===
         function applyTheme(themeName) {
-            // Kalau tema tidak ditemukan, pakai 'gold'
-            const t = themes[themeName] || themes['gold'];
-            
-            // Set Variable CSS
-            const r = document.documentElement.style;
-            r.setProperty('--c-bg', t.bg);
-            r.setProperty('--c-prim', t.prim);
-            r.setProperty('--c-text', t.text);
-            r.setProperty('--c-acc', t.acc);
+            const t = themeColors[themeName] || themeColors['gold']; 
+            const root = document.documentElement;
+            root.style.setProperty('--c-bg', t.bg);
+            root.style.setProperty('--c-prim', t.prim);
+            root.style.setProperty('--c-dark', t.dark);
+            root.style.setProperty('--c-acc', t.acc);
         }
 
         const musicLibrary = {
@@ -293,10 +267,7 @@
                 if(docSnap.exists()) {
                     const data = docSnap.data();
                     const isOwner = (user && user.uid === targetUID);
-                    
-                    // TERAPKAN TEMA
                     applyTheme(data.theme); 
-                    
                     renderData(data, isOwner);
                 }
             } catch(e) { console.error(e); }
@@ -344,7 +315,6 @@
 
             const gallerySection = document.getElementById('gallerySection');
             const galleryGrid = document.getElementById('galleryGrid');
-            const navGallery = document.getElementById('navGallery');
             const galleryData = data.gallery || [];
 
             if (showPremiumFeatures) {
@@ -352,7 +322,6 @@
                 const isPremium = (plan === 'premium');
                 const limit = (isOwner || isPremium) ? 8 : 5;
                 
-                // HARDCODE GRID 2 KOLOM
                 galleryGrid.className = "grid grid-cols-2 gap-3"; 
 
                 let html = "";
