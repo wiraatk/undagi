@@ -38,7 +38,6 @@
     <style>
         body { background-color: #FAF9F6; color: #4A4A4A; overflow-x: hidden; }
         
-        /* FOTO BULAT CLEAN */
         .photo-circle {
             width: 160px; height: 160px;
             border-radius: 50%;
@@ -49,9 +48,8 @@
         }
         .photo-circle:hover { transform: scale(1.05); }
 
-        /* NAVIGATION BAR (HIDDEN BY DEFAULT) */
         .bottom-nav {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(200%); /* Turun ke bawah layar */
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(200%);
             width: 90%; max-width: 350px;
             background-color: #A47E5C; 
             border-radius: 50px;
@@ -59,15 +57,12 @@
             padding: 12px 20px;
             z-index: 100;
             box-shadow: 0 10px 20px rgba(164, 126, 92, 0.4);
-            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efek membal */
+            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        /* Class untuk memunculkan Nav */
         .bottom-nav.show { transform: translateX(-50%) translateY(0); }
-
         .nav-item { color: rgba(255,255,255,0.7); font-size: 18px; transition: 0.3s; }
         .nav-item.active { color: white; transform: translateY(-3px); }
 
-        /* COVER TRANSITION */
         #cover-screen { transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1); }
         #cover-screen.open { transform: translateY(-100%); }
     </style>
@@ -77,22 +72,16 @@
     <audio id="bgm" loop><source src="" type="audio/mp3"></audio>
 
     <section id="cover-screen" class="fixed inset-0 z-50 bg-theme_cream flex flex-col justify-center items-center px-6 text-center">
-        
         <div data-aos="fade-up" data-aos-duration="1500" class="relative z-10 w-full max-w-sm">
-            
             <p class="font-serif text-theme_brown tracking-[0.3em] text-xs uppercase mb-6">The Wedding of</p>
-            
             <div class="mb-8 relative mx-auto w-56 h-56">
                 <img id="coverBg" src="" class="w-full h-full rounded-full object-cover border border-theme_brown/30 shadow-lg p-1 bg-white">
             </div>
-
             <h1 class="font-script text-5xl md:text-6xl text-theme_brown mb-8 leading-tight" id="coverNames">...</h1>
-
             <div class="bg-white border border-theme_brown/20 p-6 rounded-xl shadow-sm mb-8 max-w-xs mx-auto">
                 <p class="font-sans text-[10px] text-gray-400 uppercase tracking-widest mb-2">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
                 <h3 class="font-serif text-xl font-bold text-theme_dark" id="guestNameDisplay">Tamu Undangan</h3>
             </div>
-
             <button onclick="openInvitation()" class="bg-theme_brown text-white px-8 py-3 rounded-full font-sans text-xs font-bold tracking-widest hover:bg-theme_dark transition shadow-lg flex items-center justify-center gap-2 mx-auto animate-bounce">
                 <i class="fas fa-envelope-open"></i> BUKA UNDANGAN
             </button>
@@ -106,7 +95,6 @@
                 <div class="text-3xl text-theme_brown mb-4 font-serif">ॐ</div>
                 <h2 class="font-script text-5xl text-theme_brown mb-4">Om Swastyastu</h2>
                 <p class="font-serif text-xs text-gray-400 italic mb-8">"Mohon Doa Restu"</p>
-
                 <p class="font-sans text-sm text-theme_dark leading-relaxed px-4">
                     Atas Asung Kertha Wara Nugraha Ida Sang Hyang Widhi Wasa, kami bermaksud menyelenggarakan upacara Pawiwahan putra-putri kami:
                 </p>
@@ -120,9 +108,7 @@
                 <p class="font-serif text-lg font-bold text-theme_dark" id="groomNameDisplay">Nama Lengkap</p>
                 <p class="font-sans text-xs text-gray-500 mt-2">Putra dari Pasangan<br><span id="groomParents" class="font-bold">...</span></p>
             </div>
-
             <div class="font-script text-3xl text-theme_brown/30 mb-12">&</div>
-
             <div data-aos="fade-up">
                 <img id="brideImg" src="" class="photo-circle mx-auto mb-4">
                 <h3 class="font-script text-4xl text-theme_brown mb-1" id="brideNickDisplay">Putri</h3>
@@ -134,15 +120,11 @@
         <section id="event" class="py-16 px-6 bg-theme_cream/50">
             <div class="text-center" data-aos="zoom-in">
                 <p class="font-script text-4xl text-theme_brown mb-6">Pawiwahan</p>
-                
                 <div class="bg-white p-8 rounded-2xl shadow-sm border border-theme_brown/10">
                     <p class="font-serif text-xl font-bold text-theme_dark mb-1" id="dateDisplay">...</p>
                     <p class="font-sans text-sm text-gray-500 mb-6">Pukul <span id="timeDisplay">...</span> WITA</p>
-                    
                     <div class="h-px w-20 bg-theme_brown/20 mx-auto mb-6"></div>
-
                     <p class="font-sans text-sm text-theme_dark px-2 mb-6 font-bold leading-relaxed" id="locationDisplay">...</p>
-                    
                     <a id="btnMap" href="#" target="_blank" class="inline-flex items-center gap-2 bg-theme_brown text-white px-6 py-2 rounded-full text-xs font-bold hover:bg-theme_dark transition shadow-md">
                         <i class="fas fa-map-marked-alt"></i> Google Maps
                     </a>
@@ -150,10 +132,10 @@
             </div>
         </section>
 
-        <section id="gallerySection" class="py-16 px-4 hidden"> <div class="text-center mb-8">
+        <section id="gallerySection" class="py-16 px-4 hidden">
+            <div class="text-center mb-8">
                 <h2 class="font-script text-4xl text-theme_brown">Our Gallery</h2>
             </div>
-            
             <div id="galleryGrid" class="grid gap-2">
                 </div>
         </section>
@@ -176,7 +158,6 @@
                     "Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu kepada kedua mempelai. Atas kehadiran dan doa restunya, kami ucapkan terima kasih."
                 </p>
             </div>
-            
             <h2 class="font-serif text-xl mb-2 text-theme_brown">Om Shanti Shanti Shanti Om</h2>
             <div class="h-px w-10 bg-white/20 mx-auto my-4"></div>
             <p class="text-[10px] opacity-50 uppercase tracking-widest">Undagi Digital Invitation</p>
@@ -194,12 +175,10 @@
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script type="module">
-        // PENTING: IMPORT STANDAR (JANGAN UBAH INI)
         import { auth, db, doc, getDoc, onAuthStateChanged } from './firebase-config.js';
 
         AOS.init({ duration: 1000, once: true });
 
-        // === LOGIC ===
         const bgm = document.getElementById('bgm');
         let isPlaying = false;
 
@@ -210,15 +189,8 @@
         };
 
         window.openInvitation = () => {
-            // 1. Hilangkan Cover
             document.getElementById('cover-screen').classList.add('open');
-            
-            // 2. Munculkan Navigasi (Slide Up)
-            setTimeout(() => {
-                document.querySelector('.bottom-nav').classList.add('show');
-            }, 500); // Delay sedikit biar smooth
-
-            // 3. Play Music
+            setTimeout(() => { document.querySelector('.bottom-nav').classList.add('show'); }, 500);
             if(bgm.src) {
                 bgm.play().then(() => {
                     isPlaying = true;
@@ -239,7 +211,17 @@
             Swal.fire({icon: 'success', title: 'Tersalin', timer: 1000, showConfirmButton: false, toast: true, position: 'top'});
         };
 
-        // NAVIGATION ACTIVE STATE
+        window.viewPhoto = (url) => {
+            Swal.fire({
+                imageUrl: url,
+                imageAlt: 'Gallery Photo',
+                showConfirmButton: false,
+                background: 'transparent',
+                backdrop: 'rgba(0,0,0,0.9)',
+                customClass: { popup: 'bg-transparent shadow-none' }
+            });
+        };
+
         const sections = document.querySelectorAll('section');
         const navLi = document.querySelectorAll('.nav-item');
         window.addEventListener('scroll', () => {
@@ -250,58 +232,41 @@
             });
             navLi.forEach(li => {
                 li.classList.remove('active');
-                if (li.getAttribute('href') && li.getAttribute('href').includes(current)) {
-                    li.classList.add('active');
-                }
+                if (li.getAttribute('href') && li.getAttribute('href').includes(current)) li.classList.add('active');
             });
         });
 
-        // LOAD DATA
         onAuthStateChanged(auth, async (user) => {
             const urlParams = new URLSearchParams(window.location.search);
-            // Ambil UID dari URL atau Login. Jika keduanya kosong, targetUID = null.
             const targetUID = urlParams.get('uid') || (user ? user.uid : null);
             const guestName = urlParams.get('to');
 
-            // Set Nama Tamu
             if(guestName) document.getElementById('guestNameDisplay').innerText = decodeURIComponent(guestName);
-            
-            // STOP jika tidak ada UID (Mencegah error 'unexpected state')
             if(!targetUID) return;
 
             try {
-                const docRef = doc(db, "invitations", targetUID);
-                const docSnap = await getDoc(docRef);
-                
+                const docSnap = await getDoc(doc(db, "invitations", targetUID));
                 if(docSnap.exists()) {
-                    // Logic: Owner boleh lihat fitur premium meskipun status 'free'
+                    const data = docSnap.data();
                     const isOwner = (user && user.uid === targetUID);
-                    renderData(docSnap.data(), isOwner);
+                    renderData(data, isOwner);
                 }
-            } catch(e) { 
-                console.error("Gagal memuat data:", e); 
-            }
+            } catch(e) { console.error(e); }
         });
 
         function renderData(data, isOwner) {
-            // Text Data
-            const groomNick = data.groomNick || 'Pria';
-            const brideNick = data.brideNick || 'Wanita';
-            document.getElementById('coverNames').innerText = `${groomNick} & ${brideNick}`;
-            document.getElementById('groomNickDisplay').innerText = groomNick;
-            document.getElementById('brideNickDisplay').innerText = brideNick;
-            
+            document.getElementById('coverNames').innerText = `${data.groomNick || 'Pria'} & ${data.brideNick || 'Wanita'}`;
+            document.getElementById('groomNickDisplay').innerText = data.groomNick;
+            document.getElementById('brideNickDisplay').innerText = data.brideNick;
             document.getElementById('groomNameDisplay').innerText = data.groomName;
             document.getElementById('groomParents').innerText = `Bpk. ${data.groomFather} & Ibu ${data.groomMother}`;
             document.getElementById('brideNameDisplay').innerText = data.brideName;
             document.getElementById('brideParents').innerText = `Bpk. ${data.brideFather} & Ibu ${data.brideMother}`;
 
-            // Images
             if(data.coverPhoto) document.getElementById('coverBg').src = data.coverPhoto;
             if(data.groomPhoto) document.getElementById('groomImg').src = data.groomPhoto;
             if(data.bridePhoto) document.getElementById('brideImg').src = data.bridePhoto;
 
-            // Event
             if(data.eventDate) {
                 const dateObj = new Date(data.eventDate);
                 const opts = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
@@ -310,13 +275,11 @@
             document.getElementById('timeDisplay').innerText = (data.eventTime || '00:00') + " WITA";
             document.getElementById('locationDisplay').innerText = data.eventLocation;
             if(data.mapsUrl) document.getElementById('btnMap').href = data.mapsUrl;
-
-            // Bank
             document.getElementById('bankNameDisplay').innerText = data.bankName;
             document.getElementById('rekDisplay').innerText = data.accountNumber;
             document.getElementById('rekHolderDisplay').innerText = data.accountHolder;
 
-            // === PREMIUM LOGIC ===
+            // === PREMIUM & GALLERY LOGIC ===
             const plan = data.plan || 'free'; 
             const showPremiumFeatures = (plan !== 'free') || isOwner;
 
@@ -333,36 +296,41 @@
                 document.getElementById('navMusicIcon').style.display = 'none';
             }
 
-            // Galeri
+            // Galeri (THE FIX)
             const gallerySection = document.getElementById('gallerySection');
             const galleryGrid = document.getElementById('galleryGrid');
             const navGallery = document.getElementById('navGallery');
-            const demoImg = data.coverPhoto || 'https://placehold.co/400x600/A47E5C/ffffff?text=Undagi';
             
+            // Ambil data Array Galeri dari Database (atau array kosong)
+            const galleryData = data.gallery || [];
+
             if (showPremiumFeatures) {
                 gallerySection.classList.remove('hidden');
                 
-                // Tampilan jumlah foto sesuai plan (atau Owner)
+                // Batasi jumlah foto sesuai paket (Pro=5, Premium/Owner=8)
                 const isPremium = (plan === 'premium');
-                // Jika Owner Free, tampilkan 5 foto saja (seperti Pro) agar tidak PHP
-                const displayCount = isPremium ? 8 : 5;
-
+                const limit = (isOwner || isPremium) ? 8 : 5;
+                
                 let html = "";
-                if(displayCount === 5) {
-                     galleryGrid.className = "grid grid-cols-2 gap-2";
-                     html = `
-                        <div class="h-48 rounded-lg overflow-hidden bg-gray-200"><img src="${demoImg}" class="w-full h-full object-cover"></div>
-                        <div class="h-48 rounded-lg overflow-hidden bg-gray-200"><img src="${demoImg}" class="w-full h-full object-cover"></div>
-                        <div class="col-span-2 h-48 rounded-lg overflow-hidden bg-gray-200"><img src="${demoImg}" class="w-full h-full object-cover"></div>
-                        <div class="h-48 rounded-lg overflow-hidden bg-gray-200"><img src="${demoImg}" class="w-full h-full object-cover"></div>
-                        <div class="h-48 rounded-lg overflow-hidden bg-gray-200"><img src="${demoImg}" class="w-full h-full object-cover"></div>
-                    `;
-                } else {
-                    galleryGrid.className = "grid grid-cols-2 md:grid-cols-4 gap-2";
-                    for(let i=0; i<8; i++) {
-                        html += `<div class="h-40 rounded-lg overflow-hidden bg-gray-200 shadow-sm"><img src="${demoImg}" class="w-full h-full object-cover"></div>`;
+                
+                // Set Grid Layout
+                galleryGrid.className = (limit === 5) ? "grid grid-cols-2 gap-2" : "grid grid-cols-2 md:grid-cols-4 gap-2";
+
+                // Loop data asli
+                let count = 0;
+                for(let i=0; i < galleryData.length; i++) {
+                    if(count >= limit) break; // Stop kalau sudah limit
+                    if(galleryData[i]) { // Cek slot tidak kosong
+                        html += `<div class="h-40 rounded-lg overflow-hidden bg-gray-200 shadow-sm cursor-pointer hover:scale-105 transition duration-500">
+                                    <img src="${galleryData[i]}" class="w-full h-full object-cover" onclick="viewPhoto('${galleryData[i]}')">
+                                 </div>`;
+                        count++;
                     }
                 }
+                
+                // Jika kosong total
+                if(html === "") html = "<p class='text-center col-span-4 text-xs text-gray-400'>Belum ada foto galeri.</p>";
+                
                 galleryGrid.innerHTML = html;
             } else {
                 gallerySection.style.display = 'none';
