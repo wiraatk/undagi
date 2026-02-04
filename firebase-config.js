@@ -15,7 +15,9 @@ import {
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword,
     GoogleAuthProvider, 
-    signInWithPopup 
+    signInWithPopup,
+    setPersistence,           // <--- BARU
+    browserSessionPersistence // <--- BARU
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 // --- CONFIG FIREBASE KAMU ---
@@ -32,12 +34,22 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-const provider = new GoogleAuthProvider(); // <--- INI SUDAH DITAMBAHKAN
+const provider = new GoogleAuthProvider();
 
-// EXPORT LENGKAP (Provider sudah masuk)
+// SETTING AUTO LOGOUT (SESSION ONLY)
+// User tetap login selama tab dibuka. Begitu browser ditutup, otomatis logout.
+setPersistence(auth, browserSessionPersistence)
+  .then(() => {
+     console.log("Session Persistence Enabled");
+  })
+  .catch((error) => {
+     console.error("Persistence Error:", error);
+  });
+
+// EXPORT LENGKAP
 export { 
     app, db, auth, 
-    provider, // <--- INI YANG BIKIN ERROR KEMARIN (SUDAH DIPERBAIKI)
+    provider,
     doc, getDoc, setDoc, updateDoc, 
     collection, getDocs, 
     onAuthStateChanged, signOut, 
