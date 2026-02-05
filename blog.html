@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Inspirasi Pernikahan - Undagi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: { colors: { gold: '#B8860B', dark: '#1A1A1A', paper: '#FFFAF0' }, fontFamily: { serif: ['"Playfair Display"', 'serif'] } }
+            }
+        }
+    </script>
+</head>
+<body class="bg-paper text-dark">
+
+    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 h-20">
+        <div class="max-w-7xl mx-auto px-6 h-full flex justify-between items-center">
+            <a href="index.html" class="font-serif text-2xl font-bold tracking-tighter">UNDAGI<span class="text-gold">.</span></a>
+            <div class="flex gap-4">
+                <a href="index.html" class="text-sm font-bold text-gray-500 hover:text-gold">Home</a>
+                <a href="login.html" class="bg-dark text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-gold transition">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-12 px-6">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center bg-white p-6 rounded-3xl shadow-sm border border-gray-100" data-aos="fade-up">
+            <div class="h-64 md:h-96 rounded-2xl overflow-hidden relative">
+                <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover hover:scale-105 transition duration-700">
+                <span class="absolute top-4 left-4 bg-gold text-white px-3 py-1 rounded text-xs font-bold">Tips Hemat</span>
+            </div>
+            <div class="p-4">
+                <h1 class="font-serif text-3xl md:text-4xl font-bold mb-4 hover:text-gold cursor-pointer transition">5 Lokasi Prewedding Tersembunyi di Bali yang Gratis</h1>
+                <p class="text-gray-500 mb-6 leading-relaxed">Bali tidak melulu soal pantai berbayar mahal. Temukan spot estetik mulai dari bukit savana hingga air terjun yang masih asri...</p>
+                <a href="#" class="text-dark font-bold underline decoration-gold decoration-2 hover:text-gold">Baca Selengkapnya</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 pb-20">
+        <h2 class="font-serif text-2xl font-bold mb-8">Artikel Terbaru</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            
+            <article class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition" data-aos="fade-up">
+                <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&w=600&q=80" class="h-48 w-full object-cover">
+                <div class="p-6">
+                    <span class="text-xs font-bold text-gold uppercase tracking-wider">Adat Bali</span>
+                    <h3 class="font-serif text-xl font-bold mt-2 mb-3">Rincian Biaya Pawiwahan Sederhana</h3>
+                    <p class="text-xs text-gray-400 mb-4">5 Menit Baca</p>
+                    <a href="#" class="text-sm font-bold text-dark hover:text-gold">Baca Artikel &rarr;</a>
+                </div>
+            </article>
+
+            <article class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition" data-aos="fade-up" data-aos-delay="100">
+                <img src="https://images.unsplash.com/photo-1522673607200-1645062cd958?auto=format&fit=crop&w=600&q=80" class="h-48 w-full object-cover">
+                <div class="p-6">
+                    <span class="text-xs font-bold text-gold uppercase tracking-wider">Vendor</span>
+                    <h3 class="font-serif text-xl font-bold mt-2 mb-3">Memilih MUA yang Tepat untuk Wajah Asia</h3>
+                    <p class="text-xs text-gray-400 mb-4">3 Menit Baca</p>
+                    <a href="#" class="text-sm font-bold text-dark hover:text-gold">Baca Artikel &rarr;</a>
+                </div>
+            </article>
+
+            <div class="bg-dark rounded-2xl p-8 flex flex-col justify-center text-center text-white" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="font-serif text-2xl font-bold mb-4">Ingin Menulis Kisahmu?</h3>
+                <p class="text-gray-400 text-sm mb-6">Bagikan cerita inspiratif pernikahanmu di blog Undagi.</p>
+                <a href="#" class="bg-gold text-white py-3 rounded-full font-bold text-sm hover:bg-white hover:text-dark transition">Kirim Tulisan</a>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script> AOS.init(); </script>
+</body>
+</html>
